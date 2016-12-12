@@ -222,7 +222,7 @@ class CommandLine {
     String stdin
 
     CommandLine(String[] args) {
-        def cli = new CliBuilder(usage: 'groovy freemarker-commandLine.groovy [options] file[s]', stopAtNonOption: false)
+        def cli = new CliBuilder(usage: 'groovy freemarker-cli.groovy [options] file[s]', stopAtNonOption: false)
         cli.h(longOpt: 'help', 'Usage information', required: false)
         cli.v(longOpt: 'verbose', 'Verbose mode', required: false)
         cli.o(longOpt: 'output', 'Output file', required: false, args: 1)

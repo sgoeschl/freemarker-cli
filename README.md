@@ -26,7 +26,7 @@ Using Velocity actually created some minor issues so I migrated to FreeMarker
 # 3. Usage
 
 ```
-freemarker-commandLine> groovy freemarker-commandLine.groovy 
+> groovy freemarker-cli.groovy
 usage: groovy freemarker-commandLine.groovy [options] file[s]
  -h,--help             Usage information
  -l,--locale <arg>     Locale value
