@@ -1,0 +1,31 @@
+1) Language-specific Date Format
+---------------------------------------------------------------------------
+Report generated at Dec 12, 2016 10:52:15 PM
+
+2) Invoke a constructor of a Java class
+---------------------------------------------------------------------------
+new java.utilDate(1000 * 3600 * 24): Jan 2, 1970 1:00:00 AM
+
+3) Invoke a static method of an non-constructor class
+---------------------------------------------------------------------------
+System.currentTimeMillis: 1,481,579,535,504
+
+4) Access an Enumeration
+---------------------------------------------------------------------------
+java.math.RoundingMode#UP: UP
+
+5) Loop Over The Values Of An Enumeration
+---------------------------------------------------------------------------
+* java.math.RoundingMode.UP
+* java.math.RoundingMode.DOWN
+* java.math.RoundingMode.CEILING
+* java.math.RoundingMode.FLOOR
+* java.math.RoundingMode.HALF_UP
+* java.math.RoundingMode.HALF_DOWN
+* java.math.RoundingMode.HALF_EVEN
+* java.math.RoundingMode.UNNECESSARY
+
+6) Display input files
+---------------------------------------------------------------------------
+Document: name=pom.xml file=/Users/sgoeschl/work/github/sgoeschl/freemarker-cli/pom.xml length=1,516 hasFile=true
+Document: name=README.md file=/Users/sgoeschl/work/github/sgoeschl/freemarker-cli/README.md length=6,416 hasFile=true

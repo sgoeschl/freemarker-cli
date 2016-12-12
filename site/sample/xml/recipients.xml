@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<recipients>
+    <person>
+        <name>John Smith</name>
+        <address>3033 Long Drive, Houston, TX</address>
+    </person>
+    <person>
+        <name>Janet Mason</name>
+        <address>11c Poplar Drive, Knoxville, TN</address>
+    </person>
+</recipients>
