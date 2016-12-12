@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="freemarker-commandLine" basedir=".">
+<project name="freemarker-cli" basedir=".">
 
     <!-- =================================================================== -->
     <!-- General Tasks                                                       -->
@@ -10,8 +10,8 @@
     </target>
 
     <target name="package" description="Creates a compressed distributable">
-        <tar basedir="${basedir}" destfile="${basedir}/target/freemarker-commandLine.tar" excludes="target,site/**,.idea/**,LICENSE,build.xml" />
-        <gzip destfile="${basedir}/target/freemarker-commandLine.tar.gz" src="${basedir}/target/freemarker-commandLine.tar" />
+        <tar basedir="${basedir}" destfile="${basedir}/target/freemarker-cli.tar" excludes="target,site/**,.idea/**,LICENSE,build.xml" />
+        <gzip destfile="${basedir}/target/freemarker-cli.tar.gz" src="${basedir}/target/freemarker-cli.tar" />
     </target>
 
 </project>

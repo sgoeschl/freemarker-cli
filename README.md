@@ -27,7 +27,7 @@ Using Velocity actually created some minor issues so I migrated to FreeMarker
 
 ```
 > groovy freemarker-cli.groovy
-usage: groovy freemarker-commandLine.groovy [options] file[s]
+usage: groovy freemarker-cli.groovy [options] file[s]
  -h,--help             Usage information
  -l,--locale <arg>     Locale value
  -o,--output <arg>     Output file
@@ -45,11 +45,11 @@ A simple example with real JSON data
 
 You can either use the existing JSON sample
 
-> groovy freemarker-commandLine.groovy -t temlates/json/md/github-users.ftl site/sample/json/github-users.json 
+> groovy freemarker-cli.groovy -t temlates/json/md/github-users.ftl site/sample/json/github-users.json
 
 or pipe a cURL response
 
-> curl -s https://api.github.com/users | groovy freemarker-commandLine.groovy -t templates/json/md/github-users.ftl
+> curl -s https://api.github.com/users | groovy freemarker-cli.groovy -t templates/json/md/github-users.ftl
 
 ### FreeMarker Template
 
@@ -83,7 +83,7 @@ creates the following output
 For a customer I created a Groovy script to fetch all products for a list of users - the script generates a JSON file which can be easily transformed to Markdown
 
 ```
-> groovy freemarker-commandLine.groovy -t templates/json/md/customer-user-products.ftl  site/sample/json/customer-user-products.json
+> groovy freemarker-cli.groovy -t templates/json/md/customer-user-products.ftl  site/sample/json/customer-user-products.json
 ```
 
 The resulting file can be viewed with any decent Markdown viewer
@@ -95,8 +95,8 @@ The resulting file can be viewed with any decent Markdown viewer
 Sometimes you have a CSV file which needs to be translated in Markdown or HTML - there are on-line solutions available such as [CSV To Markdown Table Generator](https://donatstudios.com/CsvToMarkdownTable) but having a local solution gives you more flexibility.
 
 ```
-> groovy freemarker-commandLine.groovy -t templates/csv/md/transform.ftl site/sample/csv/contract.csv 
-> groovy freemarker-commandLine.groovy -t templates/csv/html/transform.ftl site/sample/csv/contract.csv 
+> groovy freemarker-cli.groovy -t templates/csv/md/transform.ftl site/sample/csv/contract.csv
+> groovy freemarker-cli.groovy -t templates/csv/html/transform.ftl site/sample/csv/contract.csv
 ```
 
 The FreeMarker template is shown below
@@ -155,7 +155,7 @@ The resulting file actually looks pleasant when compared to raw CSV
 Of course you can also transform a XML document
 
 ```
-> groovy freemarker-commandLine.groovy -t ./templates/xml/txt/recipients.ftl site/sample/xml/recipients.xml 
+> groovy freemarker-cli.groovy -t ./templates/xml/txt/recipients.ftl site/sample/xml/recipients.xml
 ```
 
 using the following template
