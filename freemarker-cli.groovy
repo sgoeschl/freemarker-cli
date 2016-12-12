@@ -96,6 +96,8 @@ class Task {
         dataModel.putAll(createJsonPathDataModel())
         dataModel.putAll(createXmlParserDataModel())
         dataModel.putAll(createFreeMarkerDataModel())
+        dataModel.putAll(createSystemPropertiesDataModel())
+        dataModel.putAll(createEnvironmentDataModel())
         return dataModel
     }
 
@@ -110,6 +112,18 @@ class Task {
         Map<String, Object> dataModel = new HashMap<String, Object>();
         dataModel.put("CSVFormat", csvFormats)
         dataModel.put("CSVParser", new CSVParserBean())
+        return dataModel
+    }
+
+    static Map<String, Object> createSystemPropertiesDataModel() {
+        final Map<String, Object> dataModel = new HashMap<String, Object>();
+        dataModel.put("SystemProperties", System.getProperties())
+        return dataModel
+    }
+
+    static Map<String, Object> createEnvironmentDataModel() {
+        final Map<String, Object> dataModel = new HashMap<String, Object>();
+        dataModel.put("Environment", System.getenv())
         return dataModel
     }
 

@@ -26,3 +26,16 @@ java.math.RoundingMode#UP: ${Enums["java.math.RoundingMode"].UP}
 <#list documents as document>
 Document: name=${document.name} file=${document.file.getAbsolutePath()} length=${document.length} hasFile=${document.hasFile()?c}
 </#list>
+
+7) Access System Properties
+---------------------------------------------------------------------------
+user.name    : ${SystemProperties["user.name"]}
+user.dir     : ${SystemProperties["user.dir"]}
+user.home    : ${SystemProperties["user.home"]}
+java.version : ${SystemProperties["java.version"]}
+
+8) Environment
+---------------------------------------------------------------------------
+<#list Environment as name,value>
+* ${name} ==> ${value}
+</#list>

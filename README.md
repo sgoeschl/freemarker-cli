@@ -21,6 +21,7 @@ Using Velocity actually created some minor issues so I migrated to FreeMarker
 * Support multiple documents for a single transformation
 * Support transformation of CSV files using [Apache Commons CSV](http://commons.apache.org/proper/commons-csv/)
 * Support for reading document content from STDIN to integrate with command line tools
+* Add some commonly useful information such as `System Properties`, `Enviroment Variables`
 
 # 3. Usage
 
@@ -28,10 +29,10 @@ Using Velocity actually created some minor issues so I migrated to FreeMarker
 freemarker-commandLine> groovy freemarker-commandLine.groovy 
 usage: groovy freemarker-commandLine.groovy [options] file[s]
  -h,--help             Usage information
- -l,--language <arg>   Language code
+ -l,--locale <arg>     Locale value
  -o,--output <arg>     Output file
  -t,--template <arg>   Template name
- -v,--verbose          Verbose mode 
+ -v,--verbose          Verbose mode
 ```
 
 # 4. Examples
@@ -51,8 +52,6 @@ or pipe a cURL response
 > curl -s https://api.github.com/users | groovy freemarker-commandLine.groovy -t templates/json/md/github-users.ftl
 
 ### FreeMarker Template
-
-The FreeMarker template 
 
 ```
 <#ftl output_format="plainText" >
