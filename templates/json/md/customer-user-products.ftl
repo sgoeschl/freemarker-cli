@@ -67,5 +67,6 @@ Report generated at ${.now?iso_utc}
 <#list products as product>
 | ${product.id}         | ${product.type!}   | ${product.product!}   | ${product.productI18N!} | ${product.accountnoIban!} | ${product.number!}        | ${product.description!}   | ${product.state!}         |
 </#list>
+
 </#if>
 </#macro>
