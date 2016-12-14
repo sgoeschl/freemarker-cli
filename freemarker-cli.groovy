@@ -273,6 +273,7 @@ class CommandLine {
     boolean hasOutputFile() {
         return this.outputFile != null && !this.outputFile.isEmpty()
     }
+
     private static Locale createLocale(String value) {
         final String[] parts = value.split("_")
         return parts.size() == 1 ? new Locale(parts[0]) : new Locale(parts[0], parts[1])
