@@ -3,6 +3,6 @@
 <#assign paths = json.read("$.paths")>
 ENDPOINT,METHOD
 <#list paths as url,entry>
-    <#assign http_method = entry?keys[0]>
+<#assign http_method = entry?keys[0]>
 ${url},${http_method?upper_case}
 </#list>
