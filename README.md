@@ -16,6 +16,13 @@ So I went with 'Apache Groovy', 'JsonPath' and 'Apache Velocity'
 
 Using Velocity actually created some minor issues so I migrated to FreeMarker
 
+* Velocity 1.7 was released 2010
+* I was painful to get Velocity Tools working 
+* Velocity XML processing support is also painful
+* Spring 4.3 deprecated velocity support which could affect me in the long run
+
+While I love Apache Velocity I decided to give FreeMarker a chance and migrated my [velocity-cli](https://github.com/sgoeschl/velocity-cli) to FreeMarker
+
 # 2. Design Goals
 
 * Support multiple documents for a single transformation
