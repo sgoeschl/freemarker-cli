@@ -7,8 +7,8 @@
 Report generated at ${.now?iso_utc}
 
 <#list users as user>
-    <#assign userAvatarUrl = user.avatar_url>
-    <#assign userHomeUrl = user.html_url>
+<#assign userAvatarUrl = user.avatar_url>
+<#assign userHomeUrl = user.html_url>
 # ${user.login}
 
 | User                                                    | Homepage                                      |

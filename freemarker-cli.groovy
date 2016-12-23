@@ -1,7 +1,8 @@
 #!/usr/bin/env groovy
 @Grapes([
         @Grab(group = "com.jayway.jsonpath", module = "json-path", version = "2.2.0"),
-        @Grab(group = "org.slf4j", module = "slf4j-simple", version = "1.6.1"),
+        @Grab(group = "org.slf4j", module = "slf4j-api", version = "1.7.21"),
+        @Grab(group = "org.slf4j", module = "slf4j-log4j12", version = "1.7.21"),
         @Grab(group = "org.freemarker", module = "freemarker", version = "2.3.25-incubating"),
         @Grab(group = "org.apache.commons", module = "commons-csv", version = "1.4")])
 
@@ -28,29 +29,34 @@ public static void main(String[] args) {
 class Task {
 
     String name
-    CommandLine commandLine
+    CommandLine cli
     static boolean verbose
 
-    Task(String name, CommandLine commandLine) {
+    Task(String name, CommandLine cli) {
         this.name = name
-        this.commandLine = commandLine
-        Locale.setDefault(commandLine.locale)
-        verbose = commandLine.verbose
+        this.cli = cli
+        Locale.setDefault(cli.locale)
+        verbose = cli.verbose
     }
 
     void run() {
         final Writer writer
+        final File outputFile = cli.hasOutputFile() ? new File(cli.outputFile) : null
         final long startTime = System.currentTimeMillis();
-        final List<Document> documents = readDocuments(commandLine)
+        final List<Document> documents = readDocuments(cli)
         final Configuration configuration = createConfiguration()
         final Map<String, Object> dataModel = createDataModel(documents)
-        final Template template = configuration.getTemplate(commandLine.templateName);
+        final Template template = configuration.getTemplate(cli.templateName);
 
         try {
-            writer = createWriter(commandLine.outputFile)
+            writer = createWriter(cli.outputFile)
             template.process(dataModel, writer)
             final long durationInMs = System.currentTimeMillis() - startTime;
             log("Template processing finished in ${durationInMs} ms")
+
+            if(outputFile != null && outputFile.exists()) {
+                log("The ouptut file has ${outputFile.length()} bytes")
+            }
         }
         finally {
             if (writer != null) {
@@ -67,15 +73,13 @@ class Task {
             documents.add(new Document("stdin", null, cli.stdin))
         }
 
-        cli.sourceFiles.each {
-            final File file = new File(it)
+        cli.sourceFiles.eachWithIndex { sourceFile, index ->
+            final File file = new File(sourceFile)
             final String content = file.getText("UTF-8")
             final Document document = new Document(file.getName(), file, content)
-            log("Adding document: ${file.getAbsolutePath()}")
+            log("document[${index}]: ${file.getAbsolutePath()}")
             documents.add(document)
         }
-
-        log("Added the following number of documents: " + documents.size())
 
         return documents
     }
@@ -155,6 +159,7 @@ class Task {
         } else {
             final File outputFile = new File(outputFileName)
             if (outputFile.exists()) {
+                log("Deleting the exiting output file: ${outputFile.getAbsolutePath()}")
                 outputFile.delete()
                 assert !outputFile.exists()
             }
@@ -164,7 +169,7 @@ class Task {
 
     static void log(String message) {
         if (verbose) {
-            System.err.println("[CLI] " + message)
+            System.err.println("[freemarker-cli] " + message)
         }
     }
 }
@@ -263,6 +268,10 @@ class CommandLine {
             System.in.eachLine { line -> buffer.append(line) }
             stdin = buffer.toString()
         }
+    }
+
+    boolean hasOutputFile() {
+        return this.outputFile != null && !this.outputFile.isEmpty()
     }
 
     private static Locale createLocale(String value) {
