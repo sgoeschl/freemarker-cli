@@ -20,7 +20,7 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.xml.sax.InputSource
 
-public static void main(String[] args) {
+static void main(String[] args) {
     final CommandLine cli = new CommandLine(args)
     new Task("freemarker-cli", cli).run()
 }
@@ -35,23 +35,23 @@ class Task {
     Task(String name, CommandLine cli) {
         this.name = name
         this.cli = cli
-        Locale.setDefault(cli.locale)
         verbose = cli.verbose
+        Locale.setDefault(cli.locale)
     }
 
     void run() {
         final Writer writer
         final File outputFile = cli.hasOutputFile() ? new File(cli.outputFile) : null
-        final long startTime = System.currentTimeMillis();
+        final long startTime = System.currentTimeMillis()
         final List<Document> documents = readDocuments(cli)
-        final Configuration configuration = createConfiguration()
+        final Configuration configuration = createConfiguration(cli.baseDir)
         final Map<String, Object> dataModel = createDataModel(documents)
-        final Template template = configuration.getTemplate(cli.templateName);
+        final Template template = configuration.getTemplate(cli.templateName)
 
         try {
             writer = createWriter(cli.outputFile)
             template.process(dataModel, writer)
-            final long durationInMs = System.currentTimeMillis() - startTime;
+            final long durationInMs = System.currentTimeMillis() - startTime
             log("Template processing finished in ${durationInMs} ms")
 
             if(outputFile != null && outputFile.exists()) {
@@ -84,17 +84,17 @@ class Task {
         return documents
     }
 
-    static Configuration createConfiguration() {
-        final Configuration configuration = new Configuration(Configuration.VERSION_2_3_25);
-        configuration.setDirectoryForTemplateLoading(new File("."));
-        configuration.setDefaultEncoding("UTF-8");
+    static Configuration createConfiguration(File baseDir) {
+        final Configuration configuration = new Configuration(Configuration.VERSION_2_3_25)
+        configuration.setDirectoryForTemplateLoading(baseDir)
+        configuration.setDefaultEncoding("UTF-8")
         configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER)
-        configuration.setLogTemplateExceptions(false);
+        configuration.setLogTemplateExceptions(false)
         return configuration
     }
 
     static Map<String, Object> createDataModel(List<Document> documents) {
-        final Map<String, Object> dataModel = new HashMap<String, Object>();
+        final Map<String, Object> dataModel = new HashMap<String, Object>()
         dataModel.put("documents", documents)
         dataModel.putAll(createCommonsCsvDataModel())
         dataModel.putAll(createJsonPathDataModel())
@@ -106,56 +106,56 @@ class Task {
     }
 
     static Map<String, Object> createCommonsCsvDataModel() {
-        final Map<String, CSVFormat> csvFormats = new HashMap<String, CSVFormat>();
+        final Map<String, CSVFormat> csvFormats = new HashMap<String, CSVFormat>()
         csvFormats.put("DEFAULT", CSVFormat.DEFAULT)
         csvFormats.put("EXCEL", CSVFormat.EXCEL)
         csvFormats.put("MYSQL", CSVFormat.MYSQL)
         csvFormats.put("RFC4180", CSVFormat.RFC4180)
         csvFormats.put("TDF", CSVFormat.TDF)
 
-        Map<String, Object> dataModel = new HashMap<String, Object>();
+        Map<String, Object> dataModel = new HashMap<String, Object>()
         dataModel.put("CSVFormat", csvFormats)
         dataModel.put("CSVParser", new CSVParserBean())
         return dataModel
     }
 
     static Map<String, Object> createSystemPropertiesDataModel() {
-        final Map<String, Object> dataModel = new HashMap<String, Object>();
+        final Map<String, Object> dataModel = new HashMap<String, Object>()
         dataModel.put("SystemProperties", System.getProperties())
         return dataModel
     }
 
     static Map<String, Object> createEnvironmentDataModel() {
-        final Map<String, Object> dataModel = new HashMap<String, Object>();
+        final Map<String, Object> dataModel = new HashMap<String, Object>()
         dataModel.put("Environment", System.getenv())
         return dataModel
     }
 
     static Map<String, Object> createJsonPathDataModel() {
-        final Map<String, Object> dataModel = new HashMap<String, Object>();
+        final Map<String, Object> dataModel = new HashMap<String, Object>()
         dataModel.put("JsonPath", new JsonPathBean())
         return dataModel
     }
 
     static Map<String, Object> createXmlParserDataModel() {
-        final Map<String, Object> dataModel = new HashMap<String, Object>();
+        final Map<String, Object> dataModel = new HashMap<String, Object>()
         dataModel.put("XmlParser", new XmlParserBean())
         return dataModel
     }
 
     static Map<String, Object> createFreeMarkerDataModel() {
-        final Map<String, Object> dataModel = new HashMap<String, Object>();
-        final BeansWrapperBuilder builder = new BeansWrapperBuilder(Configuration.VERSION_2_3_25);
-        final BeansWrapper beansWrapper = builder.build();
-        dataModel.put("ObjectConstructor", new ObjectConstructor());
-        dataModel.put("Statics", beansWrapper.getStaticModels());
-        dataModel.put("Enums", beansWrapper.getEnumModels());
+        final Map<String, Object> dataModel = new HashMap<String, Object>()
+        final BeansWrapperBuilder builder = new BeansWrapperBuilder(Configuration.VERSION_2_3_25)
+        final BeansWrapper beansWrapper = builder.build()
+        dataModel.put("ObjectConstructor", new ObjectConstructor())
+        dataModel.put("Statics", beansWrapper.getStaticModels())
+        dataModel.put("Enums", beansWrapper.getEnumModels())
         return dataModel
     }
 
     static Writer createWriter(String outputFileName) {
         if (outputFileName == null || outputFileName.isEmpty()) {
-            new BufferedWriter(new OutputStreamWriter(System.out));
+            new BufferedWriter(new OutputStreamWriter(System.out))
         } else {
             final File outputFile = new File(outputFileName)
             if (outputFile.exists()) {
@@ -163,7 +163,7 @@ class Task {
                 outputFile.delete()
                 assert !outputFile.exists()
             }
-            new BufferedWriter(new FileWriter(outputFile));
+            new BufferedWriter(new FileWriter(outputFile))
         }
     }
 
@@ -174,12 +174,16 @@ class Task {
     }
 }
 
+/****************************************************************************/
+/** FreeMarker Beans                                                        */
+/****************************************************************************/
+
 @ToString(includeNames = true)
 class Document {
     String name
     File file
     String content
-    long length;
+    long length
 
     Document(String name, File file, String content) {
         this.name = name
@@ -188,22 +192,22 @@ class Document {
         this.length = content != null ? content.length() : -1
     }
 
-    public boolean hasFile() {
-        return file != null;
+    boolean hasFile() {
+        return file != null
     }
 }
 
 @ToString(includeNames = true)
 class CSVParserBean {
-    public CSVParser parse(String string, CSVFormat format) {
-        return CSVParser.parse(string, format);
+    CSVParser parse(String string, CSVFormat format) {
+        return CSVParser.parse(string, format)
 
     }
 }
 
 @ToString(includeNames = true)
 class JsonPathBean {
-    public DocumentContext parse(String string) {
+    DocumentContext parse(String string) {
         return JsonPath.parse(string)
 
     }
@@ -211,7 +215,7 @@ class JsonPathBean {
 
 @ToString(includeNames = true)
 class XmlParserBean {
-    public NodeModel parse(String string) {
+    NodeModel parse(String string) {
         final InputSource inputSource = new InputSource(new StringReader(string))
         return NodeModel.parse(inputSource)
     }
@@ -219,7 +223,8 @@ class XmlParserBean {
 
 @ToString(includeNames = true, excludes = "stdin")
 class CommandLine {
-    Locale locale = Locale.getDefault();
+    File baseDir
+    Locale locale = Locale.getDefault()
     String templateName = ''
     boolean verbose = false
     String outputFile
@@ -230,6 +235,7 @@ class CommandLine {
         def cli = new CliBuilder(usage: 'groovy freemarker-cli.groovy [options] file[s]', stopAtNonOption: false)
         cli.h(longOpt: 'help', 'Usage information', required: false)
         cli.v(longOpt: 'verbose', 'Verbose mode', required: false)
+        cli.b(longOpt: 'basedir', 'Base directory to resolve template files', required: false, args: 1)
         cli.o(longOpt: 'output', 'Output file', required: false, args: 1)
         cli.t(longOpt: 'template', 'Template name', required: true, args: 1)
         cli.l(longOpt: 'locale', 'Locale value', required: false, args: 1)
@@ -245,12 +251,19 @@ class CommandLine {
         }
 
         if (opt.h) {
-            cli.usage();
+            cli.usage()
             System.exit(0)
         }
 
         if (opt.t) {
             this.templateName = opt.t
+        }
+
+        if (opt.b) {
+            this.baseDir = new File((String) opt.b)
+        }
+        else {
+            this.baseDir = getScriptDirectory()
         }
 
         if (opt.o) {
@@ -278,4 +291,9 @@ class CommandLine {
         final String[] parts = value.split("_")
         return parts.size() == 1 ? new Locale(parts[0]) : new Locale(parts[0], parts[1])
     }
+
+    private File getScriptDirectory() {
+        new File(getClass().protectionDomain.codeSource.location.path).getParentFile()
+    }
+
 }

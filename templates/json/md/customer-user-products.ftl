@@ -1,11 +1,16 @@
 <#ftl output_format="plainText" >
+<#assign sourceDocumentName = documents[0].name>
 <#assign json = JsonPath.parse(documents[0].content)>
 <#assign users = json.read("$[*]")>
 <#assign userDetails = json.read("$[*].user")>
 <#--------------------------------------------------------------------------->
 # 1. Overview
 
-Report generated at ${.now?iso_utc}
+| Parameter                     | Value                                     |
+|:------------------------------|:------------------------------------------|
+| Source Document Name          | ${sourceDocumentName}                     |
+| Report Generation Date        | ${.now?iso_utc}                           |
+| Report User Name              | ${SystemProperties["user.name"]}          |
 
 # 2. Users
 

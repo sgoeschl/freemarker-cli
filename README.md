@@ -220,6 +220,8 @@ There is a `demo.ftl` which shows some advanced FreeMarker functionality
 * Access System properties
 * Access Environment variables
 
+> groovy freemarker-cli.groovy -t ./templates/demo.ftl README.md 
+
 ```
 1) Language-specific Date Format
 ---------------------------------------------------------------------------
@@ -264,12 +266,28 @@ java.version : ${SystemProperties["java.version"]}
 </#list>
 ```
 
+# 5. Tips & Tricks
 
+## 5.1 Template Base Directory
 
+When doing some ad-hoc scripting it is useful to rely on a base directory to resolve the FTL templates
 
+* As a default the FTL templates are resolved relative to the script directory
+* The caller can provide a `-b` or `--basedir` command line parameter
 
+> groovy freemarker-cli/freemarker-cli.groovy -t templates/json/html/customer-user-products.ftl freemarker-cli/site/sample/json/customer-user-products.jso
 
+## 5.2 Using Pipes
 
+When doing ad-hoc scripting it useful to pipe the output of one command directly into the Groovy script
+
+> cat site/sample/json/customer-user-products.json | groovy freemarker-cli.groovy -t ./templates/json/html/customer-user-products.ftl
+
+## 5.3 Executable Groovy Scripts
+
+When you run on Unix and are tired of always typing `groovy` there is light on the end of the tunnel - assuming that the `freemarker-cli.groovy` is executable you can use
+
+> ./freemarker-cli.groovy -t templates/json/html/customer-user-products.ftl site/sample/json/customer-user-products.json 
 
 
 
