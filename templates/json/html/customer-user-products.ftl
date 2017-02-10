@@ -17,7 +17,7 @@
     <h1>WebAPI Test User Report</h1>
     <hr/>
 
-    <h2>1. Overview</h2>
+    <h2>1. Report Coordinates</h2>
     <hr/>
     <table class="table table-striped">
         <tr>
@@ -25,16 +25,16 @@
             <th>Value</th>
         </tr>
         <tr>
-            <td>Name</td>
-            <td>${sourceDocumentName}</td>
+            <td>Report Description</td>
+            <td>${ReportData["description"]}</td>
         </tr>
         <tr>
             <td>Report Generation Date</td>
             <td>${.now?iso_utc}</td>
         </tr>
         <tr>
-            <td>User Name</td>
-            <td>${SystemProperties["user.name"]}</td>
+            <td>Source Document Name</td>
+            <td>${sourceDocumentName}</td>
         </tr>
     </table>
 

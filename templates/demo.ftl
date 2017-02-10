@@ -34,7 +34,13 @@ user.dir     : ${SystemProperties["user.dir"]}
 user.home    : ${SystemProperties["user.home"]}
 java.version : ${SystemProperties["java.version"]}
 
-8) Environment
+7) Report Data
+---------------------------------------------------------------------------
+description  : ${ReportData["description"]}
+host         : ${ReportData["host"]}
+user         : ${ReportData["user"]}
+
+9) Environment
 ---------------------------------------------------------------------------
 <#list Environment as name,value>
 * ${name} ==> ${value}

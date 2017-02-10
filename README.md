@@ -32,13 +32,14 @@ While I love Apache Velocity I decided to give FreeMarker a chance and migrated 
 
 # 3. Usage
 
-```
+```text
 > groovy freemarker-cli.groovy
 usage: groovy freemarker-cli.groovy [options] file[s]
+ -b,--basedir <arg>    Base directory to resolve template files
  -h,--help             Usage information
- -l,--locale <arg>     Locale value
+ -l,--locale <arg>     Locale used for the JVM
  -o,--output <arg>     Output file
- -t,--template <arg>   Template name
+ -t,--template <arg>   FreeMarker template file name
  -v,--verbose          Verbose mode
 ```
 
@@ -96,6 +97,10 @@ For a customer I created a Groovy script to fetch all products for a list of use
 The resulting file can be viewed with any decent Markdown viewer
 
 ![Customer User Products](./site/image/customer-user-products.png "Customer User Products")
+
+Since QA people are not familiar with Markdown and have no Markdown viewer installed I also created a very similar HTML representaton
+
+> groovy freemarker-cli.groovy -t templates/json/html/customer-user-products.ftl  site/sample/json/customer-user-products.json
 
 ## 4.3 CSV to Markdown Transformation
 
@@ -210,7 +215,34 @@ Sincere salutations,
 D. H.
 ```
 
-## 4.5 Using Advanced FreeMarker Features
+## 4.5 Transform JSON To CSV
+
+One day I was asked a to prepare a CSV files containind REST endpoints described by Swagger - technically this is a JSON to CSV transformation. Of course I could create that CSV manually but writing a FTL template doing that was simply more fun and might save some time in the future
+
+```
+<#ftl output_format="plainText">
+<#assign json = JsonPath.parse(documents[0].content)>
+<#assign paths = json.read("$.paths")>
+ENDPOINT,METHOD
+<#list paths as url,entry>
+<#assign http_method = entry?keys[0]>
+${url},${http_method?upper_case}
+</#list>
+```
+
+Invoking the FTL template
+
+> groovy freemarker-cli.groovy -t templates/json/csv/swagger-endpoints.ftl site/sample/json/swagger-spec.json 
+
+gives you
+
+```text
+ENDPOINT,METHOD
+/pets,GET
+/pets/{id},GET
+```
+
+## 4.6 Using Advanced FreeMarker Features
 
 There is a `demo.ftl` which shows some advanced FreeMarker functionality
 
