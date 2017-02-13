@@ -96,11 +96,13 @@ For a customer I created a Groovy script to fetch all products for a list of use
 
 The resulting file can be viewed with any decent Markdown viewer
 
-![Customer User Products](./site/image/customer-user-products.png "Customer User Products")
+![Customer User Products Markdown](./site/image/customer-user-products-md.png "Customer User Products Markdown")
 
 Since QA people are not familiar with Markdown and have no Markdown viewer installed I also created a very similar HTML representaton
 
 > groovy freemarker-cli.groovy -t templates/json/html/customer-user-products.ftl  site/sample/json/customer-user-products.json
+
+![Customer User Products HTML](./site/image/customer-user-products-html.png "Customer User Products HTML")
 
 ## 4.3 CSV to Markdown Transformation
 
