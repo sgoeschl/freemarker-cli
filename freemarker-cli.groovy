@@ -279,9 +279,9 @@ class CommandLine {
         def cli = new CliBuilder(usage: 'groovy freemarker-cli.groovy [options] file[s]', stopAtNonOption: false)
         cli.h(longOpt: 'help', 'Usage information', required: false)
         cli.v(longOpt: 'verbose', 'Verbose mode', required: false)
-        cli.b(longOpt: 'basedir', 'Base directory to resolve template files', required: false, args: 1)
-        cli.d(longOpt: 'description', 'Report description', required: false, args: 1)
-        cli.o(longOpt: 'output', 'Output file', required: false, args: 1)
+        cli.b(longOpt: 'basedir', 'Base directory to resolve FreeMarker templates', required: false, args: 1)
+        cli.d(longOpt: 'description', 'Custom report description', required: false, args: 1)
+        cli.o(longOpt: 'output', 'Generated output file', required: false, args: 1)
         cli.t(longOpt: 'template', 'Template name', required: true, args: 1)
         cli.l(longOpt: 'locale', 'Locale value', required: false, args: 1)
 

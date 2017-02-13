@@ -35,12 +35,13 @@ While I love Apache Velocity I decided to give FreeMarker a chance and migrated 
 ```text
 > groovy freemarker-cli.groovy
 usage: groovy freemarker-cli.groovy [options] file[s]
- -b,--basedir <arg>    Base directory to resolve template files
- -h,--help             Usage information
- -l,--locale <arg>     Locale used for the JVM
- -o,--output <arg>     Output file
- -t,--template <arg>   FreeMarker template file name
- -v,--verbose          Verbose mode
+ -b,--basedir <arg>       Base directory to resolve FreeMarker templates
+ -d,--description <arg>   Custom report description
+ -h,--help                Usage information
+ -l,--locale <arg>        Locale value
+ -o,--output <arg>        Generated output file
+ -t,--template <arg>      Template name
+ -v,--verbose             Verbose mode
 ```
 
 # 4. Examples
@@ -293,7 +294,13 @@ user.dir     : ${SystemProperties["user.dir"]}
 user.home    : ${SystemProperties["user.home"]}
 java.version : ${SystemProperties["java.version"]}
 
-8) Environment
+7) Report Data
+---------------------------------------------------------------------------
+description  : ${ReportData["description"]}
+host         : ${ReportData["host"]}
+user         : ${ReportData["user"]}
+
+9) Environment
 ---------------------------------------------------------------------------
 <#list Environment as name,value>
 * ${name} ==> ${value}
