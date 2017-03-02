@@ -49,7 +49,6 @@ static void main(String[] args) {
 }
 
 class Task {
-
     final String name
     final CommandLine cli
     static boolean verbose
@@ -212,7 +211,7 @@ class Task {
         try {
             InetAddress.getLocalHost().getHostName()
         }
-        catch (UnknownHostException ex) {
+        catch (UnknownHostException ignored) {
             "localhost"
         }
     }
