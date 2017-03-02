@@ -37,12 +37,13 @@ While I love Apache Velocity I decided to give FreeMarker a chance and migrated 
 ```text
 > groovy freemarker-cli.groovy
 usage: groovy freemarker-cli.groovy [options] file[s]
- -b,--basedir <arg>    Base directory to resolve template files
- -h,--help             Usage information
- -l,--locale <arg>     Locale used for the JVM
- -o,--output <arg>     Output file
- -t,--template <arg>   FreeMarker template file name
- -v,--verbose          Verbose mode
+ -b,--basedir <arg>       Base directory to resolve FreeMarker templates
+ -d,--description <arg>   Custom report description
+ -h,--help                Usage information
+ -l,--locale <arg>        Locale value
+ -o,--output <arg>        Generated output file
+ -t,--template <arg>      Template name
+ -v,--verbose             Verbose mode
 ```
 
 # 4. Examples
@@ -98,11 +99,13 @@ For a customer I created a Groovy script to fetch all products for a list of use
 
 The resulting file can be viewed with any decent Markdown viewer
 
-![Customer User Products](./site/image/customer-user-products.png "Customer User Products")
+![Customer User Products Markdown](./site/image/customer-user-products-md.png "Customer User Products Markdown")
 
-Since QA people are not familiar with Markdown and have no Markdown viewer installed I also created a very similar HTML representaton
+Since many of our QA people have no Markdown viewer installed I also created a very similar HTML representaton
 
 > groovy freemarker-cli.groovy -t templates/json/html/customer-user-products.ftl  site/sample/json/customer-user-products.json
+
+![Customer User Products HTML](./site/image/customer-user-products-html.png "Customer User Products HTML")
 
 ## 4.3 CSV to Markdown Transformation
 
@@ -293,7 +296,13 @@ user.dir     : ${SystemProperties["user.dir"]}
 user.home    : ${SystemProperties["user.home"]}
 java.version : ${SystemProperties["java.version"]}
 
-8) Environment
+7) Report Data
+---------------------------------------------------------------------------
+description  : ${ReportData["description"]}
+host         : ${ReportData["host"]}
+user         : ${ReportData["user"]}
+
+9) Environment
 ---------------------------------------------------------------------------
 <#list Environment as name,value>
 * ${name} ==> ${value}

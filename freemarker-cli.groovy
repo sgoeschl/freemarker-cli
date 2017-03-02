@@ -1,4 +1,18 @@
 #!/usr/bin/env groovy
+import com.jayway.jsonpath.DocumentContext
+import com.jayway.jsonpath.JsonPath
+import freemarker.ext.beans.BeansWrapper
+import freemarker.ext.beans.BeansWrapperBuilder
+import freemarker.ext.dom.NodeModel
+import freemarker.template.Configuration
+import freemarker.template.Template
+import freemarker.template.TemplateExceptionHandler
+import freemarker.template.utility.ObjectConstructor
+import groovy.transform.ToString
+import org.apache.commons.csv.CSVFormat
+import org.apache.commons.csv.CSVParser
+import org.xml.sax.InputSource
+
 @Grapes([
         @Grab(group = "com.jayway.jsonpath", module = "json-path", version = "2.2.0"),
         @Grab(group = "org.slf4j", module = "slf4j-api", version = "1.7.21"),
@@ -22,19 +36,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.jayway.jsonpath.DocumentContext
-import com.jayway.jsonpath.JsonPath
-import freemarker.ext.beans.BeansWrapper
-import freemarker.ext.beans.BeansWrapperBuilder
-import freemarker.ext.dom.NodeModel
-import freemarker.template.Configuration
-import freemarker.template.Template
-import freemarker.template.TemplateExceptionHandler
-import freemarker.template.utility.ObjectConstructor
-import groovy.transform.ToString
-import org.apache.commons.csv.CSVFormat
-import org.apache.commons.csv.CSVParser
-import org.xml.sax.InputSource
+import java.text.SimpleDateFormat
 
 static void main(String[] args) {
     final CommandLine cli = new CommandLine(args)
@@ -175,6 +177,7 @@ class Task {
         properties.put("host", getHostName())
         properties.put("description", description)
         properties.put("user", System.getProperty("user.name", "unknown"))
+        properties.put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date()))
         final Map<String, Object> dataModel = new HashMap<String, Object>()
         dataModel.put("ReportData", properties)
         return dataModel
@@ -195,12 +198,10 @@ class Task {
     }
 
     private static String getHostName() {
-        try
-        {
+        try {
             InetAddress.getLocalHost().getHostName()
         }
-        catch (UnknownHostException ex)
-        {
+        catch (UnknownHostException ex) {
             "localhost"
         }
     }
@@ -278,9 +279,9 @@ class CommandLine {
         def cli = new CliBuilder(usage: 'groovy freemarker-cli.groovy [options] file[s]', stopAtNonOption: false)
         cli.h(longOpt: 'help', 'Usage information', required: false)
         cli.v(longOpt: 'verbose', 'Verbose mode', required: false)
-        cli.b(longOpt: 'basedir', 'Base directory to resolve template files', required: false, args: 1)
-        cli.d(longOpt: 'description', 'Report description', required: false, args: 1)
-        cli.o(longOpt: 'output', 'Output file', required: false, args: 1)
+        cli.b(longOpt: 'basedir', 'Base directory to resolve FreeMarker templates', required: false, args: 1)
+        cli.d(longOpt: 'description', 'Custom report description', required: false, args: 1)
+        cli.o(longOpt: 'output', 'Generated output file', required: false, args: 1)
         cli.t(longOpt: 'template', 'Template name', required: true, args: 1)
         cli.l(longOpt: 'locale', 'Locale value', required: false, args: 1)
 
@@ -299,7 +300,7 @@ class CommandLine {
             System.exit(0)
         }
 
-        if(opt.d) {
+        if (opt.d) {
             this.description = opt.d
         }
 

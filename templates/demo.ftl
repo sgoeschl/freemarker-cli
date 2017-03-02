@@ -39,6 +39,7 @@ java.version : ${SystemProperties["java.version"]}
 description  : ${ReportData["description"]}
 host         : ${ReportData["host"]}
 user         : ${ReportData["user"]}
+date         : ${ReportData["date"]}
 
 9) Environment
 ---------------------------------------------------------------------------

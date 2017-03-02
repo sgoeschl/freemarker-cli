@@ -3,6 +3,8 @@
 <#assign json = JsonPath.parse(documents[0].content)>
 <#assign users = json.read("$[*]")>
 <#assign userDetails = json.read("$[*].user")>
+<#assign description = ReportData["description"]>
+<#assign date =  ReportData["date"]>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
 <html>
@@ -14,42 +16,21 @@
 </head>
 <body>
 <div class="container-fluid">
-    <h1>WebAPI Test User Report</h1>
+    <h1>WebAPI Test User Report <small>${description}, ${date}</small></h1>
     <hr/>
 
-    <h2>1. Report Coordinates</h2>
-    <hr/>
-    <table class="table table-striped">
-        <tr>
-            <th>Parameter</th>
-            <th>Value</th>
-        </tr>
-        <tr>
-            <td>Report Description</td>
-            <td>${ReportData["description"]}</td>
-        </tr>
-        <tr>
-            <td>Report Generation Date</td>
-            <td>${.now?iso_utc}</td>
-        </tr>
-        <tr>
-            <td>Source Document Name</td>
-            <td>${sourceDocumentName}</td>
-        </tr>
-    </table>
-
-    <h2>2. Users</h2>
+    <h2>1. Users</h2>
     <hr/>
     <@writeTestUserOverview users=userDetails/>
 
-    <h2>3. User Products Overview</h2>
+    <h2>2. User Products Overview</h2>
     <hr/>
     <@writeTestUserDetails users=users/>
 
-    <h2>4. User Products</h2>
+    <h2>3. User Products</h2>
     <#list users as user>
     <hr/>
-    <h3><a id="${user.user.disposerId}">4.${user?counter} ${user.user.name}</a></h3>
+    <h3><a id="${user.user.disposerId}">3.${user?counter} ${user.user.name}</a></h3>
     <@writeProducts title="Accounts" products=user.accounts/>
     <@writeProducts title="Cards" products=user.cards/>
     <@writeProducts title="Building Saving Plans" products=user.buildings/>
