@@ -1,8 +1,6 @@
 <#ftl output_format="HTML" >
 <#assign sourceDocumentName = documents[0].name>
 <#assign workbook = ExcelParser.parseFile(documents[0].file)>
-<#assign sheet = workbook.getSheetAt(0)>
-<#assign rows = ExcelParser.parseSheet(sheet)>
 <#assign date =  ReportData["date"]>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
@@ -16,11 +14,10 @@
 <body>
 <div class="container-fluid">
     <h1>Excel Test <small>${sourceDocumentName}, ${date}</small></h1>
-<@writeSheet sheet=workbook.getSheetAt(0)/>
+    <@writeSheet sheet=workbook.getSheetAt(0)/>
 </div>
 </body>
 </html>
-
 <#--------------------------------------------------------------------------->
 <#-- writeSheet                                                            -->
 <#--------------------------------------------------------------------------->
@@ -29,7 +26,6 @@
     <h2>${sheet.getSheetName()}</h2>
     <@writeRows rows=rows/>
 </#macro>
-
 <#--------------------------------------------------------------------------->
 <#-- writeRow                                                              -->
 <#--------------------------------------------------------------------------->

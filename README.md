@@ -262,8 +262,6 @@ The provided FTL transforms a known Excel document structure into a HTML documen
 <#ftl output_format="HTML" >
 <#assign sourceDocumentName = documents[0].name>
 <#assign workbook = ExcelParser.parseFile(documents[0].file)>
-<#assign sheet = workbook.getSheetAt(0)>
-<#assign rows = ExcelParser.parseSheet(sheet)>
 <#assign date =  ReportData["date"]>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
@@ -277,11 +275,10 @@ The provided FTL transforms a known Excel document structure into a HTML documen
 <body>
 <div class="container-fluid">
     <h1>Excel Test <small>${sourceDocumentName}, ${date}</small></h1>
-<@writeSheet sheet=workbook.getSheetAt(0)/>
+    <@writeSheet sheet=workbook.getSheetAt(0)/>
 </div>
 </body>
 </html>
-
 <#--------------------------------------------------------------------------->
 <#-- writeSheet                                                            -->
 <#--------------------------------------------------------------------------->
@@ -290,7 +287,6 @@ The provided FTL transforms a known Excel document structure into a HTML documen
     <h2>${sheet.getSheetName()}</h2>
     <@writeRows rows=rows/>
 </#macro>
-
 <#--------------------------------------------------------------------------->
 <#-- writeRow                                                              -->
 <#--------------------------------------------------------------------------->
