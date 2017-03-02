@@ -1,28 +1,4 @@
 #!/usr/bin/env groovy
-import com.jayway.jsonpath.DocumentContext
-import com.jayway.jsonpath.JsonPath
-import freemarker.ext.beans.BeansWrapper
-import freemarker.ext.beans.BeansWrapperBuilder
-import freemarker.ext.dom.NodeModel
-import freemarker.template.Configuration
-import freemarker.template.Template
-import freemarker.template.TemplateExceptionHandler
-import freemarker.template.utility.ObjectConstructor
-import groovy.transform.ToString
-import org.apache.commons.csv.CSVFormat
-import org.apache.commons.csv.CSVParser
-import org.apache.poi.ss.usermodel.*
-import org.xml.sax.InputSource
-
-@Grapes([
-        @Grab(group = "org.apache.poi", module = "poi", version = "3.15"),
-        @Grab(group = "org.apache.poi", module = "poi-ooxml", version = "3.15"),
-        @Grab(group = "org.apache.poi", module = "poi-ooxml-schemas", version = "3.15"),
-        @Grab(group = "com.jayway.jsonpath", module = "json-path", version = "2.2.0"),
-        @Grab(group = "org.slf4j", module = "slf4j-api", version = "1.7.21"),
-        @Grab(group = "org.slf4j", module = "slf4j-log4j12", version = "1.7.21"),
-        @Grab(group = "org.freemarker", module = "freemarker", version = "2.3.25-incubating"),
-        @Grab(group = "org.apache.commons", module = "commons-csv", version = "1.4")])
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -40,6 +16,31 @@ import org.xml.sax.InputSource
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+@Grapes([
+        @Grab(group = "org.apache.poi", module = "poi", version = "3.15"),
+        @Grab(group = "org.apache.poi", module = "poi-ooxml", version = "3.15"),
+        @Grab(group = "org.apache.poi", module = "poi-ooxml-schemas", version = "3.15"),
+        @Grab(group = "com.jayway.jsonpath", module = "json-path", version = "2.2.0"),
+        @Grab(group = "org.slf4j", module = "slf4j-api", version = "1.7.21"),
+        @Grab(group = "org.slf4j", module = "slf4j-log4j12", version = "1.7.21"),
+        @Grab(group = "org.freemarker", module = "freemarker", version = "2.3.25-incubating"),
+        @Grab(group = "org.apache.commons", module = "commons-csv", version = "1.4")])
+
+import com.jayway.jsonpath.DocumentContext
+import com.jayway.jsonpath.JsonPath
+import freemarker.ext.beans.BeansWrapper
+import freemarker.ext.beans.BeansWrapperBuilder
+import freemarker.ext.dom.NodeModel
+import freemarker.template.Configuration
+import freemarker.template.Template
+import freemarker.template.TemplateExceptionHandler
+import freemarker.template.utility.ObjectConstructor
+import org.apache.commons.csv.CSVFormat
+import org.apache.commons.csv.CSVParser
+import org.apache.poi.ss.usermodel.*
+import org.xml.sax.InputSource
+
 import java.text.SimpleDateFormat
 
 static void main(String[] args) {
@@ -47,7 +48,6 @@ static void main(String[] args) {
     new Task("freemarker-cli", cli).run()
 }
 
-@ToString(includeNames = true)
 class Task {
 
     final String name
@@ -228,7 +228,6 @@ class Task {
 // Objects exposed in FreeMarker templates
 // ==========================================================================
 
-@ToString(includeNames = true)
 class Document {
     String name
     File file
@@ -247,7 +246,6 @@ class Document {
     }
 }
 
-@ToString(includeNames = true)
 class CSVParserBean {
     public CSVParser parse(String string, CSVFormat format) {
         return CSVParser.parse(string, format)
@@ -255,7 +253,6 @@ class CSVParserBean {
     }
 }
 
-@ToString(includeNames = true)
 class JsonPathBean {
     public DocumentContext parse(String string) {
         return JsonPath.parse(string)
@@ -263,7 +260,6 @@ class JsonPathBean {
     }
 }
 
-@ToString(includeNames = true)
 class XmlParserBean {
     public NodeModel parse(String string) {
         final InputSource inputSource = new InputSource(new StringReader(string))
@@ -271,7 +267,6 @@ class XmlParserBean {
     }
 }
 
-@ToString(includeNames = true)
 class ExcelParserBean {
     public Workbook parseFile(File sourceFile) {
         return WorkbookFactory.create(sourceFile)
@@ -301,7 +296,6 @@ class ExcelParserBean {
 // CLI
 // ==========================================================================
 
-@ToString(includeNames = true, excludes = "stdin")
 class CommandLine {
     File baseDir
     String description = ""
