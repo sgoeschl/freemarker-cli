@@ -11,9 +11,13 @@ import freemarker.template.utility.ObjectConstructor
 import groovy.transform.ToString
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
+import org.apache.poi.ss.usermodel.*
 import org.xml.sax.InputSource
 
 @Grapes([
+        @Grab(group = "org.apache.poi", module = "poi", version = "3.15"),
+        @Grab(group = "org.apache.poi", module = "poi-ooxml", version = "3.15"),
+        @Grab(group = "org.apache.poi", module = "poi-ooxml-schemas", version = "3.15"),
         @Grab(group = "com.jayway.jsonpath", module = "json-path", version = "2.2.0"),
         @Grab(group = "org.slf4j", module = "slf4j-api", version = "1.7.21"),
         @Grab(group = "org.slf4j", module = "slf4j-log4j12", version = "1.7.21"),
@@ -117,6 +121,7 @@ class Task {
         dataModel.putAll(createCommonsCsvDataModel())
         dataModel.putAll(createJsonPathDataModel())
         dataModel.putAll(createXmlParserDataModel())
+        dataModel.putAll(createExcelParserDataModel())
         dataModel.putAll(createFreeMarkerDataModel())
         dataModel.putAll(createSystemPropertiesDataModel())
         dataModel.putAll(createEnvironmentDataModel())
@@ -159,6 +164,12 @@ class Task {
     private static Map<String, Object> createXmlParserDataModel() {
         final Map<String, Object> dataModel = new HashMap<String, Object>()
         dataModel.put("XmlParser", new XmlParserBean())
+        return dataModel
+    }
+
+    private static Map<String, Object> createExcelParserDataModel() {
+        final Map<String, Object> dataModel = new HashMap<String, Object>()
+        dataModel.put("ExcelParser", new ExcelParserBean())
         return dataModel
     }
 
@@ -257,6 +268,32 @@ class XmlParserBean {
     public NodeModel parse(String string) {
         final InputSource inputSource = new InputSource(new StringReader(string))
         return NodeModel.parse(inputSource)
+    }
+}
+
+@ToString(includeNames = true)
+class ExcelParserBean {
+    public Workbook parseFile(File sourceFile) {
+        return WorkbookFactory.create(sourceFile)
+    }
+
+    public List<List<Object>> parseSheet(Sheet sheet) {
+        DataFormatter formatter = new DataFormatter()
+        Iterator<Row> iterator = sheet.iterator()
+        List<List<Object>> result = new ArrayList<>()
+
+        while (iterator.hasNext()) {
+            Row nextRow = iterator.next()
+            List<Object> currRowValues = new ArrayList<>()
+            Iterator<Cell> cellIterator = nextRow.cellIterator()
+            result.add(currRowValues)
+            while (cellIterator.hasNext()) {
+                Cell cell = cellIterator.next()
+                currRowValues.add(formatter.formatCellValue(cell))
+            }
+        }
+
+        return result
     }
 }
 

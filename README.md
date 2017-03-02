@@ -26,8 +26,9 @@ While I love Apache Velocity I decided to give FreeMarker a chance and migrated 
 # 2. Design Goals
 
 * Support multiple documents for a single transformation
-* Support transformation of CSV files using [Apache Commons CSV](http://commons.apache.org/proper/commons-csv/)
+* Support transformation of CSV files using [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/)
 * Support transformation of JSON using [Jayway's JSONPath](https://github.com/jayway/JsonPath)
+* Support transformation of Excel using [Apache POI](https://poi.apache.org)
 * XML is supported by FreeMarker anyway - see http://freemarker.org/docs/xgui.html
 * Support for reading document content from STDIN to integrate with command line tools
 * Add some commonly useful information such as `System Properties`, `Enviroment Variables`
@@ -86,8 +87,7 @@ Report generated at ${.now?iso_utc}
 
 creates the following output
 
-![Github Users](./site/image/github.png "Github Users")
-
+![](./site/image/github.png)
 
 ## 4.2 Markdown Test User Documentation
 
@@ -247,7 +247,89 @@ ENDPOINT,METHOD
 /pets/{id},GET
 ```
 
-## 4.6 Using Advanced FreeMarker Features
+## 4.6 Transforming Excel Documents
+
+Apache POI supports XLS and XLSX documents. 
+
+```text
+> groovy freemarker-cli.groovy -t templates/excel/html/test.ftl site/sample/excel/test.xls
+> groovy freemarker-cli.groovy -t templates/excel/html/test.ftl site/sample/excel/test.xlsx
+```
+
+The provided FTL transforms a known Excel document structure into a HTML document and is not sophisticated
+
+```
+<#ftl output_format="HTML" >
+<#assign sourceDocumentName = documents[0].name>
+<#assign workbook = ExcelParser.parseFile(documents[0].file)>
+<#assign sheet = workbook.getSheetAt(0)>
+<#assign rows = ExcelParser.parseSheet(sheet)>
+<#assign date =  ReportData["date"]>
+<#--------------------------------------------------------------------------->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>${sourceDocumentName}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container-fluid">
+    <h1>Excel Test <small>${sourceDocumentName}, ${date}</small></h1>
+<@writeSheet sheet=workbook.getSheetAt(0)/>
+</div>
+</body>
+</html>
+
+<#--------------------------------------------------------------------------->
+<#-- writeSheet                                                            -->
+<#--------------------------------------------------------------------------->
+<#macro writeSheet sheet>
+    <#assign rows = ExcelParser.parseSheet(sheet)>
+    <h2>${sheet.getSheetName()}</h2>
+    <@writeRows rows=rows/>
+</#macro>
+
+<#--------------------------------------------------------------------------->
+<#-- writeRow                                                              -->
+<#--------------------------------------------------------------------------->
+<#macro writeRows rows>
+<table class="table table-striped">
+    <#list rows as row>
+        <#if row?is_first>
+            <tr>
+                <th>#</th>
+                <th>${row[0]}</th>
+                <th>${row[1]}</th>
+                <th>${row[2]}</th>
+                <th>${row[3]}</th>
+                <th>${row[4]}</th>
+                <th>${row[5]}</th>
+                <th>${row[6]}</th>
+            </tr>
+        <#else>
+            <tr>
+                <td>${row?index}</td>
+                <td>${row[0]}</td>
+                <td>${row[1]}</td>
+                <td>${row[2]}</td>
+                <td>${row[3]}</td>
+                <td>${row[4]}</td>
+                <td>${row[5]}</td>
+                <td>${row[6]}</td>
+            </tr>
+        </#if>
+    </#list>
+</table>
+</#macro>
+```
+
+but the result looks reasonable
+
+![](./site/image/excel-to-html.png)
+
+## 4.7 Using Advanced FreeMarker Features
 
 There is a `demo.ftl` which shows some advanced FreeMarker functionality
 
