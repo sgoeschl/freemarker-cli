@@ -14,7 +14,7 @@ So I went with 'Apache Groovy', 'JsonPath' and 'Apache Velocity'
 * Groovy has a built-in package manager which makes distribution a breeze
 * Provding samples to transform JSON to Markdown
 
-Using Velocity actually created some minor issues so I migrated to FreeMarker
+Using Velocity actually created some minor issues so I migrated to FreeMarker during Christmas 2017
 
 * Velocity 1.7 was released 2010
 * I was painful to get Velocity Tools working 
@@ -27,6 +27,8 @@ While I love Apache Velocity I decided to give FreeMarker a chance and migrated 
 
 * Support multiple documents for a single transformation
 * Support transformation of CSV files using [Apache Commons CSV](http://commons.apache.org/proper/commons-csv/)
+* Support transformation of JSON using [Jayway's JSONPath](https://github.com/jayway/JsonPath)
+* XML is supported by FreeMarker anyway - see http://freemarker.org/docs/xgui.html
 * Support for reading document content from STDIN to integrate with command line tools
 * Add some commonly useful information such as `System Properties`, `Enviroment Variables`
 
