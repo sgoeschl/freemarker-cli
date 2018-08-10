@@ -49,7 +49,7 @@ usage: groovy freemarker-cli.groovy [options] file[s]
 
 # 4. Examples
 
-The examples were tested with Groovy 2.5.1 on Mac OS X
+The examples were tested with Groovy 2.5.1 on Mac OS X so please upgrade your Groovy version.
 
 ```
 > groovy -v
