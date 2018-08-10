@@ -49,6 +49,13 @@ usage: groovy freemarker-cli.groovy [options] file[s]
 
 # 4. Examples
 
+The examples were tested with Groovy 2.5.1 on Mac OS X
+
+```
+> groovy -v
+Groovy Version: 2.5.1 JVM: 1.8.0_181 Vendor: Oracle Corporation OS: Mac OS X
+```
+
 ## 4.1 Transforming GitHub JSON To Markdown
 
 A simple example with real JSON data
@@ -57,7 +64,7 @@ A simple example with real JSON data
 
 You can either use the existing JSON sample
 
-> groovy freemarker-cli.groovy -t temlates/json/md/github-users.ftl site/sample/json/github-users.json
+> groovy freemarker-cli.groovy -t templates/json/md/github-users.ftl site/sample/json/github-users.json
 
 or pipe a cURL response
 

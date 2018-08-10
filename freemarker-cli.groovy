@@ -18,14 +18,16 @@
  */
 
 @Grapes([
-        @Grab(group = "org.apache.poi", module = "poi", version = "3.15"),
-        @Grab(group = "org.apache.poi", module = "poi-ooxml", version = "3.15"),
-        @Grab(group = "org.apache.poi", module = "poi-ooxml-schemas", version = "3.15"),
-        @Grab(group = "com.jayway.jsonpath", module = "json-path", version = "2.2.0"),
+        @Grab(group = "commons-cli", module = "commons-cli", version = "1.4"),
+        @Grab(group = "org.apache.ivy", module = "ivy", version = "2.4.0"),
+        @Grab(group = "org.apache.poi", module = "poi", version = "3.17"),
+        @Grab(group = "org.apache.poi", module = "poi-ooxml", version = "3.17"),
+        @Grab(group = "org.apache.poi", module = "poi-ooxml-schemas", version = "3.17"),
+        @Grab(group = "com.jayway.jsonpath", module = "json-path", version = "2.4.0"),
         @Grab(group = "org.slf4j", module = "slf4j-api", version = "1.7.21"),
         @Grab(group = "org.slf4j", module = "slf4j-log4j12", version = "1.7.21"),
-        @Grab(group = "org.freemarker", module = "freemarker", version = "2.3.25-incubating"),
-        @Grab(group = "org.apache.commons", module = "commons-csv", version = "1.4")])
+        @Grab(group = "org.freemarker", module = "freemarker", version = "2.3.28"),
+        @Grab(group = "org.apache.commons", module = "commons-csv", version = "1.5")])
 
 import com.jayway.jsonpath.DocumentContext
 import com.jayway.jsonpath.JsonPath
@@ -317,18 +319,20 @@ class CommandLine {
 
         OptionAccessor opt = cli.parse(args)
 
-        if (!opt) {
+        if (args.length == 0 || !opt) {
+            cli.usage()
             System.exit(1)
-        }
-
-        if (opt.v) {
-            this.verbose = true
         }
 
         if (opt.h) {
             cli.usage()
             System.exit(0)
         }
+
+        if (opt.v) {
+            this.verbose = true
+        }
+
 
         if (opt.d) {
             this.description = opt.d
