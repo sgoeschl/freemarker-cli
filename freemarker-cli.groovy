@@ -45,6 +45,7 @@ import org.xml.sax.InputSource
 
 import java.text.SimpleDateFormat
 
+
 static void main(String[] args) {
     final CommandLine cli = new CommandLine(args)
     new Task("freemarker-cli", cli).run()
@@ -127,6 +128,7 @@ class Task {
         dataModel.putAll(createSystemPropertiesDataModel())
         dataModel.putAll(createEnvironmentDataModel())
         dataModel.putAll(createReportDataModel(description))
+        dataModel.putAll(createPropertiesParserDataModel())
         return dataModel
     }
 
@@ -159,6 +161,12 @@ class Task {
     private static Map<String, Object> createJsonPathDataModel() {
         final Map<String, Object> dataModel = new HashMap<String, Object>()
         dataModel.put("JsonPath", new JsonPathBean())
+        return dataModel
+    }
+
+    private static Map<String, Object> createPropertiesParserDataModel() {
+        final Map<String, Object> dataModel = new HashMap<String, Object>()
+        dataModel.put("PropertiesParser", new PropertiesParserBean())
         return dataModel
     }
 
@@ -248,32 +256,40 @@ class Document {
 }
 
 class CSVParserBean {
-    public CSVParser parse(String string, CSVFormat format) {
+    CSVParser parse(String string, CSVFormat format) {
         return CSVParser.parse(string, format)
-
     }
 }
 
 class JsonPathBean {
-    public DocumentContext parse(String string) {
+    DocumentContext parse(String string) {
         return JsonPath.parse(string)
+    }
+}
 
+class PropertiesParserBean {
+    Properties parse(String string) {
+        Reader reader = new StringReader(string)
+        Properties properties = new Properties()
+        properties.load(reader)
+        reader.close()
+        return properties
     }
 }
 
 class XmlParserBean {
-    public NodeModel parse(String string) {
+    NodeModel parse(String string) {
         final InputSource inputSource = new InputSource(new StringReader(string))
         return NodeModel.parse(inputSource)
     }
 }
 
 class ExcelParserBean {
-    public Workbook parseFile(File sourceFile) {
+    Workbook parseFile(File sourceFile) {
         return WorkbookFactory.create(sourceFile)
     }
 
-    public List<List<Object>> parseSheet(Sheet sheet) {
+    List<List<Object>> parseSheet(Sheet sheet) {
         DataFormatter formatter = new DataFormatter()
         Iterator<Row> iterator = sheet.iterator()
         List<List<Object>> result = new ArrayList<>()
@@ -305,6 +321,7 @@ class CommandLine {
     boolean verbose = false
     String outputFile
     List<String> sourceFiles = []
+    String includePattern = "**/*"
     String stdin
 
     CommandLine(String[] args) {
@@ -313,6 +330,7 @@ class CommandLine {
         cli.v(longOpt: 'verbose', 'Verbose mode', required: false)
         cli.b(longOpt: 'basedir', 'Base directory to resolve FreeMarker templates', required: false, args: 1)
         cli.d(longOpt: 'description', 'Custom report description', required: false, args: 1)
+        cli.i(longOpt: 'include', 'Ant file pattern for directory search', required: false, args: 1)
         cli.o(longOpt: 'output', 'Generated output file', required: false, args: 1)
         cli.t(longOpt: 'template', 'Template name', required: true, args: 1)
         cli.l(longOpt: 'locale', 'Locale value', required: false, args: 1)
@@ -333,9 +351,12 @@ class CommandLine {
             this.verbose = true
         }
 
-
         if (opt.d) {
             this.description = opt.d
+        }
+
+        if (opt.i) {
+            this.includePattern = opt.i
         }
 
         if (opt.t) {
@@ -357,7 +378,7 @@ class CommandLine {
         }
 
         if (!opt.arguments().isEmpty()) {
-            this.sourceFiles = opt.arguments()
+            this.sourceFiles = resolveSourceFiles(opt.arguments())
         } else {
             StringBuffer buffer = new StringBuffer()
             System.in.eachLine { line -> buffer.append(line) }
@@ -378,4 +399,24 @@ class CommandLine {
         new File(getClass().protectionDomain.codeSource.location.path).getParentFile()
     }
 
+    private List<String> resolveSourceFiles(List<String> sourceFiles) {
+        sourceFiles.stream()
+                .map { name -> resolveSourceFile(name) }
+                .toList()
+                .flatten()
+    }
+
+    private List<String> resolveSourceFile(String name) {
+        File file = new File(name)
+
+        if(!file.exists()) {
+            throw new IllegalArgumentException("The file/directory does not exist: " + file.getAbsolutePath())
+        }
+
+        if (new File(name).isDirectory()) {
+            new FileNameFinder().getFileNames(name, this.includePattern)
+        } else {
+            [name]
+        }
+    }
 }

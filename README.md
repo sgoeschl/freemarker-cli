@@ -25,7 +25,7 @@ While I love Apache Velocity I decided to give FreeMarker a chance and migrated 
 
 # 2. Design Goals
 
-* Support multiple documents for a single transformation
+* Support multiple files/directories for a single transformation
 * Support transformation of CSV files using [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/)
 * Support transformation of JSON using [Jayway's JSONPath](https://github.com/jayway/JsonPath)
 * Support transformation of Excel using [Apache POI](https://poi.apache.org)
@@ -41,6 +41,7 @@ usage: groovy freemarker-cli.groovy [options] file[s]
  -b,--basedir <arg>       Base directory to resolve FreeMarker templates
  -d,--description <arg>   Custom report description
  -h,--help                Usage information
+ -i,--include             Ant file pattern for directory search
  -l,--locale <arg>        Locale value
  -o,--output <arg>        Generated output file
  -t,--template <arg>      Template name
@@ -49,11 +50,11 @@ usage: groovy freemarker-cli.groovy [options] file[s]
 
 # 4. Examples
 
-The examples were tested with Groovy 2.5.1 on Mac OS X so please upgrade your Groovy version.
+The examples were tested with Groovy 2.5.4 on Mac OS X so please upgrade your Groovy version.
 
 ```
 > groovy -v
-Groovy Version: 2.5.1 JVM: 1.8.0_181 Vendor: Oracle Corporation OS: Mac OS X
+Groovy Version: 2.5.4 JVM: 1.8.0_192 Vendor: Oracle Corporation OS: Mac OS X
 ```
 
 ## 4.1 Transforming GitHub JSON To Markdown
@@ -332,7 +333,44 @@ but the result looks reasonable
 
 ![](./site/image/excel-to-html.png)
 
-## 4.7 Using Advanced FreeMarker Features
+## 4.7 Transform Property Files To CSV
+
+In this sample we transform property files found in a directory to a CSV file
+
+```text
+> groovy freemarker-cli.groovy -i **/*.properties -t templates/properties/csv/locker-test-users.ftl site/sample/properties
+USER_ID,PASSWORD,SMS_OTP,TENANT,SITE,NAME,DESCRIPTION
+01303494,01303494,,ro,fat,,
+205089760,205089760,,at,fat,,
+9200021464,9200021464,,sk,uat,,
+9422350309,9422350309,000000,cz,fat,,
+```
+
+The FTL uses a couple of interesting features
+
+* We process a list of property files
+* The `strip_text` and `compress` strips any whitespaces and linebreaks from the output so we can create a proper CSV file
+* We use FTL functions to extract the `tenant` and `site`, e.g. `extractTenant`
+
+```
+<#ftl output_format="plainText" strip_text="true">
+<#compress>
+    USER_ID,PASSWORD,SMS_OTP,TENANT,SITE,NAME,DESCRIPTION
+    <#list documents as document>
+        <#assign properties = PropertiesParser.parse(document.content)>
+        <#assign userId = properties["USER_ID"]!"">
+        <#assign password = properties["PASSWORD"]!"">
+        <#assign smsOtp = properties["SMS_OTP"]!"">
+        <#assign environments = properties["ENVIRONMENTS"]!"">
+        <#assign tenant = extractTenant(environments)>
+        <#assign site = extractSite(environments)>
+        ${userId},${password},${smsOtp},${tenant},${site},,
+    </#list>
+</#compress>
+${'\n'}
+```
+
+## 4.8 Using Advanced FreeMarker Features
 
 There is a `demo.ftl` which shows some advanced FreeMarker functionality
 
