@@ -14,16 +14,17 @@ So I went with 'Apache Groovy', 'JsonPath' and 'Apache Velocity'
 * Groovy has a built-in package manager which makes distribution a breeze
 * Provding samples to transform JSON to Markdown
 
-Using Velocity actually created some minor issues so I migrated to FreeMarker during Christmas 2017
+Using Velocity actually created some minor issues so I migrated to Apache FreeMarker during Christmas 2016
 
 * Velocity 1.7 was released 2010
 * I was painful to get Velocity Tools working 
 * Velocity XML processing support is also painful
 * Spring 4.3 deprecated velocity support which could affect me in the long run
+* Freemarker has no additional dependencies and things are just working
 
-While I love Apache Velocity I decided to give FreeMarker a chance and migrated my [velocity-cli](https://github.com/sgoeschl/velocity-cli) to FreeMarker.
+While I love Apache Velocity (Apache Turbine anyone?) I decided to give FreeMarker a chance and migrated my [velocity-cli](https://github.com/sgoeschl/velocity-cli) to FreeMarker.
 
-The goal of `freemarker-cli` is to automate repeated transformation tasks which are too boring to be done manually and too simple to write a more sophisticated script or application.
+The goal of `freemarker-cli` is to automate repeated transformation tasks which are too boring to be done manually and too simple to justify a script/program.
 
 # 2. Design Goals
 
@@ -76,7 +77,7 @@ or pipe a cURL response
 
 ### FreeMarker Template
 
-```
+```text
 <#ftl output_format="plainText" >
 <#assign json = JsonPath.parse(documents[0].content)>
 <#assign users = json.read("$[*]")>
@@ -104,7 +105,7 @@ creates the following output
 
 For a customer I created a Groovy script to fetch all products for a list of users - the script generates a JSON file which can be easily transformed to Markdown
 
-```
+```text
 > groovy freemarker-cli.groovy -t templates/json/md/customer-user-products.ftl  site/sample/json/customer-user-products.json
 ```
 
@@ -122,14 +123,14 @@ Since many of our QA people have no Markdown viewer installed I also created a v
 
 Sometimes you have a CSV file which needs to be translated in Markdown or HTML - there are on-line solutions available such as [CSV To Markdown Table Generator](https://donatstudios.com/CsvToMarkdownTable) but having a local solution gives you more flexibility.
 
-```
+```text
 > groovy freemarker-cli.groovy -t templates/csv/md/transform.ftl site/sample/csv/contract.csv
 > groovy freemarker-cli.groovy -t templates/csv/html/transform.ftl site/sample/csv/contract.csv
 ```
 
 The FreeMarker template is shown below
 
-```
+```text
 <#ftl output_format="HTML" >
 <#assign name = documents[0].name>
 <#assign content = documents[0].content>
@@ -182,13 +183,13 @@ The resulting file actually looks pleasant when compared to raw CSV
 
 Of course you can also transform a XML document
 
-```
+```text
 > groovy freemarker-cli.groovy -t ./templates/xml/txt/recipients.ftl site/sample/xml/recipients.xml
 ```
 
 using the following template
 
-```
+```text
 <#ftl output_format="plainText" >
 <#assign xml = XmlParser.parse(documents[0].content)>
 <#list xml.recipients.person as recipient>
@@ -235,7 +236,7 @@ D. H.
 
 One day I was asked a to prepare a CSV files containind REST endpoints described by Swagger - technically this is a JSON to CSV transformation. Of course I could create that CSV manually but writing a FTL template doing that was simply more fun and might save some time in the future
 
-```
+```text
 <#ftl output_format="plainText">
 <#assign json = JsonPath.parse(documents[0].content)>
 <#assign paths = json.read("$.paths")>
@@ -269,7 +270,7 @@ Apache POI supports XLS and XLSX documents.
 
 The provided FTL transforms a known Excel document structure into a HTML document and is not sophisticated
 
-```
+```text
 <#ftl output_format="HTML" >
 <#assign sourceDocumentName = documents[0].name>
 <#assign workbook = ExcelParser.parseFile(documents[0].file)>
@@ -353,9 +354,9 @@ The FTL uses a couple of interesting features
 
 * We process a list of property files
 * The `strip_text` and `compress` strips any whitespaces and linebreaks from the output so we can create a proper CSV file
-* We use FTL functions to extract the `tenant` and `site`, e.g. `extractTenant
+* We use FTL functions to extract the `tenant` and `site`, e.g. `extractTenant`
 
-```
+```text
 <#ftl output_format="plainText" strip_text="true">
 <#compress>
     USER_ID,PASSWORD,SMS_OTP,TENANT,SITE,NAME,DESCRIPTION
@@ -385,7 +386,7 @@ There is a `demo.ftl` which shows some advanced FreeMarker functionality
 
 > groovy freemarker-cli.groovy -d "This is a description" -t ./templates/demo.ftl README.md
 
-```
+```text
 1) Language-specific Date Format
 ---------------------------------------------------------------------------
 Report generated at ${.now}

@@ -1,15 +1,16 @@
 <#ftl output_format="plainText" strip_text="true">
 <#compress>
-    USER_ID,PASSWORD,SMS_OTP,TENANT,SITE,NAME,DESCRIPTION
+    USER_ID,DISPOSER_ID,PASSWORD,SMS_OTP,TENANT,SITE,NAME,DESCRIPTION
     <#list documents as document>
         <#assign properties = PropertiesParser.parse(document.content)>
         <#assign userId = properties["USER_ID"]!"">
+        <#assign disposerId = properties["USER_ID"]!"">
         <#assign password = properties["PASSWORD"]!"">
         <#assign smsOtp = properties["SMS_OTP"]!"">
         <#assign environments = properties["ENVIRONMENTS"]!"">
         <#assign tenant = extractTenant(environments)>
         <#assign site = extractSite(environments)>
-        ${userId},${password},${smsOtp},${tenant},${site},,
+        ${userId},${disposerId},${password},${smsOtp},${tenant},${site},,
     </#list>
 </#compress>
 ${'\n'}
