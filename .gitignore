@@ -1,20 +1,31 @@
-*.class
+# eclipse conf file
+.settings
+.classpath
+.project
+.manager
+.scala_dependencies
+.cache
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.ear
-
-# IDE Files
-
-*.iml
+# idea conf files
 .idea
+*.iml
+*.ipr
+*.iws
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# building
+target
+build
+null
+tmp
+temp
+dist
+test-output
+build.log
+.gradle
 
-out.md
-out.html
+# misc
+.DS_Store
+
+# project files to ignore
+!/results/.gitkeep
+

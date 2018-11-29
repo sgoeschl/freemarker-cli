@@ -29,10 +29,10 @@ Document: name=${document.name} file=${document.file.getAbsolutePath()} length=$
 
 7) Access System Properties
 ---------------------------------------------------------------------------
-user.name    : ${SystemProperties["user.name"]}
-user.dir     : ${SystemProperties["user.dir"]}
-user.home    : ${SystemProperties["user.home"]}
-java.version : ${SystemProperties["java.version"]}
+user.name    : ${SystemProperties["user.name"]!""}
+user.dir     : ${SystemProperties["user.dir"]!""}
+user.home    : ${SystemProperties["user.home"]!""}
+java.version : ${SystemProperties["java.version"]!""}
 
 7) Report Data
 ---------------------------------------------------------------------------

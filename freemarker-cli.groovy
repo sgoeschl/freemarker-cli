@@ -38,13 +38,14 @@ import freemarker.template.Configuration
 import freemarker.template.Template
 import freemarker.template.TemplateExceptionHandler
 import freemarker.template.utility.ObjectConstructor
+import groovy.cli.commons.CliBuilder
+import groovy.cli.commons.OptionAccessor
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.poi.ss.usermodel.*
 import org.xml.sax.InputSource
 
 import java.text.SimpleDateFormat
-
 
 static void main(String[] args) {
     final CommandLine cli = new CommandLine(args)
@@ -64,7 +65,6 @@ class Task {
     }
 
     void run() {
-        final Writer writer
         final File outputFile = cli.hasOutputFile() ? new File(cli.outputFile) : null
         final long startTime = System.currentTimeMillis()
         final List<Document> documents = readDocuments(cli)
@@ -72,19 +72,13 @@ class Task {
         final Map<String, Object> dataModel = createDataModel(documents, cli.description)
         final Template template = configuration.getTemplate(cli.templateName)
 
-        try {
-            writer = createFileWriter(cli.outputFile)
+        createFileWriter(cli.outputFile).withCloseable { writer ->
             template.process(dataModel, writer)
             final long durationInMs = System.currentTimeMillis() - startTime
             log("Template processing finished in ${durationInMs} ms")
 
             if (outputFile != null && outputFile.exists()) {
                 log("The ouptut file has ${outputFile.length()} bytes")
-            }
-        }
-        finally {
-            if (writer != null) {
-                writer.close()
             }
         }
     }
@@ -184,7 +178,7 @@ class Task {
 
     private static Map<String, Object> createFreeMarkerDataModel() {
         final Map<String, Object> dataModel = new HashMap<String, Object>()
-        final BeansWrapperBuilder builder = new BeansWrapperBuilder(Configuration.VERSION_2_3_25)
+        final BeansWrapperBuilder builder = new BeansWrapperBuilder(Configuration.VERSION_2_3_28)
         final BeansWrapper beansWrapper = builder.build()
         dataModel.put("ObjectConstructor", new ObjectConstructor())
         dataModel.put("Statics", beansWrapper.getStaticModels())
@@ -247,10 +241,10 @@ class Document {
         this.name = name
         this.file = file
         this.content = content != null ? content : ""
-        this.length = content != null ? content.length() : -1
+        this.length = content != null ? content.length() : 0
     }
 
-    public boolean hasFile() {
+    boolean hasFile() {
         return file != null
     }
 }
@@ -332,7 +326,7 @@ class CommandLine {
         cli.d(longOpt: 'description', 'Custom report description', required: false, args: 1)
         cli.i(longOpt: 'include', 'Ant file pattern for directory search', required: false, args: 1)
         cli.o(longOpt: 'output', 'Generated output file', required: false, args: 1)
-        cli.t(longOpt: 'template', 'Template name', required: true, args: 1)
+        cli.t(longOpt: 'template', 'Template name', required: false, args: 1)
         cli.l(longOpt: 'locale', 'Locale value', required: false, args: 1)
 
         OptionAccessor opt = cli.parse(args)
@@ -361,6 +355,9 @@ class CommandLine {
 
         if (opt.t) {
             this.templateName = opt.t
+        } else {
+            cli.usage()
+            System.exit(0)
         }
 
         if (opt.b) {
@@ -407,13 +404,13 @@ class CommandLine {
     }
 
     private List<String> resolveSourceFile(String name) {
-        File file = new File(name)
+        final File file = new File(name)
 
-        if(!file.exists()) {
+        if (!file.exists()) {
             throw new IllegalArgumentException("The file/directory does not exist: " + file.getAbsolutePath())
         }
 
-        if (new File(name).isDirectory()) {
+        if (file.isDirectory()) {
             new FileNameFinder().getFileNames(name, this.includePattern)
         } else {
             [name]

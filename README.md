@@ -21,11 +21,14 @@ Using Velocity actually created some minor issues so I migrated to FreeMarker du
 * Velocity XML processing support is also painful
 * Spring 4.3 deprecated velocity support which could affect me in the long run
 
-While I love Apache Velocity I decided to give FreeMarker a chance and migrated my [velocity-cli](https://github.com/sgoeschl/velocity-cli) to FreeMarker
+While I love Apache Velocity I decided to give FreeMarker a chance and migrated my [velocity-cli](https://github.com/sgoeschl/velocity-cli) to FreeMarker.
+
+The goal of `freemarker-cli` is to automate repeated transformation tasks which are too boring to be done manually and too simple to write a more sophisticated script or application.
 
 # 2. Design Goals
 
 * Support multiple files/directories for a single transformation
+* Support transformation of Property files using plain-vanilla JDK
 * Support transformation of CSV files using [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/)
 * Support transformation of JSON using [Jayway's JSONPath](https://github.com/jayway/JsonPath)
 * Support transformation of Excel using [Apache POI](https://poi.apache.org)
@@ -50,9 +53,9 @@ usage: groovy freemarker-cli.groovy [options] file[s]
 
 # 4. Examples
 
-The examples were tested with Groovy 2.5.4 on Mac OS X so please upgrade your Groovy version.
+The examples were tested with Groovy 2.5.4 on Mac OS X so please upgrade your Groovy version if you have problems.
 
-```
+```text
 > groovy -v
 Groovy Version: 2.5.4 JVM: 1.8.0_192 Vendor: Oracle Corporation OS: Mac OS X
 ```
@@ -350,7 +353,7 @@ The FTL uses a couple of interesting features
 
 * We process a list of property files
 * The `strip_text` and `compress` strips any whitespaces and linebreaks from the output so we can create a proper CSV file
-* We use FTL functions to extract the `tenant` and `site`, e.g. `extractTenant`
+* We use FTL functions to extract the `tenant` and `site`, e.g. `extractTenant
 
 ```
 <#ftl output_format="plainText" strip_text="true">
@@ -380,7 +383,7 @@ There is a `demo.ftl` which shows some advanced FreeMarker functionality
 * Access System properties
 * Access Environment variables
 
-> groovy freemarker-cli.groovy -t ./templates/demo.ftl README.md 
+> groovy freemarker-cli.groovy -d "This is a description" -t ./templates/demo.ftl README.md
 
 ```
 1) Language-specific Date Format
@@ -409,7 +412,7 @@ java.math.RoundingMode#UP: ${Enums["java.math.RoundingMode"].UP}
 6) Display input files
 ---------------------------------------------------------------------------
 <#list documents as document>
-Document: name=${document.name} file=${document.file.getAbsolutePath()} length=${document.length} hasFile=${document.hasFile()?c}
+Document: name=${document.name} file=${document.file.getAbsolutePath()} length=${document.length} isFile=${document.isFile()?c}
 </#list>
 
 7) Access System Properties
@@ -418,7 +421,7 @@ user.name    : ${SystemProperties["user.name"]}
 user.dir     : ${SystemProperties["user.dir"]}
 user.home    : ${SystemProperties["user.home"]}
 java.version : ${SystemProperties["java.version"]}
-
+|
 7) Report Data
 ---------------------------------------------------------------------------
 description  : ${ReportData["description"]}
@@ -432,9 +435,36 @@ user         : ${ReportData["user"]}
 </#list>
 ```
 
-# 5. Tips & Tricks
+# 5. Design Considerations
 
-## 5.1 Template Base Directory
+## 5.1 How It Works
+
+* The user-supplied files are loaded into memory or if there are no file the script reads the from `stdin`
+* The FreeMarker data model containing the documents and helper object is created and passed tp the template
+* The generated output is written to the user-supplied file or to `stdout`
+
+## 5.2 FreeMarker Data Model
+
+Within the script a FreeMarker data model is set up and passed to the template - it contains the documents to be processed and helper objects
+
+| Helper                | Description                                                         |
+|-----------------------|---------------------------------------------------------------------|
+| CSVFormat             | Available CSV formats, e.g. "DEFAULT", "EXCEL"                      |
+| CSVParser             | CSV parser exposing a `parse` method                                |
+| Enums                 | Helper to work with Java enumerations                               |
+| Environment           | Environment variables                                               |
+| ExcelParser           | Excel parser exposing a `parse` method                              |
+| JsonPath              | JSON Parser                                                         |
+| ObjectConstructor     | Creata Java instances using reflection                              |
+| PropertiesParser      | Properties parser exposing a `parse` method                         |
+| ReportData            | Bean containing some convinience data, e.g. `user` and `host`       |
+| Statics               | Invoke static Java methods using reflection                         |
+| SystemProperties      | JVM System properties                                               |
+| XmlParser             | XML parser exposing a `parse` method                                |
+
+# 6. Tips & Tricks
+
+## 6.1 Template Base Directory
 
 When doing some ad-hoc scripting it is useful to rely on a base directory to resolve the FTL templates
 
@@ -443,13 +473,13 @@ When doing some ad-hoc scripting it is useful to rely on a base directory to res
 
 > groovy freemarker-cli/freemarker-cli.groovy -t templates/json/html/customer-user-products.ftl freemarker-cli/site/sample/json/customer-user-products.jso
 
-## 5.2 Using Pipes
+## 6.2 Using Pipes
 
 When doing ad-hoc scripting it useful to pipe the output of one command directly into the Groovy script
 
 > cat site/sample/json/customer-user-products.json | groovy freemarker-cli.groovy -t ./templates/json/html/customer-user-products.ftl
 
-## 5.3 Executable Groovy Scripts
+## 6.3 Executable Groovy Scripts
 
 When you run on Unix and are tired of always typing `groovy` there is light on the end of the tunnel - assuming that the `freemarker-cli.groovy` is executable you can use
 
