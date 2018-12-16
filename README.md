@@ -343,11 +343,11 @@ In this sample we transform property files found in a directory to a CSV file
 
 ```text
 > groovy freemarker-cli.groovy -i **/*.properties -t templates/properties/csv/locker-test-users.ftl site/sample/properties
-USER_ID,PASSWORD,SMS_OTP,TENANT,SITE,NAME,DESCRIPTION
-01303494,01303494,,ro,fat,,
-205089760,205089760,,at,fat,,
-9200021464,9200021464,,sk,uat,,
-9422350309,9422350309,000000,cz,fat,,
+TENANT,SITE,USER_ID,DISPOSER_ID,PASSWORD,SMS_OTP,NAME,DESCRIPTION
+ro,fat,01303494,01303494,01303494,,,
+at,fat,205089760,205089760,205089760,,,
+sk,uat,9200021464,9200021464,9200021464,,,
+cz,fat,9422350309,9422350309,9422350309,000000,,
 ```
 
 The FTL uses a couple of interesting features
