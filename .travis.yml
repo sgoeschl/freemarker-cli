@@ -1,4 +1,2 @@
 language: groovy
 sudo: false
-script:
-    - bash run-samples.sh
