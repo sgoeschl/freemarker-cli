@@ -512,8 +512,14 @@ For A POC (proof of concept) I created a sample transformation from CSV to XML-F
 In order to create the PDF you need to execute the following commands (assuming that you have Apache FOP installed)
 
 ```text
-groovy freemarker-cli.groovy -t templates/csv/fo/transform.ftl site/sample/csv/locker-test-users.csv > sample.fo
-fop -fo sample.fo sample.pdf
+> groovy freemarker-cli.groovy -t templates/csv/fo/transform.ftl site/sample/csv/locker-test-users.csv > sample.fo
+> fop -fo sample.fo sample.pdf
+Dec 29, 2018 10:24:30 PM org.apache.fop.events.LoggingEventListener processEvent
+WARNING: Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+Dec 29, 2018 10:24:30 PM org.apache.fop.events.LoggingEventListener processEvent
+WARNING: Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+Dec 29, 2018 10:24:30 PM org.apache.fop.events.LoggingEventListener processEvent
+INFO: Rendered page #1.
 ```
 
 The result does not look very impressive but it is a PDF :-)
