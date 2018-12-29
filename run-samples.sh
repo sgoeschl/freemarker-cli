@@ -1,12 +1,16 @@
 #!/bin/sh
 
+# Check that groovy is on the path
+
+hash groovy 2>/dev/null || { echo >&2 "I require Apache Groovy but it's not installed.  Aborting."; exit 1; }
+
 # Run all the samples being documented 
 
-mkdir target
-mkdir target/out
+mkdir target 2>/dev/null
+mkdir target/out 2>/dev/null
 
 echo "templates/demo.ftl"
-groovy freemarker-cli.groovy -t templates/demo.ftl target/out/demo.txt
+groovy freemarker-cli.groovy -t templates/demo.ftl README.md > target/out/demo.txt
 
 echo "templates/csv/html/transform.ftl"
 groovy freemarker-cli.groovy -t templates/csv/html/transform.ftl site/sample/csv/contract.csv > target/out/contract.html
@@ -24,6 +28,11 @@ groovy freemarker-cli.groovy -t templates/json/csv/swagger-endpoints.ftl site/sa
 echo "templates/json/html/customer-user-products.ftl"
 groovy freemarker-cli.groovy -t templates/json/html/customer-user-products.ftl site/sample/json/customer-user-products.json > target/out/customer-user-products.html
 
+if hash wkhtmltopdf 2>/dev/null; then
+	echo "wkhtmltopdf -O landscape target/out/customer-user-products.html target/out/customer-user-products.pdf"
+    wkhtmltopdf -O landscape target/out/customer-user-products.html target/out/customer-user-products.pdf 2>/dev/null
+fi
+
 echo "templates/json/md/customer-user-products.ftl"
 groovy freemarker-cli.groovy -t templates/json/md/customer-user-products.ftl  site/sample/json/customer-user-products.json > target/out/customer-user-products.md
 
@@ -38,3 +47,8 @@ groovy freemarker-cli.groovy -t ./templates/xml/txt/recipients.ftl site/sample/x
 
 echo "templates/csv/fo/transform.ftl"
 groovy freemarker-cli.groovy -t templates/csv/fo/transform.ftl site/sample/csv/locker-test-users.csv > target/out/locker-test-users.fo
+
+if hash fop 2>/dev/null; then
+	echo "fop -fo target/out/locker-test-users.fo target/out/locker-test-users.pdf"
+    fop -fo target/out/locker-test-users.fo target/out/locker-test-users.pdf 2>/dev/null
+fi
