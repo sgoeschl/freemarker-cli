@@ -119,7 +119,7 @@ Since many of our QA people have no Markdown viewer installed I also created a v
 
 ![Customer User Products HTML](./site/image/customer-user-products-html.png "Customer User Products HTML")
 
-## 4.3 CSV to Markdown Transformation
+## 4.3 CSV to HTML/Markdown Transformation
 
 Sometimes you have a CSV file which needs to be translated in Markdown or HTML - there are on-line solutions available such as [CSV To Markdown Table Generator](https://donatstudios.com/CsvToMarkdownTable) but having a local solution gives you more flexibility.
 
@@ -339,7 +339,7 @@ but the result looks reasonable
 
 ## 4.7 Transform Property Files To CSV
 
-In this sample we transform property files found in a directory to a CSV file
+In this sample we transform all property files found in a directory (recursive search using include pattern) to a CSV file
 
 ```text
 > groovy freemarker-cli.groovy -i **/*.properties -t templates/properties/csv/locker-test-users.ftl site/sample/properties

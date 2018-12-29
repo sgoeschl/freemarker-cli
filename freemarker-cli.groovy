@@ -263,11 +263,11 @@ class JsonPathBean {
 
 class PropertiesParserBean {
     Properties parse(String string) {
-        Reader reader = new StringReader(string)
-        Properties properties = new Properties()
-        properties.load(reader)
-        reader.close()
-        return properties
+        new StringReader(string).withCloseable { reader ->
+            Properties properties = new Properties()
+            properties.load(reader)
+            return properties
+        }
     }
 }
 
@@ -284,17 +284,17 @@ class ExcelParserBean {
     }
 
     List<List<Object>> parseSheet(Sheet sheet) {
-        DataFormatter formatter = new DataFormatter()
-        Iterator<Row> iterator = sheet.iterator()
-        List<List<Object>> result = new ArrayList<>()
+        final DataFormatter formatter = new DataFormatter()
+        final Iterator<Row> iterator = sheet.iterator()
+        final List<List<Object>> result = new ArrayList<>()
 
         while (iterator.hasNext()) {
-            Row nextRow = iterator.next()
-            List<Object> currRowValues = new ArrayList<>()
-            Iterator<Cell> cellIterator = nextRow.cellIterator()
+            final Row nextRow = iterator.next()
+            final List<Object> currRowValues = new ArrayList<>()
+            final Iterator<Cell> cellIterator = nextRow.cellIterator()
             result.add(currRowValues)
             while (cellIterator.hasNext()) {
-                Cell cell = cellIterator.next()
+                final Cell cell = cellIterator.next()
                 currRowValues.add(formatter.formatCellValue(cell))
             }
         }

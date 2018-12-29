@@ -1,12 +1,14 @@
-<#ftl output_format="plainText" >
+<#ftl output_format="plainText">
 <#assign content = documents[0].content>
 <#assign cvsFormat = CSVFormat.DEFAULT.withHeader()>
 <#assign csvParser = CSVParser.parse(content, cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
 <#--------------------------------------------------------------------------->
+<#compress>
 <@writeHeaders headers=csvHeaders/>
 <@writeColums columns=csvRecords/>
+</#compress>
 <#--------------------------------------------------------------------------->
 <#macro writeHeaders headers>
 | ${csvHeaders?join(" | ", "")} |
