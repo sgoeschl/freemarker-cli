@@ -1,6 +1,15 @@
 [![Build Status](https://travis-ci.org/sgoeschl/freemarker-cli.svg?branch=master)](https://travis-ci.org/sgoeschl/freemarker-cli)
 
-# 1. Introduction
+# 1. Why 'freemarker-cli' Is For You
+
+You somehow found this GitHub project and wonder if it solves a problem you might have?!
+
+* You need to transform some structured text document (CSV, JSON, XML, Java Property file) into CSV, HTML, Markdown or Confluence markup 
+* You need to convert an Excel document into CSV, HTML or Markdown
+
+And this happens not often enough to write a dedicated script or application but too often to do it manually - if this is the case than help is near :-)
+
+# 2. Introduction
 
 For a customer I needed a little bit of test data management - to make a long story short (after writing a few scripts) it boiled down to transforming one or more JSON files to something human readable.
 
@@ -28,7 +37,7 @@ While I love Apache Velocity (Apache Turbine anyone?) I decided to give FreeMark
 
 The goal of `freemarker-cli` is to automate repeated transformation tasks which are too boring to be done manually and too simple to justify a script/program.
 
-# 2. Design Goals
+# 3. Design Goals
 
 * Support multiple files/directories for a single transformation
 * Support transformation of Property files using plain-vanilla JDK
@@ -39,7 +48,7 @@ The goal of `freemarker-cli` is to automate repeated transformation tasks which 
 * Support for reading document content from STDIN to integrate with command line tools
 * Add some commonly useful information such as `System Properties`, `Enviroment Variables`
 
-# 3. Usage
+# 4. Usage
 
 ```text
 > groovy freemarker-cli.groovy
@@ -54,7 +63,7 @@ usage: groovy freemarker-cli.groovy [options] file[s]
  -v,--verbose             Verbose mode
 ```
 
-# 4. Examples
+# 5. Examples
 
 The examples were tested with Groovy 2.5.4 on Mac OS X so please upgrade your Groovy version if you have problems.
 
@@ -63,7 +72,7 @@ The examples were tested with Groovy 2.5.4 on Mac OS X so please upgrade your Gr
 Groovy Version: 2.5.4 JVM: 1.8.0_192 Vendor: Oracle Corporation OS: Mac OS X
 ```
 
-## 4.1 Transforming GitHub JSON To Markdown
+## 5.1 Transforming GitHub JSON To Markdown
 
 A simple example with real JSON data
 
@@ -105,7 +114,7 @@ creates the following output
 
 ![](./site/image/github.png)
 
-## 4.2 Markdown Test User Documentation
+## 5.2 Markdown Test User Documentation
 
 For a customer I created a Groovy script to fetch all products for a list of users - the script generates a JSON file which can be easily transformed to Markdown
 
@@ -123,7 +132,23 @@ Since many of our QA people have no Markdown viewer installed I also created a v
 
 ![Customer User Products HTML](./site/image/customer-user-products-html.png "Customer User Products HTML")
 
-## 4.3 CSV to HTML/Markdown Transformation
+As added bonus we can easily transform the CSV to PDF using [wkhtmltopdf](https://wkhtmltopdf.org) `wkhtmltopdf`
+
+```text
+freemarker-cli> wkhtmltopdf ./site/sample/customer-user-products.html customer-user-products.pdf
+Loading pages (1/6)
+Counting pages (2/6)                                               
+Resolving links (4/6)                                                       
+Loading headers and footers (5/6)                                           
+Printing pages (6/6)
+Done  
+```
+
+which creates the following PDF document
+
+![Customer User Products PDF](./site/image/customer-user-products-pdf.png "Customer User Products PDF")
+
+## 5.3 CSV to HTML/Markdown Transformation
 
 Sometimes you have a CSV file which needs to be translated in Markdown or HTML - there are on-line solutions available such as [CSV To Markdown Table Generator](https://donatstudios.com/CsvToMarkdownTable) but having a local solution gives you more flexibility.
 
@@ -183,7 +208,7 @@ The resulting file actually looks pleasant when compared to raw CSV
 
 ![Contract CSV to HTML](./site/image/contract.png "Contract CSV to HTML")
 
-## 4.4 Transform XML To Plain Text
+## 5.4 Transform XML To Plain Text
 
 Of course you can also transform a XML document
 
@@ -236,7 +261,7 @@ Sincere salutations,
 D. H.
 ```
 
-## 4.5 Transform JSON To CSV
+## 5.5 Transform JSON To CSV
 
 One day I was asked a to prepare a CSV files containind REST endpoints described by Swagger - technically this is a JSON to CSV transformation. Of course I could create that CSV manually but writing a FTL template doing that was simply more fun and might save some time in the future
 
@@ -263,7 +288,7 @@ ENDPOINT,METHOD
 /pets/{id},GET
 ```
 
-## 4.6 Transforming Excel Documents
+## 5.6 Transforming Excel Documents
 
 Apache POI supports XLS and XLSX documents. 
 
@@ -341,7 +366,7 @@ but the result looks reasonable
 
 ![](./site/image/excel-to-html.png)
 
-## 4.7 Transform Property Files To CSV
+## 5.7 Transform Property Files To CSV
 
 In this sample we transform all property files found in a directory (recursive search using include pattern) to a CSV file
 
@@ -414,7 +439,7 @@ ${'\n'}
 ${'\n'}
 ```
 
-## 4.8 Using Advanced FreeMarker Features
+## 5.8 Using Advanced FreeMarker Features
 
 There is a `demo.ftl` which shows some advanced FreeMarker functionality
 
@@ -565,16 +590,15 @@ date         : 2018-12-29
 * SHLVL ==> 1
 ```
 
+# 6. Design Considerations
 
-# 5. Design Considerations
-
-## 5.1 How It Works
+## 6.1 How It Works
 
 * The user-supplied files are loaded into memory or if there are no file the script reads the from `stdin`
 * The FreeMarker data model containing the documents and helper object is created and passed tp the template
 * The generated output is written to the user-supplied file or to `stdout`
 
-## 5.2 FreeMarker Data Model
+## 6.2 FreeMarker Data Model
 
 Within the script a FreeMarker data model is set up and passed to the template - it contains the documents to be processed and helper objects
 
@@ -593,9 +617,9 @@ Within the script a FreeMarker data model is set up and passed to the template -
 | SystemProperties      | JVM System properties                                               |
 | XmlParser             | XML parser exposing a `parse` method                                |
 
-# 6. Tips & Tricks
+# 7. Tips & Tricks
 
-## 6.1 Template Base Directory
+## 7.1 Template Base Directory
 
 When doing some ad-hoc scripting it is useful to rely on a base directory to resolve the FTL templates
 
@@ -604,17 +628,14 @@ When doing some ad-hoc scripting it is useful to rely on a base directory to res
 
 > groovy freemarker-cli/freemarker-cli.groovy -t templates/json/html/customer-user-products.ftl freemarker-cli/site/sample/json/customer-user-products.jso
 
-## 6.2 Using Pipes
+## 7.2 Using Pipes
 
 When doing ad-hoc scripting it useful to pipe the output of one command directly into the Groovy script
 
 > cat site/sample/json/customer-user-products.json | groovy freemarker-cli.groovy -t ./templates/json/html/customer-user-products.ftl
 
-## 6.3 Executable Groovy Scripts
+## 7.3 Executable Groovy Scripts
 
 When you run on Unix and are tired of always typing `groovy` there is light on the end of the tunnel - assuming that the `freemarker-cli.groovy` is executable you can use
 
 > ./freemarker-cli.groovy -t templates/json/html/customer-user-products.ftl site/sample/json/customer-user-products.json 
-
-
-
