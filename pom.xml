@@ -14,6 +14,7 @@
     </properties>    
 
     <build>
+        <defaultGoal>clean package</defaultGoal>
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
