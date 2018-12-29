@@ -1,6 +1,4 @@
-language: java
+language: groovy
 sudo: false
-install: ./travis.sh
-script: mvn clean verify
-jdk:
-  - oraclejdk8
+script:
+    - bash run-samples.sh

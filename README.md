@@ -1,26 +1,61 @@
 [![Build Status](https://travis-ci.org/sgoeschl/freemarker-cli.svg?branch=master)](https://travis-ci.org/sgoeschl/freemarker-cli)
 
-# 1. Why 'freemarker-cli' Is For You
+# 1. Is This Project For You?
 
 You somehow found this GitHub project and wonder if it solves a problem you might have?!
 
 * You need to transform some structured text document (CSV, JSON, XML, Java Property file) into CSV, HTML, Markdown or Confluence markup 
 * You need to convert an Excel document into CSV, HTML or Markdown
-* You need to create a nice-looking PDF from some boring JSON content 
+* You need to create a nice-looking PDF from some boring-looking CSV or JSON content 
 
 The goal of `freemarker-cli` is to automate repeated transformation tasks 
 
 * Which are too boring to be done manually 
-* Which happen not often enough to write a script or program
+* Which happen not often enough to write a dedicated script or program
 
-# 2. How It Started
+Assuming that you are still interested - install [Apache Groovy](http://groovy-lang.org/install.html) and run `./run-samples.sh`
 
-For a customer I needed a little bit of test data management - to make a long story short (after writing a few scripts) it boiled down to transforming one or more JSON files to something human readable.
+```text
+freemarker-cli> ./run-samples.sh 
+templates/demo.ftl
+templates/csv/html/transform.ftl
+templates/csv/md/transform.ftl
+templates/excel/html/test.ftl
+templates/json/csv/swagger-endpoints.ftl
+templates/json/html/customer-user-products.ftl
+wkhtmltopdf -O landscape target/out/customer-user-products.html target/out/customer-user-products.pdf
+templates/json/md/customer-user-products.ftl
+templates/json/md/github-users.ftl
+templates/properties/csv/locker-test-users.ftl
+templates/xml/txt/recipients.ftl
+templates/csv/fo/transform.ftl
+fop -fo target/out/locker-test-users.fo target/out/locker-test-users.pdf
+Creating sample files in ./target/out
+total 712
+-rw-r--r--  1 sgoeschl  staff   22412 Dec 30 00:14 contract.html
+-rw-r--r--  1 sgoeschl  staff    7933 Dec 30 00:15 contract.md
+-rw-r--r--  1 sgoeschl  staff  103504 Dec 30 00:15 customer-user-products.html
+-rw-r--r--  1 sgoeschl  staff   35017 Dec 30 00:15 customer-user-products.md
+-rw-r--r--  1 sgoeschl  staff  116257 Dec 30 00:15 customer-user-products.pdf
+-rw-r--r--  1 sgoeschl  staff    3412 Dec 30 00:14 demo.txt
+-rw-r--r--  1 sgoeschl  staff    2029 Dec 30 00:15 github-users.md
+-rw-r--r--  1 sgoeschl  staff     235 Dec 30 00:15 locker-test-users.csv
+-rw-r--r--  1 sgoeschl  staff    6291 Dec 30 00:15 locker-test-users.fo
+-rw-r--r--  1 sgoeschl  staff    5503 Dec 30 00:15 locker-test-users.pdf
+-rw-r--r--  1 sgoeschl  staff     921 Dec 30 00:15 recipients.txt
+-rw-r--r--  1 sgoeschl  staff      41 Dec 30 00:15 swagger-spec.csv
+-rw-r--r--  1 sgoeschl  staff    1462 Dec 30 00:15 test.xls.html
+-rw-r--r--  1 sgoeschl  staff    1464 Dec 30 00:15 test.xslx.html
+```
 
-What are the options
+# 2. Once Upon A Time
+
+I needed a little bit of test data management for a customer project - to make a long story short (after writing a few more Groovy scripts) it boiled down to transforming one or more JSON files to something human readable.
+
+What are the options?
 
 * The cool kids say 'Node.js' - but they always say 'Node.js' 
-* Some fancy Groovy scripts using markup builder - but the Groovy syntax looks a bit odd
+* Some fancy Groovy scripts using Groovy's markup builder - but the syntax looks a bit odd
 * Using 'JsonPath' and 'Velocity' to reuse good & old stuff
 
 So I went with 'Apache Groovy', 'JsonPath' and 'Apache Velocity'
@@ -29,13 +64,13 @@ So I went with 'Apache Groovy', 'JsonPath' and 'Apache Velocity'
 * Groovy has a built-in package manager which makes distribution a breeze
 * Provding samples to transform JSON to Markdown
 
-Using Velocity actually created some minor issues so I migrated to Apache FreeMarker during Christmas 2016
+Using Velocity actually created some minor issues so I migrated to [Apache FreeMarker](https://freemarker.apache.org) during Christmas 2016
 
-* Velocity 1.7 was released 2010
-* I was painful to get Velocity Tools working 
+* Velocity 1.7 was released 2010 and only recently there was a new release
+* I was painful to get Velocity Tools working
 * Velocity XML processing support is also painful
-* Spring 4.3 deprecated velocity support which could affect me in the long run
-* Freemarker has no additional dependencies and things are just working
+* Spring 4.3 deprecated Velocity support which could affect me in the long run
+* Freemarker has no additional dependencies and things are just working :-)
 
 While I love Apache Velocity (Apache Turbine anyone?) I decided to give FreeMarker a chance and migrated my [velocity-cli](https://github.com/sgoeschl/velocity-cli) to FreeMarker.
 
