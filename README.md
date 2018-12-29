@@ -86,6 +86,7 @@ or pipe a cURL response
 
 Report generated at ${.now?iso_utc}
 
+<#compress>
 <#list users as user>
 <#assign userAvatarUrl = user.avatar_url>
 <#assign userHomeUrl = user.html_url>
@@ -93,8 +94,9 @@ Report generated at ${.now?iso_utc}
 
 | User                                                    | Homepage                                      |
 |:--------------------------------------------------------|:----------------------------------------------|
-| <img src="${user.avatar_url}" width="48" height="48" /> | [${userHomeUrl}](${userHomeUrl})              |
+| <img src="${user.avatar_url}" width="48" height="48"/> | [${userHomeUrl}](${userHomeUrl})               |
 </#list>
+</#compress>
 ```
 
 creates the following output
@@ -355,22 +357,58 @@ The FTL uses a couple of interesting features
 * We process a list of property files
 * The `strip_text` and `compress` strips any whitespaces and linebreaks from the output so we can create a proper CSV file
 * We use FTL functions to extract the `tenant` and `site`, e.g. `extractTenant`
+* We add a manual line break using ```${'\n'}```
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
 <#compress>
-    USER_ID,PASSWORD,SMS_OTP,TENANT,SITE,NAME,DESCRIPTION
+    TENANT,SITE,USER_ID,DISPOSER_ID,PASSWORD,SMS_OTP,NAME,DESCRIPTION
     <#list documents as document>
         <#assign properties = PropertiesParser.parse(document.content)>
-        <#assign userId = properties["USER_ID"]!"">
-        <#assign password = properties["PASSWORD"]!"">
-        <#assign smsOtp = properties["SMS_OTP"]!"">
         <#assign environments = properties["ENVIRONMENTS"]!"">
         <#assign tenant = extractTenant(environments)>
         <#assign site = extractSite(environments)>
-        ${userId},${password},${smsOtp},${tenant},${site},,
+        <#assign userId = properties["USER_ID"]!"">
+        <#assign disposerId = properties["USER_ID"]!"">
+        <#assign password = properties["PASSWORD"]!"">
+        <#assign smsOtp = properties["SMS_OTP"]!"">
+        <#assign name = properties["NAME"]!"">
+        <#assign description = properties["NAME"]!"">
+        ${tenant},${site},${userId},${disposerId},${password},${smsOtp},${name},${description}
     </#list>
 </#compress>
+${'\n'}
+
+<#function extractSite environments>
+    <#if (environments)?contains("_DEV")>
+        <#return "dev">
+    <#elseif (environments)?contains("_FAT")>
+        <#return "fat">
+    <#elseif (environments)?contains("_ST")>
+        <#return "st">
+    <#elseif (environments)?contains("_PROD")>
+        <#return "prod">
+    <#elseif (environments)?contains("_UAT")>
+        <#return "uat">
+    <#else>
+        <#return "???">
+    </#if>
+</#function>
+
+<#function extractTenant environments>
+    <#if (environments)?contains("AT_")>
+        <#return "at">
+    <#elseif (environments)?contains("BCR_")>
+        <#return "ro">
+    <#elseif (environments)?contains("CSAS_")>
+        <#return "cz">
+    <#elseif (environments)?contains("SK_")>
+        <#return "sk">
+    <#else>
+        <#return "???">
+    </#if>
+</#function>
+
 ${'\n'}
 ```
 

@@ -6,6 +6,7 @@
 
 Report generated at ${.now?iso_utc}
 
+<#compress>
 <#list users as user>
 <#assign userAvatarUrl = user.avatar_url>
 <#assign userHomeUrl = user.html_url>
@@ -13,5 +14,6 @@ Report generated at ${.now?iso_utc}
 
 | User                                                    | Homepage                                      |
 |:--------------------------------------------------------|:----------------------------------------------|
-| <img src="${user.avatar_url}" width="48" height="48"/> | [${userHomeUrl}](${userHomeUrl})              |
+| <img src="${user.avatar_url}" width="48" height="48"/> | [${userHomeUrl}](${userHomeUrl})               |
 </#list>
+</#compress>

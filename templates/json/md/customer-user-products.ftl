@@ -3,6 +3,7 @@
 <#assign json = JsonPath.parse(documents[0].content)>
 <#assign users = json.read("$[*]")>
 <#assign userDetails = json.read("$[*].user")>
+<#compress>
 <#--------------------------------------------------------------------------->
 # 1. Overview
 
@@ -32,6 +33,8 @@
 <@writeProducts title="Insurances" products=user.insurances/>
 <@writeProducts title="Securities" products=user.securities/>
 </#list>
+</#compress>
+
 <#--------------------------------------------------------------------------->
 <#-- writeTestUsers                                                        -->
 <#--------------------------------------------------------------------------->
