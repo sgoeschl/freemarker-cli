@@ -35,3 +35,6 @@ groovy freemarker-cli.groovy -i **/*.properties -t templates/properties/csv/lock
 
 echo "templates/xml/txt/recipients.ftl"
 groovy freemarker-cli.groovy -t ./templates/xml/txt/recipients.ftl site/sample/xml/recipients.xml > target/out/recipients.txt
+
+echo "templates/csv/fo/transform.ftl"
+groovy freemarker-cli.groovy -t templates/csv/fo/transform.ftl site/sample/csv/locker-test-users.csv > target/out/locker-test-users.fo
