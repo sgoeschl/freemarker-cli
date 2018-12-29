@@ -6,6 +6,7 @@ You somehow found this GitHub project and wonder if it solves a problem you migh
 
 * You need to transform some structured text document (CSV, JSON, XML, Java Property file) into CSV, HTML, Markdown or Confluence markup 
 * You need to convert an Excel document into CSV, HTML or Markdown
+* You need to create a nice-looking PDF from some boring JSON content 
 
 The goal of `freemarker-cli` is to automate repeated transformation tasks 
 
