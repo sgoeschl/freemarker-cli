@@ -7,9 +7,9 @@ You somehow found this GitHub project and wonder if it solves a problem you migh
 * You need to transform some structured text document (CSV, JSON, XML, Java Property file) into CSV, HTML, Markdown or Confluence markup 
 * You need to convert an Excel document into CSV, HTML or Markdown
 
-And this happens not often enough to write a dedicated script or application but too often to do it manually - if this is the case than help is near :-)
+The goal of `freemarker-cli` is to automate repeated transformation tasks which are too boring to be done manually and too simple to justify a script/program.
 
-# 2. Introduction
+# 2. How It Started
 
 For a customer I needed a little bit of test data management - to make a long story short (after writing a few scripts) it boiled down to transforming one or more JSON files to something human readable.
 
@@ -34,8 +34,6 @@ Using Velocity actually created some minor issues so I migrated to Apache FreeMa
 * Freemarker has no additional dependencies and things are just working
 
 While I love Apache Velocity (Apache Turbine anyone?) I decided to give FreeMarker a chance and migrated my [velocity-cli](https://github.com/sgoeschl/velocity-cli) to FreeMarker.
-
-The goal of `freemarker-cli` is to automate repeated transformation tasks which are too boring to be done manually and too simple to justify a script/program.
 
 # 3. Design Goals
 
