@@ -441,9 +441,9 @@ ${'\n'}
 ${'\n'}
 ```
 
-## 5.8 Transform CSVTo XML-FO
+## 5.8 Transform CSV To XML-FO
 
-For a proof of concept I created a sample transformation from CSV to XML-FO in order to create a PDF document using [Apache FOP](https://xmlgraphics.apache.org/fop) using the following template file
+For A POC (proof of concept) I created a sample transformation from CSV to XML-FO in order to create a PDF document using [Apache FOP](https://xmlgraphics.apache.org/fop) using the following template file
 
 ```text
 <#ftl output_format="XML" >
