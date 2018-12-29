@@ -27,7 +27,7 @@
         @Grab(group = "org.slf4j", module = "slf4j-api", version = "1.7.21"),
         @Grab(group = "org.slf4j", module = "slf4j-log4j12", version = "1.7.21"),
         @Grab(group = "org.freemarker", module = "freemarker", version = "2.3.28"),
-        @Grab(group = "org.apache.commons", module = "commons-csv", version = "1.5")])
+        @Grab(group = "org.apache.commons", module = "commons-csv", version = "1.6")])
 
 import com.jayway.jsonpath.DocumentContext
 import com.jayway.jsonpath.JsonPath
