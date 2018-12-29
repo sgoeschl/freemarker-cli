@@ -424,8 +424,6 @@ There is a `demo.ftl` which shows some advanced FreeMarker functionality
 * Access System properties
 * Access Environment variables
 
-> groovy freemarker-cli.groovy -d "This is a description" -t ./templates/demo.ftl README.md
-
 ```text
 1) Language-specific Date Format
 ---------------------------------------------------------------------------
@@ -475,6 +473,98 @@ user         : ${ReportData["user"]}
 * ${name} ==> ${value}
 </#list>
 ```
+
+Running the command
+
+> groovy freemarker-cli.groovy -d "This is a description" -t ./templates/demo.ftl README.md
+
+generated the following output
+
+```text
+1) Language-specific Date Format
+---------------------------------------------------------------------------
+Report generated at Dec 29, 2018 8:35:10 PM
+
+2) Invoke a constructor of a Java class
+---------------------------------------------------------------------------
+new java.utilDate(1000 * 3600 * 24): Jan 2, 1970 1:00:00 AM
+
+3) Invoke a static method of an non-constructor class
+---------------------------------------------------------------------------
+System.currentTimeMillis: 1,546,112,110,295
+
+4) Access an Enumeration
+---------------------------------------------------------------------------
+java.math.RoundingMode#UP: UP
+
+5) Loop Over The Values Of An Enumeration
+---------------------------------------------------------------------------
+* java.math.RoundingMode.UP
+* java.math.RoundingMode.DOWN
+* java.math.RoundingMode.CEILING
+* java.math.RoundingMode.FLOOR
+* java.math.RoundingMode.HALF_UP
+* java.math.RoundingMode.HALF_DOWN
+* java.math.RoundingMode.HALF_EVEN
+* java.math.RoundingMode.UNNECESSARY
+
+6) Display input files
+---------------------------------------------------------------------------
+Document: name=README.md file=/Users/sgoeschl/work/github/sgoeschl/freemarker-cli/README.md length=19,502 hasFile=true
+
+7) Access System Properties
+---------------------------------------------------------------------------
+user.name    : sgoeschl
+user.dir     : /Users/sgoeschl/work/github/sgoeschl/freemarker-cli
+user.home    : /Users/sgoeschl
+java.version : 1.8.0_192
+
+8) Report Data
+---------------------------------------------------------------------------
+description  : 
+host         : murderbot.local
+user         : sgoeschl
+date         : 2018-12-29
+
+9) Environment
+---------------------------------------------------------------------------
+* PATH ==> /Users/sgoeschl/bin:/Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home/bin:/usr/local/Cellar/ruby/2.5.3//bin:/usr/local/Cellar/git/2.19.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+* GIT_HOME ==> /usr/local/Cellar/git/2.19.1
+* JAVA_HOME ==> /Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home
+* TERM ==> xterm-256color
+* LANG ==> en_US
+* DISPLAY ==> :0.0
+* JAVA_MAIN_CLASS_32553 ==> org.codehaus.groovy.tools.GroovyStarter
+* LOGNAME ==> sgoeschl
+* XPC_SERVICE_NAME ==> 0
+* PWD ==> /Users/sgoeschl/work/github/sgoeschl/freemarker-cli
+* TERM_PROGRAM_VERSION ==> 421.1
+* JAVA_1_8_HOME ==> /Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home
+* RUBY_HOME ==> /usr/local/Cellar/ruby/2.5.3/
+* SHELL ==> /bin/bash
+* PROFILE_TYPE ==> development
+* TERM_PROGRAM ==> Apple_Terminal
+* LSCOLORS ==> ExFxCxDxBxegedabagacad
+* APP_ICON_32553 ==> /usr/local/Cellar/groovy/2.5.4/libexec/lib/groovy.icns
+* PROFILE_ENV ==> default
+* SECURITYSESSIONID ==> 186a8
+* OLDPWD ==> /usr/local/Cellar/groovy/2.5.4/libexec
+* USER ==> sgoeschl
+* CLICOLOR ==> 1
+* TMPDIR ==> /var/folders/cd/jbgc9cg14ld7dlsqk44tpmrw0000gn/T/
+* APP_NAME_32553 ==> Groovy
+* SSH_AUTH_SOCK ==> /private/tmp/com.apple.launchd.ymn0c6f7kR/Listeners
+* EDITOR ==> vi
+* XPC_FLAGS ==> 0x0
+* TERM_SESSION_ID ==> CB91CF57-17A0-4623-96DD-6A2A3EB6D9CA
+* LC_ALL ==> en_US.utf-8
+* __CF_USER_TEXT_ENCODING ==> 0x1F5:0x0:0x0
+* Apple_PubSub_Socket_Render ==> /private/tmp/com.apple.launchd.EWTvdMJuxl/Render
+* LC_CTYPE ==> UTF-8
+* HOME ==> /Users/sgoeschl
+* SHLVL ==> 1
+```
+
 
 # 5. Design Considerations
 

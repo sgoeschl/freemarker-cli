@@ -5,6 +5,9 @@
 mkdir target
 mkdir target/out
 
+echo "templates/demo.ftl"
+groovy freemarker-cli.groovy -t templates/demo.ftl target/out/demo.txt
+
 echo "templates/csv/html/transform.ftl"
 groovy freemarker-cli.groovy -t templates/csv/html/transform.ftl site/sample/csv/contract.csv > target/out/contract.html
 
