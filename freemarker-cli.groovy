@@ -1,4 +1,16 @@
 #!/usr/bin/env groovy
+@Grapes([
+        @Grab(group = "commons-cli", module = "commons-cli", version = "1.4"),
+        @Grab(group = "org.apache.poi", module = "poi", version = "3.17"),
+        @Grab(group = "org.apache.poi", module = "poi-ooxml", version = "3.17"),
+        @Grab(group = "org.apache.poi", module = "poi-ooxml-schemas", version = "3.17"),
+        @Grab(group = "com.jayway.jsonpath", module = "json-path", version = "2.4.0"),
+        @Grab(group = "org.slf4j", module = "slf4j-api", version = "1.7.21"),
+        @Grab(group = "org.slf4j", module = "slf4j-log4j12", version = "1.7.21"),
+        @Grab(group = "org.freemarker", module = "freemarker", version = "2.3.28"),
+        @Grab(group = "org.apache.commons", module = "commons-csv", version = "1.6")])
+
+import com.jayway.jsonpath.DocumentContext
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -17,18 +29,6 @@
  * limitations under the License.
  */
 
-@Grapes([
-        @Grab(group = "commons-cli", module = "commons-cli", version = "1.4"),
-        @Grab(group = "org.apache.poi", module = "poi", version = "3.17"),
-        @Grab(group = "org.apache.poi", module = "poi-ooxml", version = "3.17"),
-        @Grab(group = "org.apache.poi", module = "poi-ooxml-schemas", version = "3.17"),
-        @Grab(group = "com.jayway.jsonpath", module = "json-path", version = "2.4.0"),
-        @Grab(group = "org.slf4j", module = "slf4j-api", version = "1.7.21"),
-        @Grab(group = "org.slf4j", module = "slf4j-log4j12", version = "1.7.21"),
-        @Grab(group = "org.freemarker", module = "freemarker", version = "2.3.28"),
-        @Grab(group = "org.apache.commons", module = "commons-csv", version = "1.6")])
-
-import com.jayway.jsonpath.DocumentContext
 import com.jayway.jsonpath.JsonPath
 import freemarker.ext.beans.BeansWrapper
 import freemarker.ext.beans.BeansWrapperBuilder
@@ -44,6 +44,7 @@ import org.apache.commons.csv.CSVParser
 import org.apache.poi.ss.usermodel.*
 import org.xml.sax.InputSource
 
+import java.nio.charset.Charset
 import java.text.SimpleDateFormat
 
 static void main(String[] args) {
@@ -87,18 +88,31 @@ class Task {
 
         if (cli.stdin) {
             log("Reading from System.stdin")
-            documents.add(new Document("stdin", null, cli.stdin))
+            documents.add(new Document("stdin", cli.stdin))
         }
 
-        cli.sourceFiles.eachWithIndex { sourceFile, index ->
-            final File file = new File(sourceFile)
-            final String content = file.getText(cli.encoding)
-            final Document document = new Document(file.getName(), file, content)
+        cli.sourceFiles.eachWithIndex { fileName, index ->
+            final File file = new File(fileName)
+            final String name = file.getName()
+            final String encoding = getEncoding(file, cli.encoding)
+            final Document document = new Document(name, file, encoding)
             log("document[${index}]: ${file.getAbsolutePath()}")
             documents.add(document)
         }
 
         return documents
+    }
+
+    private static String getEncoding(File file, String encoding) {
+        final String name = file.getName().toLowerCase()
+
+        if(name.endsWith(".json")) {
+            // JSON files always have UTF-8 encoding
+            return "UTF-8"
+        }
+        else {
+            return encoding
+        }
     }
 
     private static Configuration createFreeMarkerConfiguration(File baseDir) {
@@ -235,51 +249,72 @@ class Document {
     File file
     String content
     long length
+    String encoding
 
-    Document(String name, File file, String content) {
+    Document(String name, String content) {
         this.name = name
-        this.file = file
         this.content = content != null ? content : ""
         this.length = content != null ? content.length() : 0
+        this.encoding = System.getProperty("file.encoding")
+    }
+
+    Document(String name, File file, String encoding) {
+        this.name = name
+        this.file = file
+        this.length = file.length()
+        this.encoding = encoding
     }
 
     boolean hasFile() {
         return file != null
     }
+
+    InputStream getInputStream() {
+        return hasFile() ? new FileInputStream(file) : new ByteArrayInputStream(content.getBytes())
+    }
 }
 
 class CSVParserBean {
-    CSVParser parse(String string, CSVFormat format) {
-        return CSVParser.parse(string, format)
+    CSVParser parse(Document document, CSVFormat format) {
+        // The input stream would be closed by CSVParser#close but it
+        // is unlikely to be called so we load the file into a String.
+        final String text = document.file.getText(document.encoding)
+        return CSVParser.parse(text, format)
     }
 }
 
 class JsonPathBean {
-    DocumentContext parse(String string) {
-        return JsonPath.parse(string)
+    DocumentContext parse(Document document) {
+        document.getInputStream().withCloseable {
+            return JsonPath.parse(it)
+        }
     }
 }
 
 class PropertiesParserBean {
-    Properties parse(String string) {
-        new StringReader(string).withCloseable { reader ->
+    Properties parse(Document document) {
+        document.getInputStream().withCloseable {
             Properties properties = new Properties()
-            properties.load(reader)
+            properties.load(it)
             return properties
         }
     }
 }
 
 class XmlParserBean {
-    NodeModel parse(String string) {
-        final InputSource inputSource = new InputSource(new StringReader(string))
-        return NodeModel.parse(inputSource)
+    NodeModel parse(Document document) {
+        document.getInputStream().withCloseable {
+            return NodeModel.parse(new InputSource(it))
+        }
     }
 }
 
 class ExcelParserBean {
-    Workbook parseFile(File sourceFile) {
-        return WorkbookFactory.create(sourceFile)
+
+    Workbook parse(Document document) {
+        document.getInputStream().withCloseable {
+            return WorkbookFactory.create(it)
+        }
     }
 
     List<List<Object>> parseSheet(Sheet sheet) {

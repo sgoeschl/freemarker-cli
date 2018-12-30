@@ -24,7 +24,7 @@ java.math.RoundingMode#UP: ${Enums["java.math.RoundingMode"].UP}
 6) Display input files
 ---------------------------------------------------------------------------
 <#list documents as document>
-Document: name=${document.name} file=${document.file.getAbsolutePath()} length=${document.length} hasFile=${document.hasFile()?c}
+Document: name=${document.name} file=${document.file.getAbsolutePath()} length=${document.length} hasFile=${document.hasFile()?c} encoding=${document.encoding}
 </#list>
 
 7) Access System Properties

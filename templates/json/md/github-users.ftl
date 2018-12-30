@@ -1,5 +1,5 @@
 <#ftl output_format="plainText" >
-<#assign json = JsonPath.parse(documents[0].content)>
+<#assign json = JsonPath.parse(documents[0])>
 <#assign users = json.read("$[*]")>
 <#--------------------------------------------------------------------------->
 # GitHub Users

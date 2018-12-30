@@ -1,6 +1,6 @@
 <#ftl output_format="HTML" >
 <#assign sourceDocumentName = documents[0].name>
-<#assign workbook = ExcelParser.parseFile(documents[0].file)>
+<#assign workbook = ExcelParser.parse(documents[0])>
 <#assign date =  ReportData["date"]>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>

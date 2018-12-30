@@ -36,8 +36,13 @@ fi
 echo "templates/json/md/customer-user-products.ftl"
 groovy freemarker-cli.groovy -t templates/json/md/customer-user-products.ftl  site/sample/json/customer-user-products.json > target/out/customer-user-products.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
+if hash curl 2>/dev/null; then
+echo "templates/json/md/github-users.ftl from stdin using cURL"
+groovy freemarker-cli.groovy -t templates/json/md/github-users.ftl site/sample/json/github-users.json > target/out/customer-user-products-curl.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
+fi
+
 echo "templates/json/md/github-users.ftl"
-groovy freemarker-cli.groovy -t templates/json/md/github-users.ftl site/sample/json/github-users.json > target/out/github-users.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
+curl -s https://api.github.com/users | groovy freemarker-cli.groovy -t templates/json/md/github-users.ftl > target/out/github-users.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "templates/properties/csv/locker-test-users.ftl"
 groovy freemarker-cli.groovy -i **/*.properties -t templates/properties/csv/locker-test-users.ftl site/sample/properties > target/out/locker-test-users.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
@@ -53,5 +58,5 @@ if hash fop 2>/dev/null; then
     fop -fo target/out/locker-test-users.fo target/out/locker-test-users.pdf 2>/dev/null || { echo >&2 "Test failed.  Aborting."; exit 1; }
 fi
 
-echo "Creating sample files in ./target/out"
+echo "Created the following sample files in ./target/out"
 ls -l ./target/out
