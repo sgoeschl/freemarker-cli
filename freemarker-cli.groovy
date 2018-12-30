@@ -19,7 +19,6 @@
 
 @Grapes([
         @Grab(group = "commons-cli", module = "commons-cli", version = "1.4"),
-        @Grab(group = "org.apache.ivy", module = "ivy", version = "2.4.0"),
         @Grab(group = "org.apache.poi", module = "poi", version = "3.17"),
         @Grab(group = "org.apache.poi", module = "poi-ooxml", version = "3.17"),
         @Grab(group = "org.apache.poi", module = "poi-ooxml-schemas", version = "3.17"),
