@@ -10,8 +10,6 @@
         @Grab(group = "org.freemarker", module = "freemarker", version = "2.3.28"),
         @Grab(group = "org.apache.commons", module = "commons-csv", version = "1.6")])
 
-import com.jayway.jsonpath.DocumentContext
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -29,6 +27,7 @@ import com.jayway.jsonpath.DocumentContext
  * limitations under the License.
  */
 
+import com.jayway.jsonpath.DocumentContext
 import com.jayway.jsonpath.JsonPath
 import freemarker.ext.beans.BeansWrapper
 import freemarker.ext.beans.BeansWrapperBuilder
@@ -44,7 +43,6 @@ import org.apache.commons.csv.CSVParser
 import org.apache.poi.ss.usermodel.*
 import org.xml.sax.InputSource
 
-import java.nio.charset.Charset
 import java.text.SimpleDateFormat
 
 static void main(String[] args) {
@@ -245,11 +243,11 @@ class Task {
 // ==========================================================================
 
 class Document {
-    String name
-    File file
-    String content
-    long length
-    String encoding
+    private String name
+    private long length
+    private String encoding
+    private File file
+    private String content
 
     Document(String name, String content) {
         this.name = name
@@ -265,12 +263,42 @@ class Document {
         this.encoding = encoding
     }
 
-    boolean hasFile() {
-        return file != null
+    String getName() {
+        return name
     }
 
-    InputStream getInputStream() {
-        return hasFile() ? new FileInputStream(file) : new ByteArrayInputStream(content.getBytes())
+    long getLength() {
+        return length
+    }
+
+    String getEncoding() {
+        return encoding
+    }
+
+    String getText() {
+        if (hasFile()) {
+            return getInputStream().getText(encoding)
+        }
+        else {
+            return content
+        }
+    }
+
+    String getLocation() {
+        if (hasFile()) {
+            return file.getAbsolutePath()
+        }
+        else {
+            return "stdin"
+        }
+    }
+
+    private InputStream getInputStream() {
+        return hasFile() ? new FileInputStream(file) : new ByteArrayInputStream(content.getBytes(encoding))
+    }
+
+    private boolean hasFile() {
+        return file != null
     }
 }
 
@@ -278,7 +306,7 @@ class CSVParserBean {
     CSVParser parse(Document document, CSVFormat format) {
         // The input stream would be closed by CSVParser#close but it
         // is unlikely to be called so we load the file into a String.
-        final String text = document.file.getText(document.encoding)
+        final String text = document.getText()
         return CSVParser.parse(text, format)
     }
 }
@@ -294,7 +322,7 @@ class JsonPathBean {
 class PropertiesParserBean {
     Properties parse(Document document) {
         document.getInputStream().withCloseable {
-            Properties properties = new Properties()
+            final Properties properties = new Properties()
             properties.load(it)
             return properties
         }
@@ -417,8 +445,11 @@ class CommandLine {
         if (!opt.arguments().isEmpty()) {
             this.sourceFiles = resolveSourceFiles(opt.arguments())
         } else {
-            StringBuffer buffer = new StringBuffer()
-            System.in.eachLine { line -> buffer.append(line) }
+            final String lineSeparator = System.getProperty("line.separator")
+            final StringBuffer buffer = new StringBuffer()
+            System.in.eachLine { line ->
+                buffer.append(line);
+                buffer.append(lineSeparator) }
             stdin = buffer.toString()
         }
     }
