@@ -127,7 +127,7 @@ or pipe a cURL response
 
 ```text
 <#ftl output_format="plainText" >
-<#assign json = JsonPath.parse(documents[0].content)>
+<#assign json = JsonPath.parse(documents[0])>
 <#assign users = json.read("$[*]")>
 <#--------------------------------------------------------------------------->
 # GitHub Users
@@ -199,9 +199,8 @@ The FreeMarker template is shown below
 ```text
 <#ftl output_format="HTML" >
 <#assign name = documents[0].name>
-<#assign content = documents[0].content>
 <#assign cvsFormat = CSVFormat.DEFAULT.withHeader()>
-<#assign csvParser = CSVParser.parse(content, cvsFormat)>
+<#assign csvParser = CSVParser.parse(documents[0], cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
 <#--------------------------------------------------------------------------->
@@ -211,30 +210,30 @@ The FreeMarker template is shown below
     <title>${name}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 </head>
 <body>
 <table class="table table-striped">
-    <@writeHeaders headers=csvHeaders/>
+<@writeHeaders headers=csvHeaders/>
     <@writeColums columns=csvRecords/>
 </table>
 </body>
 </html>
 <#--------------------------------------------------------------------------->
 <#macro writeHeaders headers>
-    <tr>
+<tr>
     <#list headers as header>
         <th>${header}</th>
     </#list>
-    </tr>
+</tr>
 </#macro>
 <#--------------------------------------------------------------------------->
 <#macro writeColums columns>
     <#list columns as column>
     <tr>
-    <#list column.iterator() as field>
-        <td>${field}</td>
-    </#list>
+        <#list column.iterator() as field>
+            <td>${field}</td>
+        </#list>
     </tr>
     </#list>
 </#macro>
@@ -257,7 +256,7 @@ using the following template
 
 ```text
 <#ftl output_format="plainText" >
-<#assign xml = XmlParser.parse(documents[0].content)>
+<#assign xml = XmlParser.parse(documents[0])>
 <#list xml.recipients.person as recipient>
 To: ${recipient.name}
 ${recipient.address}
@@ -304,7 +303,7 @@ One day I was asked a to prepare a CSV files containind REST endpoints described
 
 ```text
 <#ftl output_format="plainText">
-<#assign json = JsonPath.parse(documents[0].content)>
+<#assign json = JsonPath.parse(documents[0])>
 <#assign paths = json.read("$.paths")>
 ENDPOINT,METHOD
 <#list paths as url,entry>
@@ -339,7 +338,7 @@ The provided FTL transforms a known Excel document structure into a HTML documen
 ```text
 <#ftl output_format="HTML" >
 <#assign sourceDocumentName = documents[0].name>
-<#assign workbook = ExcelParser.parseFile(documents[0].file)>
+<#assign workbook = ExcelParser.parseFile(documents[0])>
 <#assign date =  ReportData["date"]>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
@@ -421,14 +420,14 @@ The FTL uses a couple of interesting features
 * We process a list of property files
 * The `strip_text` and `compress` strips any whitespaces and linebreaks from the output so we can create a proper CSV file
 * We use FTL functions to extract the `tenant` and `site`, e.g. `extractTenant`
-* We add a manual line break using ```${'\n'}``
+* We add a manual line break using ```${'\n'}```
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
 <#compress>
     TENANT,SITE,USER_ID,DISPOSER_ID,PASSWORD,SMS_OTP,NAME,DESCRIPTION
     <#list documents as document>
-        <#assign properties = PropertiesParser.parse(document.content)>
+        <#assign properties = PropertiesParser.parse(document)>
         <#assign environments = properties["ENVIRONMENTS"]!"">
         <#assign tenant = extractTenant(environments)>
         <#assign site = extractSite(environments)>
@@ -472,8 +471,6 @@ ${'\n'}
         <#return "???">
     </#if>
 </#function>
-
-${'\n'}
 ```
 
 ## 5.8 Transform CSV To XML-FO
@@ -483,9 +480,8 @@ For A POC (proof of concept) I created a sample transformation from CSV to XML-F
 ```text
 <#ftl output_format="XML" >
 <#assign name = documents[0].name>
-<#assign content = documents[0].content>
 <#assign cvsFormat = CSVFormat.DEFAULT.withHeader()>
-<#assign csvParser = CSVParser.parse(content, cvsFormat)>
+<#assign csvParser = CSVParser.parse(documents[0], cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
 <#--------------------------------------------------------------------------->
@@ -598,21 +594,22 @@ java.math.RoundingMode#UP: ${Enums["java.math.RoundingMode"].UP}
 6) Display input files
 ---------------------------------------------------------------------------
 <#list documents as document>
-Document: name=${document.name} file=${document.file.getAbsolutePath()} length=${document.length} isFile=${document.isFile()?c}
+Document: name=${document.name} location=${document.location} length=${document.length} encoding=${document.encoding}
 </#list>
 
 7) Access System Properties
 ---------------------------------------------------------------------------
-user.name    : ${SystemProperties["user.name"]}
-user.dir     : ${SystemProperties["user.dir"]}
-user.home    : ${SystemProperties["user.home"]}
-java.version : ${SystemProperties["java.version"]}
-|
-7) Report Data
+user.name    : ${SystemProperties["user.name"]!""}
+user.dir     : ${SystemProperties["user.dir"]!""}
+user.home    : ${SystemProperties["user.home"]!""}
+java.version : ${SystemProperties["java.version"]!""}
+
+8) Report Data
 ---------------------------------------------------------------------------
 description  : ${ReportData["description"]}
 host         : ${ReportData["host"]}
 user         : ${ReportData["user"]}
+date         : ${ReportData["date"]}
 
 9) Environment
 ---------------------------------------------------------------------------
@@ -657,7 +654,7 @@ java.math.RoundingMode#UP: UP
 
 6) Display input files
 ---------------------------------------------------------------------------
-Document: name=README.md file=/Users/sgoeschl/work/github/sgoeschl/freemarker-cli/README.md length=19,502 hasFile=true
+Document: name=README.md location=/Users/sgoeschl/work/github/sgoeschl/freemarker-cli/README.md length=19,502
 
 7) Access System Properties
 ---------------------------------------------------------------------------
