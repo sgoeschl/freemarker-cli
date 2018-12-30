@@ -1,0 +1,7 @@
+#!/bin/sh
+
+BINDIR=`dirname $0`
+
+hash groovy 2>/dev/null || { echo >&2 "[freemarker-cli] I require Apache Groovy but it's not installed.  Aborting."; exit 1; }
+
+groovy ${BINDIR}/freemarker-cli.groovy -b $BINDIR "$@"

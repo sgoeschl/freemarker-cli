@@ -93,7 +93,7 @@ class Task {
 
         cli.sourceFiles.eachWithIndex { sourceFile, index ->
             final File file = new File(sourceFile)
-            final String content = file.getText("UTF-8")
+            final String content = file.getText(cli.encoding)
             final Document document = new Document(file.getName(), file, content)
             log("document[${index}]: ${file.getAbsolutePath()}")
             documents.add(document)
@@ -309,6 +309,7 @@ class ExcelParserBean {
 
 class CommandLine {
     File baseDir
+    String encoding = "UTF-8"
     String description = ""
     Locale locale = Locale.getDefault()
     String templateName = ""
@@ -324,6 +325,7 @@ class CommandLine {
         cli.v(longOpt: 'verbose', 'Verbose mode', required: false)
         cli.b(longOpt: 'basedir', 'Base directory to resolve FreeMarker templates', required: false, args: 1)
         cli.d(longOpt: 'description', 'Custom report description', required: false, args: 1)
+        cli.e(longOpt: 'encoding', 'Encoding of source file', required: false, args: 1)
         cli.i(longOpt: 'include', 'Ant file pattern for directory search', required: false, args: 1)
         cli.o(longOpt: 'output', 'Generated output file', required: false, args: 1)
         cli.t(longOpt: 'template', 'Template name', required: false, args: 1)
@@ -347,6 +349,10 @@ class CommandLine {
 
         if (opt.d) {
             this.description = opt.d
+        }
+
+        if (opt.e) {
+            this.encoding= opt.e
         }
 
         if (opt.i) {
