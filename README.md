@@ -169,7 +169,7 @@ Since many of our QA people have no Markdown viewer installed I also created a v
 
 ![Customer User Products HTML](./site/image/customer-user-products-html.png "Customer User Products HTML")
 
-As added bonus we can easily transform the CSV to PDF using [wkhtmltopdf](https://wkhtmltopdf.org) `wkhtmltopdf`
+As added bonus we can easily transform the HTML to PDF using [wkhtmltopdf](https://wkhtmltopdf.org)
 
 ```text
 freemarker-cli> wkhtmltopdf ./site/sample/customer-user-products.html customer-user-products.pdf
@@ -181,7 +181,7 @@ Printing pages (6/6)
 Done  
 ```
 
-which creates the following PDF document
+which creates the following PDF document (please note that even the links within the document are working)
 
 ![Customer User Products PDF](./site/image/customer-user-products-pdf.png "Customer User Products PDF")
 
@@ -326,14 +326,14 @@ ENDPOINT,METHOD
 
 ## 5.6 Transforming Excel Documents
 
-Apache POI supports XLS and XLSX documents. 
+Another day my project management asked me to create a CSV configuration file based on an Excel documents - as usual manual copying was not an option due to required data cleanup and data transformation. So I thought about Apache POI which support XLS and XLSX documents - integration of Apache POI was a breeze but now it is possible to process Excel documents
 
 ```text
 > groovy freemarker-cli.groovy -t templates/excel/html/test.ftl site/sample/excel/test.xls
 > groovy freemarker-cli.groovy -t templates/excel/html/test.ftl site/sample/excel/test.xlsx
 ```
 
-The provided FTL transforms a known Excel document structure into a HTML document and is not sophisticated
+The provided FTL transforms a known Excel document structure into a HTML document and is not sophisticated (note to myself - get rid of the hard-coded columns)
 
 ```text
 <#ftl output_format="HTML" >
@@ -420,7 +420,7 @@ The FTL uses a couple of interesting features
 * We process a list of property files
 * The `strip_text` and `compress` strips any whitespaces and linebreaks from the output so we can create a proper CSV file
 * We use FTL functions to extract the `tenant` and `site`, e.g. `extractTenant`
-* We add a manual line break using ```${'\n'}```
+* We add a manual line break using ```${'\n'}``
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
