@@ -21,10 +21,11 @@ java.math.RoundingMode#UP: ${Enums["java.math.RoundingMode"].UP}
 * java.math.RoundingMode.${roundingMode}
 </#list>
 
-6) Display input files
+6) Display list of input files
 ---------------------------------------------------------------------------
+List all files:
 <#list documents as document>
-Document: name=${document.name} location=${document.location} length=${document.length} encoding=${document.encoding}
+- Document: name=${document.name} location=${document.location} length=${document.length} encoding=${document.encoding}
 </#list>
 
 7) Access System Properties
@@ -45,4 +46,23 @@ date         : ${ReportData["date"]}
 ---------------------------------------------------------------------------
 <#list Environment as name,value>
 * ${name} ==> ${value}
+</#list>
+
+10) Documents
+---------------------------------------------------------------------------
+Get the number of documents:
+    - ${Documents.size()}
+Get the first document
+    - ${Documents.get(0)}
+List all files containing "README" in the name
+<#list Documents.findByName("README") as document>
+    - ${document.name}
+</#list>
+List all files having "md" extension
+<#list Documents.findByExtension("md") as document>
+    - ${document.name}
+</#list>
+Get all documents
+<#list Documents.getAll() as document>
+    - ${document.name}
 </#list>

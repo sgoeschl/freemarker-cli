@@ -45,6 +45,9 @@ import org.xml.sax.InputSource
 
 import java.text.SimpleDateFormat
 
+import static java.nio.charset.StandardCharsets.ISO_8859_1
+import static java.nio.charset.StandardCharsets.UTF_8
+
 static void main(String[] args) {
     final CommandLine cli = new CommandLine(args)
     new Task("freemarker-cli", cli).run()
@@ -102,14 +105,11 @@ class Task {
     }
 
     private static String getEncoding(File file, String encoding) {
-        final String name = file.getName().toLowerCase()
-
-        if(name.endsWith(".json")) {
-            // JSON files always have UTF-8 encoding
-            return "UTF-8"
-        }
-        else {
-            return encoding
+        final String extension = IOUtils.getFileExtension(file.name)
+        switch (extension) {
+            case "json": return UTF_8.name()
+            case "properties": return ISO_8859_1.name()
+            default: return encoding
         }
     }
 
@@ -125,6 +125,7 @@ class Task {
     private static Map<String, Object> createDataModel(List<Document> documents, String description) {
         final Map<String, Object> dataModel = new HashMap<String, Object>()
         dataModel.put("documents", documents)
+        dataModel.put("Documents", new Documents(documents))
         dataModel.putAll(createCommonsCsvDataModel())
         dataModel.putAll(createJsonPathDataModel())
         dataModel.putAll(createXmlParserDataModel())
@@ -239,6 +240,21 @@ class Task {
 }
 
 // ==========================================================================
+// Helper methods
+// ==========================================================================
+
+class IOUtils {
+
+    static getFileExtension(String name) {
+        int lastIndexOf = name.lastIndexOf(".")
+        if (lastIndexOf == -1) {
+            return ""
+        }
+        return name.substring(lastIndexOf+1).toLowerCase()
+    }
+}
+
+// ==========================================================================
 // Objects exposed in FreeMarker templates
 // ==========================================================================
 
@@ -276,30 +292,73 @@ class Document {
     }
 
     String getText() {
-        if (hasFile()) {
+        if (isFile()) {
             return getInputStream().getText(encoding)
-        }
-        else {
+        } else {
             return content
         }
     }
 
     String getLocation() {
-        if (hasFile()) {
+        if (isFile()) {
             return file.getAbsolutePath()
-        }
-        else {
+        } else {
             return "stdin"
         }
     }
 
     private InputStream getInputStream() {
-        return hasFile() ? new FileInputStream(file) : new ByteArrayInputStream(content.getBytes(encoding))
+        return isFile() ? new FileInputStream(file) : new ByteArrayInputStream(content.getBytes(encoding))
     }
 
-    private boolean hasFile() {
+    private boolean isFile() {
         return file != null
     }
+
+    @Override
+    public String toString() {
+        return "Document{" +
+                "name='" + name + '\'' +
+                ", location='" + getLocation() + '\'' +
+                '}';
+    }
+}
+
+class Documents {
+    private List<Document> documents;
+
+    Documents(List<Document> documents) {
+        this.documents = documents
+    }
+
+    List<String> getNames() {
+        documents.stream().map { it.getName }.toList()
+    }
+
+    int size() {
+        return documents.size
+    }
+
+    List<Document> getAll() {
+        return documents
+    }
+
+    Document get(int index) {
+        return documents.get(index);
+    }
+
+    Document get(String name) {
+        return documents.find() { (it.name == value) }
+    }
+
+    List<Document> findByName(String value) {
+        return documents.findAll() { it.name.contains(value) }
+    }
+
+    List<Document> findByExtension(String extension) {
+        return documents.findAll() { IOUtils.getFileExtension(it.name) == extension }
+    }
+
 }
 
 class CSVParserBean {
@@ -343,6 +402,14 @@ class ExcelParserBean {
         document.getInputStream().withCloseable {
             return WorkbookFactory.create(it)
         }
+    }
+
+    List<Sheet> getAllSheets(Workbook workbook) {
+        final List<Sheet> result = []
+        for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+            result.add(workbook.getSheetAt(i))
+        }
+        return result
     }
 
     List<List<Object>> parseSheet(Sheet sheet) {
@@ -414,7 +481,7 @@ class CommandLine {
         }
 
         if (opt.e) {
-            this.encoding= opt.e
+            this.encoding = opt.e
         }
 
         if (opt.i) {
@@ -448,8 +515,9 @@ class CommandLine {
             final String lineSeparator = System.getProperty("line.separator")
             final StringBuffer buffer = new StringBuffer()
             System.in.eachLine { line ->
-                buffer.append(line);
-                buffer.append(lineSeparator) }
+                buffer.append(line)
+                buffer.append(lineSeparator)
+            }
             stdin = buffer.toString()
         }
     }

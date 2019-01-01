@@ -331,71 +331,79 @@ Another day my project management asked me to create a CSV configuration file ba
 ```text
 > groovy freemarker-cli.groovy -t templates/excel/html/test.ftl site/sample/excel/test.xls
 > groovy freemarker-cli.groovy -t templates/excel/html/test.ftl site/sample/excel/test.xlsx
+> groovy freemarker-cli.groovy -t templates/excel/html/test.ftl site/sample/excel/test-multiple-sheets.xlsx
 ```
 
-The provided FTL transforms a known Excel document structure into a HTML document and is not sophisticated (note to myself - get rid of the hard-coded columns)
+The provided FTL transforms a known Excel document structure into a HTML document supporting multiple Excel sheets
 
 ```text
 <#ftl output_format="HTML" >
-<#assign sourceDocumentName = documents[0].name>
-<#assign workbook = ExcelParser.parseFile(documents[0])>
+<#assign documentName = documents[0].name>
+<#assign workbook = ExcelParser.parse(documents[0])>
 <#assign date =  ReportData["date"]>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>${sourceDocumentName}</title>
+    <title>${documentName}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container-fluid">
-    <h1>Excel Test <small>${sourceDocumentName}, ${date}</small></h1>
-    <@writeSheet sheet=workbook.getSheetAt(0)/>
+    <h1>Excel Test
+        <small>${documentName}, ${date}</small>
+    </h1>
+    <@writeSheets workbook/>
 </div>
 </body>
 </html>
+
+<#--------------------------------------------------------------------------->
+<#-- writeSheets                                                           -->
+<#--------------------------------------------------------------------------->
+<#macro writeSheets workbook>
+    <#assign sheets = ExcelParser.getAllSheets(workbook)>
+    <#list sheets as sheet>
+        <@writeSheet sheet/>
+    </#list>
+</#macro>
+
 <#--------------------------------------------------------------------------->
 <#-- writeSheet                                                            -->
 <#--------------------------------------------------------------------------->
 <#macro writeSheet sheet>
     <#assign rows = ExcelParser.parseSheet(sheet)>
     <h2>${sheet.getSheetName()}</h2>
-    <@writeRows rows=rows/>
+    <@writeRows rows/>
 </#macro>
+
 <#--------------------------------------------------------------------------->
 <#-- writeRow                                                              -->
 <#--------------------------------------------------------------------------->
 <#macro writeRows rows>
-<table class="table table-striped">
-    <#list rows as row>
-        <#if row?is_first>
-            <tr>
-                <th>#</th>
-                <th>${row[0]}</th>
-                <th>${row[1]}</th>
-                <th>${row[2]}</th>
-                <th>${row[3]}</th>
-                <th>${row[4]}</th>
-                <th>${row[5]}</th>
-                <th>${row[6]}</th>
-            </tr>
-        <#else>
-            <tr>
-                <td>${row?index}</td>
-                <td>${row[0]}</td>
-                <td>${row[1]}</td>
-                <td>${row[2]}</td>
-                <td>${row[3]}</td>
-                <td>${row[4]}</td>
-                <td>${row[5]}</td>
-                <td>${row[6]}</td>
-            </tr>
-        </#if>
-    </#list>
-</table>
+    <table class="table table-striped">
+        <#list rows as row>
+            <#if row?is_first>
+                <tr>
+                    <th>#</th>
+                    <#list row as column>
+                        <th>${column}</th>
+                    </#list>
+                </tr>
+            <#else>
+                <tr>
+                    <td>${row?index}</td>
+                    <#list row as column>
+                        <td>${column}</td>
+                    </#list>
+                </tr>
+            </#if>
+        </#list>
+    </table>
 </#macro>
+
 ```
 
 but the result looks reasonable
@@ -725,6 +733,8 @@ Within the script a FreeMarker data model is set up and passed to the template -
 |-----------------------|---------------------------------------------------------------------|
 | CSVFormat             | Available CSV formats, e.g. "DEFAULT", "EXCEL"                      |
 | CSVParser             | CSV parser exposing a `parse` method                                |
+| documents             | List of documents passed on the command line                        |
+| Documents             | Helper to find documents, e.g. by name or extension                 |
 | Enums                 | Helper to work with Java enumerations                               |
 | Environment           | Environment variables                                               |
 | ExcelParser           | Excel parser exposing a `parse` method                              |
