@@ -1,9 +1,9 @@
 #!/usr/bin/env groovy
 @Grapes([
         @Grab(group = "commons-cli", module = "commons-cli", version = "1.4"),
-        @Grab(group = "org.apache.poi", module = "poi", version = "3.17"),
-        @Grab(group = "org.apache.poi", module = "poi-ooxml", version = "3.17"),
-        @Grab(group = "org.apache.poi", module = "poi-ooxml-schemas", version = "3.17"),
+        @Grab(group = "org.apache.poi", module = "poi", version = "4.0.1"),
+        @Grab(group = "org.apache.poi", module = "poi-ooxml", version = "4.0.1"),
+        @Grab(group = "org.apache.poi", module = "poi-ooxml-schemas", version = "4.0.1"),
         @Grab(group = "com.jayway.jsonpath", module = "json-path", version = "2.4.0"),
         @Grab(group = "org.slf4j", module = "slf4j-api", version = "1.7.21"),
         @Grab(group = "org.slf4j", module = "slf4j-log4j12", version = "1.7.21"),
