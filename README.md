@@ -483,7 +483,7 @@ ${'\n'}
 
 ## 5.8 Transform CSV To XML-FO
 
-For A POC (proof of concept) I created a sample transformation from CSV to XML-FO in order to create a PDF document using [Apache FOP](https://xmlgraphics.apache.org/fop) using the following template file
+For a POC (proof of concept) I created a sample transformation from CSV to XML-FO in order to create a PDF document using [Apache FOP](https://xmlgraphics.apache.org/fop) using the following template file
 
 ```text
 <#ftl output_format="XML" >
@@ -564,6 +564,25 @@ INFO: Rendered page #1.
 The result does not look very impressive but it is a PDF :-)
 
 ![](./site/image/locker-test-users-pdf.png)
+
+Further along the line of the POC we converted a transaction export from CSV to PDF using Apache FOP
+
+```text
+> freemarker-cli.groovy -t templates/csv/fo/transactions.ftl site/sample/csv/transactions.csv > transactions.fo
+> fop -fo transactions.fo transactions.pdf
+Jan 16, 2019 11:15:21 PM org.apache.fop.events.LoggingEventListener processEvent
+WARNING: Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+Jan 16, 2019 11:15:21 PM org.apache.fop.events.LoggingEventListener processEvent
+WARNING: Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+Jan 16, 2019 11:15:21 PM org.apache.fop.events.LoggingEventListener processEvent
+WARNING: The contents of fo:block line 1 exceed the available area in the inline-progression direction by 11027 millipoints. (See position 1519:51)
+Jan 16, 2019 11:15:22 PM org.apache.fop.events.LoggingEventListener processEvent
+INFO: Rendered page #1.
+Jan 16, 2019 11:15:22 PM org.apache.fop.events.LoggingEventListener processEvent
+INFO: Rendered page #2.
+```
+
+![](./site/image/transactions.png)
 
 ## 5.9 Using Advanced FreeMarker Features
 

@@ -34,6 +34,14 @@ if hash fop 2>/dev/null; then
     fop -fo target/out/locker-test-users.fo target/out/locker-test-users.pdf 2>/dev/null || { echo >&2 "Test failed.  Aborting."; exit 1; }
 fi
 
+echo "templates/csv/fo/transactions.ftl"
+groovy freemarker-cli.groovy -t templates/csv/fo/transactions.ftl site/sample/csv/transactions.csv > target/out/transactions.fo || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+if hash fop 2>/dev/null; then
+	echo "fop -fo target/out/transactions.fo target/out/transactions.pdf"
+    fop -fo target/out/transactions.fo target/out/transactions.pdf 2>/dev/null || { echo >&2 "Test failed.  Aborting."; exit 1; }
+fi
+
 #############################################################################
 # Excel
 #############################################################################
@@ -62,7 +70,7 @@ echo "templates/json/md/customer-user-products.ftl"
 groovy freemarker-cli.groovy -t templates/json/md/customer-user-products.ftl  site/sample/json/customer-user-products.json > target/out/customer-user-products.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 if hash curl 2>/dev/null; then
-echo "templates/json/md/github-users.ftl from stdin using cURL"
+echo "templates/json/md/github-users.ftl"
 groovy freemarker-cli.groovy -t templates/json/md/github-users.ftl site/sample/json/github-users.json > target/out/github-users-curl.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 fi
 
