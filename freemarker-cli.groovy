@@ -72,8 +72,9 @@ class Task {
         final Configuration configuration = createFreeMarkerConfiguration(cli.baseDir)
         final Map<String, Object> dataModel = createDataModel(documents, cli.description)
         final Template template = configuration.getTemplate(cli.templateName)
+        final String targetEncoding = cli.targetEncoding
 
-        createFileWriter(cli.outputFile).withCloseable { writer ->
+        createFileWriter(cli.outputFile, targetEncoding).withCloseable { writer ->
             template.process(dataModel, writer)
             final long durationInMs = System.currentTimeMillis() - startTime
             log("Template processing finished in ${durationInMs} ms")
@@ -95,8 +96,8 @@ class Task {
         cli.sourceFiles.eachWithIndex { fileName, index ->
             final File file = new File(fileName)
             final String name = file.getName()
-            final String encoding = getEncoding(file, cli.encoding)
-            final Document document = new Document(name, file, encoding)
+            final String sourceEncoding = getSourceEncoding(file, cli.sourceEncoding)
+            final Document document = new Document(name, file, sourceEncoding)
             log("document[${index}]: ${file.getAbsolutePath()}")
             documents.add(document)
         }
@@ -104,7 +105,7 @@ class Task {
         return documents
     }
 
-    private static String getEncoding(File file, String encoding) {
+    private static String getSourceEncoding(File file, String encoding) {
         final String extension = IOUtils.getFileExtension(file.name)
         switch (extension) {
             case "json": return UTF_8.name()
@@ -209,9 +210,9 @@ class Task {
         return dataModel
     }
 
-    private static Writer createFileWriter(String outputFileName) {
+    private static Writer createFileWriter(String outputFileName, String encoding) {
         if (outputFileName == null || outputFileName.isEmpty()) {
-            new BufferedWriter(new OutputStreamWriter(System.out))
+            new BufferedWriter(new OutputStreamWriter(System.out, encoding))
         } else {
             final File outputFile = new File(outputFileName)
             if (outputFile.exists()) {
@@ -320,12 +321,13 @@ class Document {
         return "Document{" +
                 "name='" + name + '\'' +
                 ", location='" + getLocation() + '\'' +
-                '}';
+                ", encoding='" + getEncoding() + '\'' +
+                '}'
     }
 }
 
 class Documents {
-    private List<Document> documents;
+    private List<Document> documents
 
     Documents(List<Document> documents) {
         this.documents = documents
@@ -438,7 +440,8 @@ class ExcelParserBean {
 
 class CommandLine {
     File baseDir
-    String encoding = "UTF-8"
+    String sourceEncoding = "UTF-8"
+    String targetEncoding = "UTF-8"
     String description = ""
     Locale locale = Locale.getDefault()
     String templateName = ""
@@ -452,13 +455,14 @@ class CommandLine {
         def cli = new CliBuilder(usage: 'groovy freemarker-cli.groovy [options] file[s]', stopAtNonOption: false)
         cli.h(longOpt: 'help', 'Usage information', required: false)
         cli.v(longOpt: 'verbose', 'Verbose mode', required: false)
-        cli.b(longOpt: 'basedir', 'Base directory to resolve FreeMarker templates', required: false, args: 1)
+        cli.b(longOpt: 'basedir', 'Base directory to resolve templates', required: false, args: 1)
+        cli.e(longOpt: 'encoding', 'Encoding of output file, e.g. UTF-8', required: false, args: 1)
         cli.d(longOpt: 'description', 'Custom report description', required: false, args: 1)
-        cli.e(longOpt: 'encoding', 'Encoding of source file', required: false, args: 1)
         cli.i(longOpt: 'include', 'Ant file pattern for directory search', required: false, args: 1)
+        cli.l(longOpt: 'locale', 'Locale being used for output file', required: false, args: 1)
         cli.o(longOpt: 'output', 'Generated output file', required: false, args: 1)
+        cli.s(longOpt: 'source-encoding', 'Encoding of source file', required: false, args: 1)
         cli.t(longOpt: 'template', 'Template name', required: false, args: 1)
-        cli.l(longOpt: 'locale', 'Locale value', required: false, args: 1)
 
         OptionAccessor opt = cli.parse(args)
 
@@ -481,11 +485,15 @@ class CommandLine {
         }
 
         if (opt.e) {
-            this.encoding = opt.e
+            this.targetEncoding = opt.e
         }
 
         if (opt.i) {
             this.includePattern = opt.i
+        }
+
+        if (opt.s) {
+            this.sourceEncoding = opt.s
         }
 
         if (opt.t) {

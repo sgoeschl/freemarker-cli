@@ -90,14 +90,16 @@ While I love Apache Velocity (Apache Turbine anyone?) I decided to give FreeMark
 ```text
 > groovy freemarker-cli.groovy
 usage: groovy freemarker-cli.groovy [options] file[s]
- -b,--basedir <arg>       Base directory to resolve FreeMarker templates
- -d,--description <arg>   Custom report description
- -h,--help                Usage information
- -i,--include             Ant file pattern for directory search
- -l,--locale <arg>        Locale value
- -o,--output <arg>        Generated output file
- -t,--template <arg>      Template name
- -v,--verbose             Verbose mode
+ -b,--basedir <arg>           Base directory to resolve templates
+ -d,--description <arg>       Custom report description
+ -e,--encoding <arg>          Encoding of output file, e.g. UTF-8
+ -h,--help                    Usage information
+ -i,--include <arg>           Ant file pattern for directory search
+ -l,--locale <arg>            Locale being used for output file
+ -o,--output <arg>            Generated output file
+ -s,--source-encoding <arg>   Encoding of source file
+ -t,--template <arg>          Template name
+ -v,--verbose                 Verbose mode
 ```
 
 # 5. Examples
