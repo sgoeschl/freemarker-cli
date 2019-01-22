@@ -328,15 +328,16 @@ ENDPOINT,METHOD
 
 ## 5.6 Transforming Excel Documents
 
-Another day my project management asked me to create a CSV configuration file based on an Excel documents - as usual manual copying was not an option due to required data cleanup and data transformation. So I thought about Apache POI which support XLS and XLSX documents - integration of Apache POI was a breeze but now it is possible to process Excel documents
+Another day my project management asked me to create a CSV configuration file based on an Excel documents - as usual manual copying was not an option due to required data cleanup and data transformation. So I thought about Apache POI which support XLS and XLSX documents - integration of Apache POI was a breeze but the resulting code was not particulary useful example. So a more generic transformation was provided to show the transformation of Excel documents ...
 
 ```text
-> groovy freemarker-cli.groovy -t templates/excel/html/test.ftl site/sample/excel/test.xls
-> groovy freemarker-cli.groovy -t templates/excel/html/test.ftl site/sample/excel/test.xlsx
-> groovy freemarker-cli.groovy -t templates/excel/html/test.ftl site/sample/excel/test-multiple-sheets.xlsx
+> groovy freemarker-cli.groovy -t templates/excel/html/transform.ftl site/sample/excel/test.xls
+> groovy freemarker-cli.groovy -t templates/excel/html/transform.ftl site/sample/excel/test.xlsx
+> groovy freemarker-cli.groovy -t templates/excel/html/transform.ftl site/sample/excel/test-multiple-sheets.xlsx
+> groovy freemarker-cli.groovy -t templates/excel/md/transform.ftl site/sample/excel/test-multiple-sheets.xlsx
 ```
 
-The provided FTL transforms a known Excel document structure into a HTML document supporting multiple Excel sheets
+The provided FTL transforms an Excel into a HTML document supporting multiple Excel sheets
 
 ```text
 <#ftl output_format="HTML" >
