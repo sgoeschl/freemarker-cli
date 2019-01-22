@@ -301,17 +301,26 @@ D. H.
 
 ## 5.5 Transform JSON To CSV
 
-One day I was asked a to prepare a CSV files containind REST endpoints described by Swagger - technically this is a JSON to CSV transformation. Of course I could create that CSV manually but writing a FTL template doing that was simply more fun and might save some time in the future
+One day I was asked a to prepare a CSV files containind REST endpoints described by Swagger - technically this is a JSON to CSV transformation. Of course I could create that CSV manually but writing a FTL template doing that was simply more fun and saves time in the future.
 
 ```text
-<#ftl output_format="plainText">
+<#ftl output_format="plainText" strip_text="true">
 <#assign json = JsonPath.parse(documents[0])>
+<#assign basePath = json.read("$.basePath")>
 <#assign paths = json.read("$.paths")>
-ENDPOINT,METHOD
-<#list paths as url,entry>
-<#assign http_method = entry?keys[0]>
-${url},${http_method?upper_case}
-</#list>
+
+<#compress>
+    ENDPOINT;METHOD;DESCRIPTION
+    <#list paths as endpoint,metadata>
+        <#assign relative_url = basePath + endpoint>
+        <#assign methods = metadata?keys>
+        <#list methods as method>
+            <#assign description = paths[endpoint][method]["description"]?replace(";", ",")>
+            ${relative_url};${method?upper_case};${description}
+        </#list>
+    </#list>
+</#compress>
+${'\n'}
 ```
 
 Invoking the FTL template
@@ -321,9 +330,11 @@ Invoking the FTL template
 gives you
 
 ```text
-ENDPOINT,METHOD
-/pets,GET
-/pets/{id},GET
+ENDPOINT;METHOD;DESCRIPTION
+/api/pets;GET;Returns all pets from the system that the user has access to
+/api/pets;POST;Creates a new pet in the store. Duplicates are allowed
+/api/pets/{id};GET;Returns a user based on a single ID, if the user does not have access to the pet
+/api/pets/{id};DELETE;Deletes a single pet based on the ID supplied
 ```
 
 ## 5.6 Transforming Excel Documents
