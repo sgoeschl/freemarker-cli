@@ -46,10 +46,13 @@ fi
 # Excel
 #############################################################################
 
-echo "templates/excel/html/test.ftl"
-groovy freemarker-cli.groovy -t templates/excel/html/test.ftl site/sample/excel/test.xls > target/out/test.xls.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
-groovy freemarker-cli.groovy -t templates/excel/html/test.ftl site/sample/excel/test.xlsx > target/out/test.xslx.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
-groovy freemarker-cli.groovy -t templates/excel/html/test.ftl site/sample/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
+echo "templates/excel/html/transform.ftl"
+groovy freemarker-cli.groovy -t templates/excel/html/transform.ftl site/sample/excel/test.xls > target/out/test.xls.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
+groovy freemarker-cli.groovy -t templates/excel/html/transform.ftl site/sample/excel/test.xlsx > target/out/test.xslx.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
+groovy freemarker-cli.groovy -t templates/excel/html/transform.ftl site/sample/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+echo "templates/excel/md/transform.ftl"
+groovy freemarker-cli.groovy -t templates/excel/md/transform.ftl site/sample/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # JSON

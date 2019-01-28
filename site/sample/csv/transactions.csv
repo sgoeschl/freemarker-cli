@@ -1,100 +1,44 @@
 ﻿Buchungsdatum	Partnername	Partner IBAN	Partner BIC	Partner Kontonummer	Partner Bank-Code (BLZ)	Betrag	Währung	Buchungstext	Valutadatum
-04.01.2016	Julia Mobilgruber	AT642011180018578000	GIBAATW0XXX	80018578000	20111	11,00	EUR	Test für Dauerauftrag Julia Mobilgruber Nexus 7 Dauerauftrag	04.01.2016
-04.01.2016	Mag. Stefan Leitner	AT722011180018553703	GIBAATW0XXX			-9,61	EUR	m Mag. Stefan Leitner	04.01.2016
-04.01.2016	Mag. Stefan Leitner	AT342011180018553708				-4,61	EUR	Netbanking-Überweisung Mag. Stefan Leitner	04.01.2016
-04.01.2016	Mag. Stefan Leitner	AT562011180018553700	GIBAATW0XXX	80018553700	20111	4,61	EUR	SEPA-Gutschrift Mag. Stefan Leitner	04.01.2016
-04.01.2016	1 - Alias Test2 very long name	AT562011180018553700				-5,61	EUR	test 1 - Alias Test2 very long name	04.01.2016
-04.01.2016	Mag. Stefan Leitner	AT182011180018553705	GIBAATW0XXX	80018553705	20111	5,61	EUR	test Mag. Stefan Leitner	04.01.2016
-04.01.2016	1 - Alias Test2 very long name	AT562011180018553700				-1,00	EUR	test2 1 - Alias Test2 very long name	04.01.2016
-04.01.2016	Mag. Stefan Leitner	AT182011180018553705	GIBAATW0XXX	80018553705	20111	1,00	EUR	test2 Mag. Stefan Leitner	04.01.2016
-04.01.2016	1 - Alias Test2 very long name	AT562011180018553700				-2,00	EUR	test3 1 - Alias Test2 very long name	04.01.2016
-04.01.2016	Mag. Stefan Leitner	AT182011180018553705	GIBAATW0XXX	80018553705	20111	2,00	EUR	test3 Mag. Stefan Leitner	04.01.2016
-04.01.2016	1 - Alias Test2 very long name	AT562011180018553700				-4,00	EUR	test3 1 - Alias Test2 very long name	04.01.2016
-04.01.2016	Mag. Stefan Leitner	AT562011180018553700	GIBAATW0XXX	80018553700	20111	4,00	EUR	test3 Mag. Stefan Leitner	04.01.2016
-05.01.2016	Hannes TACuser	AT502011180020458500	GIBAATW0XXX	80020458500	20111	1,25	EUR	Test Hannes TACuser	05.01.2016
-05.01.2016	1 - Alias Test2 very long name	AT562011180018553700				-1,00	EUR	test4 1 - Alias Test2 very long name	05.01.2016
-05.01.2016	Mag. Stefan Leitner	AT562011180018553700	GIBAATW0XXX	80018553700	20111	1,00	EUR	test4 Mag. Stefan Leitner	05.01.2016
-05.01.2016	7 - Nur Eigenübertrag	AT182011180018553705				-0,20	EUR	refresh account balance test 7 - Nur Eigenübertrag	05.01.2016
-05.01.2016	Mag. Stefan Leitner	AT562011180018553700	GIBAATW0XXX	80018553700	20111	0,20	EUR	refresh account balance test Mag. Stefan Leitner	05.01.2016
-05.01.2016	Dänemark	DK6197158579156022	DABADKK0			-1,26	EUR	Überweisung Dänemark	05.01.2016
-05.01.2016	Dänemark	DK6197158579156022				-1,23	EUR	Test Dänemark	05.01.2016
-05.01.2016	Dänemark	DK6197158579156022				-1,85	EUR	6+White Dänemark	05.01.2016
-07.01.2016	Daenemark	DK6197158579156022	DABADKK0XXX			1,26	EUR	Kontoname/Kontonummer/IBAN falsch Daenemark	07.01.2016
-07.01.2016	Schweiz	CH19561660LHW8ATAP172				-1,00	EUR	Test Schweiz	07.01.2016
-07.01.2016	Dänemark	DK6197158579156022	DABADKK0			-1,00	EUR	Closed Dänemark	07.01.2016
-07.01.2016				49900997164	20111	-21,55	EUR	Bearbeitung Rückgutschrift EU	07.01.2016
+04.01.2016	Julia Mobilgruber	ATXXXXXXXXXXXXXXXXXX	GIBAATW0XXX	YYYYYYYYYYY	20111	11,00	EUR	Test für Dauerauftrag Julia Mobilgruber Nexus 7 Dauerauftrag	04.01.2016
+04.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX	GIBAATW0XXX			-9,61	EUR	m Mag. Hans Testuser	04.01.2016
+04.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX				-4,61	EUR	Netbanking-Überweisung Mag. Hans Testuser	04.01.2016
+04.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX	GIBAATW0XXX	YYYYYYYYYYY	20111	4,61	EUR	SEPA-Gutschrift Mag. Hans Testuser	04.01.2016
+04.01.2016	1 - Alias Test2 very long name	ATXXXXXXXXXXXXXXXXXX				-5,61	EUR	test 1 - Alias Test2 very long name	04.01.2016
+04.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX	GIBAATW0XXX	YYYYYYYYYYY	20111	5,61	EUR	test Mag. Hans Testuser	04.01.2016
+04.01.2016	1 - Alias Test2 very long name	ATXXXXXXXXXXXXXXXXXX				-1,00	EUR	test2 1 - Alias Test2 very long name	04.01.2016
+04.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX	GIBAATW0XXX	YYYYYYYYYYY	20111	1,00	EUR	test2 Mag. Hans Testuser	04.01.2016
+04.01.2016	1 - Alias Test2 very long name	ATXXXXXXXXXXXXXXXXXX				-2,00	EUR	test3 1 - Alias Test2 very long name	04.01.2016
+04.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX	GIBAATW0XXX	YYYYYYYYYYY	20111	2,00	EUR	test3 Mag. Hans Testuser	04.01.2016
+04.01.2016	1 - Alias Test2 very long name	ATXXXXXXXXXXXXXXXXXX				-4,00	EUR	test3 1 - Alias Test2 very long name	04.01.2016
+04.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX	GIBAATW0XXX	YYYYYYYYYYY	20111	4,00	EUR	test3 Mag. Hans Testuser	04.01.2016
+05.01.2016	Hannes TACuser	ATXXXXXXXXXXXXXXXXXX	GIBAATW0XXX	YYYYYYYYYYY	20111	1,25	EUR	Test Hannes TACuser	05.01.2016
+05.01.2016	1 - Alias Test2 very long name	ATXXXXXXXXXXXXXXXXXX				-1,00	EUR	test4 1 - Alias Test2 very long name	05.01.2016
+05.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX	GIBAATW0XXX	YYYYYYYYYYY	20111	1,00	EUR	test4 Mag. Hans Testuser	05.01.2016
+05.01.2016	7 - Nur Eigenübertrag	ATXXXXXXXXXXXXXXXXXX				-0,20	EUR	refresh account balance test 7 - Nur Eigenübertrag	05.01.2016
+05.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX	GIBAATW0XXX	YYYYYYYYYYY	20111	0,20	EUR	refresh account balance test Mag. Hans Testuser	05.01.2016
+05.01.2016	Dänemark	DKXXXXXXXXXXXXXXXX	DABADKK0			-1,26	EUR	Überweisung Dänemark	05.01.2016
+05.01.2016	Dänemark	DKXXXXXXXXXXXXXXXX				-1,23	EUR	Test Dänemark	05.01.2016
+05.01.2016	Dänemark	DKXXXXXXXXXXXXXXXX				-1,85	EUR	6+White Dänemark	05.01.2016
+07.01.2016	Daenemark	DKXXXXXXXXXXXXXXXX	DABADKK0XXX			1,26	EUR	Kontoname/Kontonummer/IBAN falsch Daenemark	07.01.2016
+07.01.2016	Schweiz	CHXXXXXXXXXXXXXXXXXXX				-1,00	EUR	Test Schweiz	07.01.2016
+07.01.2016	Dänemark	DKXXXXXXXXXXXXXXXX	DABADKK0			-1,00	EUR	Closed Dänemark	07.01.2016
+07.01.2016				YYYYYYYYYYY	20111	-21,55	EUR	Bearbeitung Rückgutschrift EU	07.01.2016
 08.01.2016						0,00	EUR	*Information gemäß VKrG per 07.01.2016* Sollzinsen: 7,00000 % Verzugszinsen: 5,00000 % Ultimoprovision: 1,00000 % Kreditprovision: 5,00000 % Ablebensrisikoprovision: 6,66000 % Eine Änderung der Konditionen kann entsprechend den in den Allgemeinen Geschäftsbedingungen enthaltenen Änderungsklauseln erfolgen.	08.01.2016
 08.01.2016						0,00	EUR	*Information gemäß VKrG per 07.01.2016* Sollzinsen: 7,00000 % Verzugszinsen: 5,00000 % Ultimoprovision: 1,00000 % Kreditprovision: 5,00000 % Eine Änderung der Konditionen kann entsprechend den in den Allgemeinen Geschäftsbedingungen enthaltenen Änderungsklauseln erfolgen.	08.01.2016
 08.01.2016						0,00	EUR	*Information gemäß VKrG per 07.01.2016* Sollzinsen: 12,75000 % Verzugszinsen: 5,00000 % Ablebensrisikoprovision: 1,30000 % Eine Änderung der Konditionen kann entsprechend den in den Allgemeinen Geschäftsbedingungen enthaltenen Änderungsklauseln erfolgen.	08.01.2016
 08.01.2016						0,00	EUR	*Information gemäß VKrG per 07.01.2016* Sollzinsen: 12,75000 % Verzugszinsen: 5,00000 % Ablebensrisikoprovision: 1,30000 % Eine Änderung der Konditionen kann entsprechend den in den Allgemeinen Geschäftsbedingungen enthaltenen Änderungsklauseln erfolgen.	08.01.2016
-11.01.2016	Caritas	AT926000000007700004				-1,00	EUR	6M Caritas test signing	11.01.2016
-11.01.2016	Stadt Wien, MA6-BA32	AT736000000002386492				-1,23	EUR	Netbanking-Überweisung Stadt Wien, MA6-BA32	11.01.2016
-11.01.2016	Daenemark	DK6197158579156022	DABADKK0XXX			1,00	EUR	Kontoname/Kontonummer/IBAN falsch Closed Daenemark	11.01.2016
-11.01.2016	Mag. Stefan Leitner	AT722011180018553703				-1,00	EUR	George Go Transfer Mag. Stefan Leitner	11.01.2016
-11.01.2016	Mag. Stefan Leitner	AT182011180018553705				-1,00	EUR	George Go Transfer Mag. Stefan Leitner	11.01.2016
-11.01.2016	Mag. Stefan Leitner	AT562011180018553700	GIBAATW0XXX	80018553700	20111	1,00	EUR	George Go Transfer Mag. Stefan Leitner	11.01.2016
-11.01.2016	Mag. Stefan Leitner	AT722011180018553703				-1,00	EUR	George Go Transfer Mag. Stefan Leitner	11.01.2016
-11.01.2016	Mag. Stefan Leitner	AT722011180018553703				-1,00	EUR	we Mag. Stefan Leitner	11.01.2016
-11.01.2016				49900997164	20111	-21,55	EUR	Bearbeitung Rückgutschrift EU	11.01.2016
-12.01.2016	Mag. Stefan Leitner	AT772011180018553710				-1,64	EUR	George Go Transfer Mag. Stefan Leitner	12.01.2016
-12.01.2016	Mag. Stefan Leitner	AT562011180018553700	GIBAATW0XXX	80018553700	20111	1,64	EUR	George Go Transfer Mag. Stefan Leitner	12.01.2016
+11.01.2016	Caritas	ATXXXXXXXXXXXXXXXXXX				-1,00	EUR	6M Caritas test signing	11.01.2016
+11.01.2016	Stadt Wien, MA6-BA32	ATXXXXXXXXXXXXXXXXXX				-1,23	EUR	Netbanking-Überweisung Stadt Wien, MA6	11.01.2016
+11.01.2016	Daenemark	DKXXXXXXXXXXXXXXXX	DABADKK0XXX			1,00	EUR	Kontoname/Kontonummer/IBAN falsch Closed Daenemark	11.01.2016
+11.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX				-1,00	EUR	George Go Transfer Mag. Hans Testuser	11.01.2016
+11.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX				-1,00	EUR	George Go Transfer Mag. Hans Testuser	11.01.2016
+11.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX	GIBAATW0XXX	YYYYYYYYYYY	20111	1,00	EUR	George Go Transfer Mag. Hans Testuser	11.01.2016
+11.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX				-1,00	EUR	George Go Transfer Mag. Hans Testuser	11.01.2016
+11.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX				-1,00	EUR	we Mag. Hans Testuser	11.01.2016
+11.01.2016				YYYYYYYYYYY	20111	-21,55	EUR	Bearbeitung Rückgutschrift EU	11.01.2016
+12.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX				-1,64	EUR	George Go Transfer Mag. Hans Testuser	12.01.2016
+12.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX	GIBAATW0XXX	YYYYYYYYYYY	20111	1,64	EUR	George Go Transfer Mag. Hans Testuser	12.01.2016
 12.01.2016	Tset	DE22512308002620105054				-1,00	EUR	George Go Transfer Tset	12.01.2016
-12.01.2016	Mag. Stefan Leitner	AT722011180018553703				-1,00	EUR	George Go Transfer Mag. Stefan Leitner	12.01.2016
-12.01.2016	Mag. Stefan Leitner	AT772011180018553710				-1,00	EUR	George Go Transfer Mag. Stefan Leitner	12.01.2016
-12.01.2016	Mag. Stefan Leitner	AT562011180018553700	GIBAATW0XXX	80018553700	20111	1,00	EUR	George Go Transfer Mag. Stefan Leitner	12.01.2016
-12.01.2016	ALIAS Spar Mag. Stefan Leitner	DE38805592137227529893				-1,00	EUR	dt ALIAS Spar Mag. Stefan Leitner	12.01.2016
-12.01.2016	J.P. Morgan		BOFAUS30XXX	30945790		-10,54	EUR	Ueberweisung Ausland20160112DAN00001 J.P. Morgan EUR 1,44 UEBERWEISUNGSSPESEN EUR 10,20 BONIFIKATION-HERKUNF *BEGUENSTIGTER -EUR 1,10 J.P. MORGAN *KTO:30945790 BIC:BOFAUS30XXX BANK OF AMERICA, N.A. UNSERE REF. 201111601123AEF-DAN00001 WERT 12.01.2016	12.01.2016
-12.01.2016	Zypern	CY9569608940A2S0PF07EJUGPO4N				-1,00	EUR	ciprus Zypern jdjdjdif fjfkkfif dieivfo f idbijdjfijd	12.01.2016
-12.01.2016	U.S. Dollar Konto	AT162011180022263700				-1,00	EUR	George Go Transfer U.S. Dollar Konto	12.01.2016
-12.01.2016	Deutschl von George	DE27860554620391004557				-1,00	EUR	George Go Transfer Deutschl von George	12.01.2016
-12.01.2016	Number 26	DE89512308002622875914	WIREDEM0			-15,00	EUR	Überweisung Number 26	12.01.2016
-12.01.2016	Deutschland Kai-Uwe	DE27860554620391004557				-12,00	EUR	1 Deutschland Kai-Uwe	12.01.2016
-12.01.2016	Mag. Stefan Leitner	DE27860554620391004557				-1,00	EUR	w Mag. Stefan Leitner	12.01.2016
-12.01.2016	BE54496019735828	BE54496019735828				-2,00	EUR	George Go Überweisung BE54496019735828	12.01.2016
-12.01.2016	Mag. Stefan Leitner	DE36000000000000000000				-1,63	EUR	George Go Transfer Mag. Stefan Leitner	12.01.2016
-12.01.2016	Belgien	BE54496019735828				-1,55	EUR	George Go Überweisung Belgien	12.01.2016
-13.01.2016	Dänemark	DK6197158579156022	DABADKK0			-1,82	EUR	4s7 Dänemark	13.01.2016
-13.01.2016	l G Holzmmann, H. Viehhauser CLEAH	AT944501000006108070				-3,00	EUR	second test l G Holzmmann, H. Viehhauser CLEAH	13.01.2016
-13.01.2016	Mag. Stefan Leitner	AT722011180018553703				-1,69	EUR	6m Mag. Stefan Leitner	13.01.2016
-13.01.2016	ALIAS Spar Mag. Stefan Leitner	DE38805592137227529893				-1,00	EUR	qhwz ALIAS Spar Mag. Stefan Leitner George Go Überweisung	13.01.2016
-13.01.2016	l G Holzaaann, H Viehhauser CLEAH L	AT944501000006108070				-1,00	EUR	George Go Überweisung l G Holzaaann, H Viehhauser CLEAH L	13.01.2016
-14.01.2016	BELGIEN	BE50401000000018	KREDBEB0XXX			1,55	EUR	Kontoname/Kontonummer/IBAN falsch GEORGE GO UEBERWEISUNG BELGIEN	14.01.2016
-14.01.2016	BE54496019735828	BE50401000000018	KREDBEB0XXX			2,00	EUR	Kontoname/Kontonummer/IBAN falsch GEORGE GO UEBERWEISUNG BE54496019735828	14.01.2016
-14.01.2016	Deutschland	DE89512308002622875914	FRSDDEF1			-1,26	EUR	TEST Deutschland	14.01.2016
-14.01.2016	Mag. Stefan Leitner	AT182011180018553705				-12,00	EUR	George Go Überweisung Mag. Stefan Leitner	14.01.2016
-14.01.2016	Mag. Stefan Leitner	AT772011180018553710	GIBAATW0XXX	80018553710	20111	12,00	EUR	George Go Überweisung Mag. Stefan Leitner	14.01.2016
-15.01.2016	Erste Bank AG	AT542011180024458708	GIBAATW0XXX	80024458708	20111	-119,17	EUR	Kredit 800-244-587/08 15.01.16 Erste Bank AG MDID:151016AB3-AT542011180024458708001	15.01.2016
-15.01.2016	ALIAS Spar Mag. Stefan Leitner	DE38805592137227529893				-5,00	EUR	George Go Transfer ALIAS Spar Mag. Stefan Leitner	15.01.2016
-15.01.2016	Deutschland Kai-Uwe	DE19700100505555555555				-1,00	EUR	Test Deutschland Kai-Uwe	15.01.2016
-15.01.2016	Belgien	BE54496019735828				-1,59	EUR	White Belgien	15.01.2016
-18.01.2016	Belgien	BE54496019735828				-1,52	EUR	George Go Transfer Belgien	18.01.2016
-18.01.2016	Mag. Stefan Leitner	AT612011180018553707				-1,22	EUR	George Go Transfer Mag. Stefan Leitner	18.01.2016
-18.01.2016	Mag. Stefan Leitner	AT562011180018553700	GIBAATW0XXX	80018553700	20111	1,22	EUR	George Go Transfer Mag. Stefan Leitner	18.01.2016
-18.01.2016	Mag. Stefan Leitner	AT182011180018553705				-2,33	EUR	Teast Mag. Stefan Leitner George Go Transfer	18.01.2016
-18.01.2016	Mag. Stefan Leitner	AT562011180018553700	GIBAATW0XXX	80018553700	20111	2,33	EUR	George Go Transfer Mag. Stefan Leitner Teast	18.01.2016
-20.01.2016	Bulgarien	BG30CMBW821981PY313UHZ				-1,45	EUR	George Go Überweisung Bulgarien	20.01.2016
-20.01.2016	Dänemark	DK6197158579156022				-1,00	EUR	Q Dänemark	20.01.2016
-20.01.2016	ALIAS Spar Mag. Stefan Leitner	DE38805592137227529893				-1,00	EUR	galaxy s3 ALIAS Spar Mag. Stefan Leitner	20.01.2016
-20.01.2016	Dänemark	DK6197158579156022				-1,29	EUR	Ne test Dänemark	20.01.2016
-20.01.2016	Mag. Stefan Leitner	AT342011180018553708				-1,89	EUR	George Go Überweisung Mag. Stefan Leitner	20.01.2016
-20.01.2016	Mag. Stefan Leitner	AT562011180018553700	GIBAATW0XXX	80018553700	20111	1,89	EUR	George Go Überweisung Mag. Stefan Leitner	20.01.2016
-20.01.2016	Mag. Stefan Leitner	AT182011180018553705				-3,33	EUR	6m Mag. Stefan Leitner George Go Transfer	20.01.2016
-20.01.2016	Mag. Stefan Leitner	AT562011180018553700	GIBAATW0XXX	80018553700	20111	3,33	EUR	George Go Transfer Mag. Stefan Leitner 6m	20.01.2016
-20.01.2016	Belgien	BE54496019735828				-1,00	EUR	George Go Überweisung Belgien	20.01.2016
-20.01.2016	G0 Holzmann, H, Viehhauser CLEAH LA	AT944501000006108070				-2,00	EUR	George Go Überweisung G0 Holzmann, H, Viehhauser CLEAH LA	20.01.2016
-20.01.2016	Belgien	BE54496019735828				-2,00	EUR	George Go Überweisung Belgien	20.01.2016
-20.01.2016	l G. Holzmann, H. Viehhauser l CLEA	AT944501000006108070				-4,00	EUR	third test l G. Holzmann, H. Viehhauser l CLEA	20.01.2016
-20.01.2016	Mag. Stefan Leitner	AT772011180018553710				-1,00	EUR	George Go Überweisung Mag. Stefan Leitner	20.01.2016
-20.01.2016	Mag. Stefan Leitner	AT562011180018553700	GIBAATW0XXX	80018553700	20111	1,00	EUR	George Go Überweisung Mag. Stefan Leitner	20.01.2016
-20.01.2016	Dänemark	DK6197158579156022				-2,37	EUR	New iban Dänemark George Go Transfer	20.01.2016
-20.01.2016	Belgien	BE54496019735828				-1,96	EUR	George Go Überweisung Belgien	20.01.2016
-20.01.2016	Mag. Stefan Leitner	AT772011180018553710				-2,00	EUR	George Go Transfer Mag. Stefan Leitner	20.01.2016
-20.01.2016	Mag. Stefan Leitner	AT562011180018553700	GIBAATW0XXX	80018553700	20111	2,00	EUR	George Go Transfer Mag. Stefan Leitner	20.01.2016
-20.01.2016	Mag. Stefan Leitner	AT772011180018553710				-2,00	EUR	George Go Transfer Mag. Stefan Leitner	20.01.2016
-20.01.2016	Mag. Stefan Leitner	AT562011180018553700	GIBAATW0XXX	80018553700	20111	2,00	EUR	George Go Transfer Mag. Stefan Leitner	20.01.2016
-21.01.2016	daenemark	DK6197158579156022	DABADKK0			-1,29	EUR	Überweisung daenemark	21.01.2016
-21.01.2016	ALIAS Spar Mag. Stefan Leitner	DE27860554620391004557				-1,00	EUR	rrrr ALIAS Spar Mag. Stefan Leitner George Go Transfer	21.01.2016
-21.01.2016	Norwegen	NO5674093511791				-1,20	EUR	George Go Überweisung Norwegen	21.01.2016
-21.01.2016	Dänemark	DK6197158579156022				-1,99	EUR	Test Dänemark	21.01.2016
-22.01.2016	Dänemark	DK6197158579156022				-1,55	EUR	White Dänemark George Go Überweisung	22.01.2016
-22.01.2016	Dänemark	DK6197158579156022				-1,23	EUR	George Go Transfer Dänemark	22.01.2016
+12.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX				-1,00	EUR	George Go Transfer Mag. Hans Testuser	12.01.2016
+12.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX				-1,00	EUR	George Go Transfer Mag. Hans Testuser	12.01.2016
+12.01.2016	Mag. Hans Testuser	ATXXXXXXXXXXXXXXXXXX	GIBAATW0XXX	YYYYYYYYYYY	20111	1,00	EUR	George Go Transfer Mag. Hans Testuser	12.01.2016

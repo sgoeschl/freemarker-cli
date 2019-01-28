@@ -301,17 +301,26 @@ D. H.
 
 ## 5.5 Transform JSON To CSV
 
-One day I was asked a to prepare a CSV files containind REST endpoints described by Swagger - technically this is a JSON to CSV transformation. Of course I could create that CSV manually but writing a FTL template doing that was simply more fun and might save some time in the future
+One day I was asked a to prepare a CSV files containind REST endpoints described by Swagger - technically this is a JSON to CSV transformation. Of course I could create that CSV manually but writing a FTL template doing that was simply more fun and saves time in the future.
 
 ```text
-<#ftl output_format="plainText">
+<#ftl output_format="plainText" strip_text="true">
 <#assign json = JsonPath.parse(documents[0])>
+<#assign basePath = json.read("$.basePath")>
 <#assign paths = json.read("$.paths")>
-ENDPOINT,METHOD
-<#list paths as url,entry>
-<#assign http_method = entry?keys[0]>
-${url},${http_method?upper_case}
-</#list>
+
+<#compress>
+    ENDPOINT;METHOD;DESCRIPTION
+    <#list paths as endpoint,metadata>
+        <#assign relative_url = basePath + endpoint>
+        <#assign methods = metadata?keys>
+        <#list methods as method>
+            <#assign description = paths[endpoint][method]["description"]?replace(";", ",")>
+            ${relative_url};${method?upper_case};${description}
+        </#list>
+    </#list>
+</#compress>
+${'\n'}
 ```
 
 Invoking the FTL template
@@ -321,22 +330,25 @@ Invoking the FTL template
 gives you
 
 ```text
-ENDPOINT,METHOD
-/pets,GET
-/pets/{id},GET
+ENDPOINT;METHOD;DESCRIPTION
+/api/pets;GET;Returns all pets from the system that the user has access to
+/api/pets;POST;Creates a new pet in the store. Duplicates are allowed
+/api/pets/{id};GET;Returns a user based on a single ID, if the user does not have access to the pet
+/api/pets/{id};DELETE;Deletes a single pet based on the ID supplied
 ```
 
 ## 5.6 Transforming Excel Documents
 
-Another day my project management asked me to create a CSV configuration file based on an Excel documents - as usual manual copying was not an option due to required data cleanup and data transformation. So I thought about Apache POI which support XLS and XLSX documents - integration of Apache POI was a breeze but now it is possible to process Excel documents
+Another day my project management asked me to create a CSV configuration file based on an Excel documents - as usual manual copying was not an option due to required data cleanup and data transformation. So I thought about Apache POI which support XLS and XLSX documents - integration of Apache POI was a breeze but the resulting code was not particulary useful example. So a more generic transformation was provided to show the transformation of Excel documents ...
 
 ```text
-> groovy freemarker-cli.groovy -t templates/excel/html/test.ftl site/sample/excel/test.xls
-> groovy freemarker-cli.groovy -t templates/excel/html/test.ftl site/sample/excel/test.xlsx
-> groovy freemarker-cli.groovy -t templates/excel/html/test.ftl site/sample/excel/test-multiple-sheets.xlsx
+> groovy freemarker-cli.groovy -t templates/excel/html/transform.ftl site/sample/excel/test.xls
+> groovy freemarker-cli.groovy -t templates/excel/html/transform.ftl site/sample/excel/test.xlsx
+> groovy freemarker-cli.groovy -t templates/excel/html/transform.ftl site/sample/excel/test-multiple-sheets.xlsx
+> groovy freemarker-cli.groovy -t templates/excel/md/transform.ftl site/sample/excel/test-multiple-sheets.xlsx
 ```
 
-The provided FTL transforms a known Excel document structure into a HTML document supporting multiple Excel sheets
+The provided FTL transforms an Excel into a HTML document supporting multiple Excel sheets
 
 ```text
 <#ftl output_format="HTML" >
