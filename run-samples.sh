@@ -55,6 +55,13 @@ echo "templates/excel/md/transform.ftl"
 groovy freemarker-cli.groovy -t templates/excel/md/transform.ftl site/sample/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
+# HTML
+#############################################################################
+
+echo "templates/html/csv/dependencies.ftl"
+ groovy freemarker-cli.groovy -t templates/html/csv/dependencies.ftl site/sample/html/dependencies.html > target/out/dependencies.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+#############################################################################
 # JSON
 #############################################################################
 

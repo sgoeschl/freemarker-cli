@@ -5,6 +5,7 @@
         @Grab(group = "org.apache.poi", module = "poi-ooxml", version = "4.0.1"),
         @Grab(group = "org.apache.poi", module = "poi-ooxml-schemas", version = "4.0.1"),
         @Grab(group = "com.jayway.jsonpath", module = "json-path", version = "2.4.0"),
+        @Grab(group = "org.jsoup", module="jsoup", version="1.11.3"),
         @Grab(group = "org.slf4j", module = "slf4j-api", version = "1.7.21"),
         @Grab(group = "org.slf4j", module = "slf4j-log4j12", version = "1.7.21"),
         @Grab(group = "org.freemarker", module = "freemarker", version = "2.3.28"),
@@ -42,6 +43,7 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.poi.ss.usermodel.*
 import org.xml.sax.InputSource
+import org.jsoup.Jsoup
 
 import java.text.SimpleDateFormat
 
@@ -128,14 +130,15 @@ class Task {
         dataModel.put("documents", documents)
         dataModel.put("Documents", new Documents(documents))
         dataModel.putAll(createCommonsCsvDataModel())
-        dataModel.putAll(createJsonPathDataModel())
-        dataModel.putAll(createXmlParserDataModel())
+        dataModel.putAll(createEnvironmentDataModel())
         dataModel.putAll(createExcelParserDataModel())
         dataModel.putAll(createFreeMarkerDataModel())
-        dataModel.putAll(createSystemPropertiesDataModel())
-        dataModel.putAll(createEnvironmentDataModel())
-        dataModel.putAll(createReportDataModel(description))
         dataModel.putAll(createPropertiesParserDataModel())
+        dataModel.putAll(createJsonPathDataModel())
+        dataModel.putAll(createJsoupDataModel())
+        dataModel.putAll(createReportDataModel(description))
+        dataModel.putAll(createSystemPropertiesDataModel())
+        dataModel.putAll(createXmlParserDataModel())
         return dataModel
     }
 
@@ -196,6 +199,12 @@ class Task {
         dataModel.put("ObjectConstructor", new ObjectConstructor())
         dataModel.put("Statics", beansWrapper.getStaticModels())
         dataModel.put("Enums", beansWrapper.getEnumModels())
+        return dataModel
+    }
+
+    private static Map<String, Object> createJsoupDataModel() {
+        final Map<String, Object> dataModel = new HashMap<String, Object>()
+        dataModel.put("JsoupBean", new JsoupParserBean())
         return dataModel
     }
 
@@ -431,6 +440,12 @@ class ExcelParserBean {
         }
 
         return result
+    }
+}
+
+class JsoupParserBean {
+    org.jsoup.nodes.Document parse(Document document) {
+        return Jsoup.parse(document.text);
     }
 }
 

@@ -4,7 +4,7 @@
 
 You somehow found this GitHub project and wonder if it solves a problem you might have?!
 
-* You need to transform some structured text document (CSV, JSON, XML, Java Property file) into CSV, HTML, Markdown or Confluence markup 
+* You need to transform some structured text document (CSV, HTML, JSON, XML, Java Property file) into CSV, HTML, Markdown or Confluence markup 
 * You need to convert an Excel document into CSV, HTML or Markdown
 * You need to create a nice-looking PDF from some boring-looking CSV or JSON content 
 
@@ -20,7 +20,13 @@ freemarker-cli> ./run-samples.sh
 templates/demo.ftl
 templates/csv/html/transform.ftl
 templates/csv/md/transform.ftl
-templates/excel/html/test.ftl
+templates/csv/fo/transform.ftl
+fop -fo target/out/locker-test-users.fo target/out/locker-test-users.pdf
+templates/csv/fo/transactions.ftl
+fop -fo target/out/transactions.fo target/out/transactions.pdf
+templates/excel/html/transform.ftl
+templates/excel/md/transform.ftl
+templates/html/csv/dependencies.ftl
 templates/json/csv/swagger-endpoints.ftl
 templates/json/html/customer-user-products.ftl
 wkhtmltopdf -O landscape target/out/customer-user-products.html target/out/customer-user-products.pdf
@@ -28,24 +34,27 @@ templates/json/md/customer-user-products.ftl
 templates/json/md/github-users.ftl
 templates/properties/csv/locker-test-users.ftl
 templates/xml/txt/recipients.ftl
-templates/csv/fo/transform.ftl
-fop -fo target/out/locker-test-users.fo target/out/locker-test-users.pdf
-Creating sample files in ./target/out
-total 712
--rw-r--r--  1 sgoeschl  staff   22412 Dec 30 00:14 contract.html
--rw-r--r--  1 sgoeschl  staff    7933 Dec 30 00:15 contract.md
--rw-r--r--  1 sgoeschl  staff  103504 Dec 30 00:15 customer-user-products.html
--rw-r--r--  1 sgoeschl  staff   35017 Dec 30 00:15 customer-user-products.md
--rw-r--r--  1 sgoeschl  staff  116257 Dec 30 00:15 customer-user-products.pdf
--rw-r--r--  1 sgoeschl  staff    3412 Dec 30 00:14 demo.txt
--rw-r--r--  1 sgoeschl  staff    2029 Dec 30 00:15 github-users.md
--rw-r--r--  1 sgoeschl  staff     235 Dec 30 00:15 locker-test-users.csv
--rw-r--r--  1 sgoeschl  staff    6291 Dec 30 00:15 locker-test-users.fo
--rw-r--r--  1 sgoeschl  staff    5503 Dec 30 00:15 locker-test-users.pdf
--rw-r--r--  1 sgoeschl  staff     921 Dec 30 00:15 recipients.txt
--rw-r--r--  1 sgoeschl  staff      41 Dec 30 00:15 swagger-spec.csv
--rw-r--r--  1 sgoeschl  staff    1462 Dec 30 00:15 test.xls.html
--rw-r--r--  1 sgoeschl  staff    1464 Dec 30 00:15 test.xslx.html
+Created the following sample files in ./target/out
+total 1008
+-rw-r--r--  1 sgoeschl  staff   22412 Feb  7 00:35 contract.html
+-rw-r--r--  1 sgoeschl  staff    7933 Feb  7 00:35 contract.md
+-rw-r--r--  1 sgoeschl  staff  103504 Feb  7 00:35 customer-user-products.html
+-rw-r--r--  1 sgoeschl  staff   35017 Feb  7 00:35 customer-user-products.md
+-rw-r--r--  1 sgoeschl  staff  114592 Feb  7 00:35 customer-user-products.pdf
+-rw-r--r--  1 sgoeschl  staff    4026 Feb  7 00:35 demo.txt
+-rw-r--r--  1 sgoeschl  staff    1310 Feb  7 00:35 dependencies.csv
+-rw-r--r--  1 sgoeschl  staff    2029 Feb  7 00:35 github-users-curl.md
+-rw-r--r--  1 sgoeschl  staff     235 Feb  7 00:35 locker-test-users.csv
+-rw-r--r--  1 sgoeschl  staff    6291 Feb  7 00:35 locker-test-users.fo
+-rw-r--r--  1 sgoeschl  staff    5503 Feb  7 00:35 locker-test-users.pdf
+-rw-r--r--  1 sgoeschl  staff     921 Feb  7 00:36 recipients.txt
+-rw-r--r--  1 sgoeschl  staff     341 Feb  7 00:35 swagger-spec.csv
+-rw-r--r--  1 sgoeschl  staff    1907 Feb  7 00:35 test-multiple-sheets.xlsx.html
+-rw-r--r--  1 sgoeschl  staff     389 Feb  7 00:35 test-multiple-sheets.xlsx.md
+-rw-r--r--  1 sgoeschl  staff    1546 Feb  7 00:35 test.xls.html
+-rw-r--r--  1 sgoeschl  staff    1548 Feb  7 00:35 test.xslx.html
+-rw-r--r--  1 sgoeschl  staff  106685 Feb  7 00:35 transactions.fo
+-rw-r--r--  1 sgoeschl  staff   11363 Feb  7 00:35 transactions.pdf
 ```
 
 # 2. Once Upon A Time
@@ -598,7 +607,74 @@ INFO: Rendered page #2.
 
 ![](./site/image/transactions.png)
 
-## 5.9 Using Advanced FreeMarker Features
+## 5.9 Transforming HTML To CSV
+
+Recently I got the rather unusual question how to determine the list of dependecied of an application - one easy way is the Maven "dependencies.html" but this is unstructured data. Having said that the Jsoup library is perfectly able to parse most real-life HTML and provides a DOM model
+
+```text
+<#ftl output_format="plainText" strip_text="true">
+<#assign documentName = documents[0].name>
+<#assign html = JsoupBean.parse(documents[0])>
+
+<#compress>
+    <@writeHeader/>
+    <@writeDependencies "Project_Dependencies_compile"/>
+    <@writeDependencies "Project_Transitive_Dependencies_compile"/>
+    <@writeDependencies "Project_Transitive_Dependencies_runtime"/>
+    <@writeDependencies "Project_Transitive_Dependencies_provided"/>
+</#compress>
+
+<#macro writeHeader>
+    GroupId,ArtifactId,Version,Type,Licenses
+</#macro>
+
+<#macro writeDependencies section>
+    <#assign selection = html.select("a[name=${section}]")>
+    <#if selection?has_content>
+        <#assign table = selection[0].nextElementSibling().child(2).child(0)>
+        <#assign rows = table.children()>
+        <#list rows as row>
+            <#if !row?is_first>
+                <#assign groupId = row.child(0).text()>
+                <#assign artificatId = row.child(1).text()>
+                <#assign version = row.child(2).text()>
+                <#assign type = row.child(3).text()>
+                <#assign licences = row.child(4).text()?replace(",", "")>
+                ${groupId},${artificatId},${version},${type},${licences}
+            </#if>
+        </#list>
+    </#if>
+</#macro>
+```
+
+Your dependencies as CSV can be generated as shown below
+
+```text
+> groovy freemarker-cli.groovy -t templates/html/csv/dependencies.ftl site/sample/html/dependencies.html 
+GroupId,ArtifactId,Version,Type,Licenses
+com.jayway.jsonpath,json-path,2.4.0,jar,The Apache Software License Version 2.0
+commons-cli,commons-cli,1.4,jar,Apache License Version 2.0
+org.apache.commons,commons-csv,1.5,jar,Apache License Version 2.0
+org.apache.poi,poi,4.0.1,jar,The Apache Software License Version 2.0
+org.apache.poi,poi-ooxml,3.17,jar,The Apache Software License Version 2.0
+org.apache.poi,poi-ooxml-schemas,3.17,jar,The Apache Software License Version 2.0
+org.freemarker,freemarker,2.3.28,jar,Apache License Version 2.0
+org.jsoup,jsoup,1.11.3,jar,The MIT License
+org.slf4j,slf4j-api,1.7.21,jar,MIT License
+org.slf4j,slf4j-log4j12,1.7.21,jar,MIT License
+com.github.virtuald,curvesapi,1.04,jar,BSD License
+commons-codec,commons-codec,1.11,jar,Apache License Version 2.0
+log4j,log4j,1.2.17,jar,The Apache Software License Version 2.0
+net.minidev,accessors-smart,1.2,jar,The Apache Software License Version 2.0
+net.minidev,json-smart,2.3,jar,The Apache Software License Version 2.0
+org.apache.commons,commons-collections4,4.2,jar,Apache License Version 2.0
+org.apache.commons,commons-math3,3.6.1,jar,Apache License Version 2.0
+org.apache.xmlbeans,xmlbeans,2.6.0,jar,The Apache Software License Version 2.0
+org.ow2.asm,asm,5.0.4,jar,BSD
+stax,stax-api,1.0.1,jar,The Apache Software License Version 2.0
+```
+
+## 5.10 Using Advanced FreeMarker Features
 
 There is a `demo.ftl` which shows some advanced FreeMarker functionality
 
@@ -772,6 +848,7 @@ Within the script a FreeMarker data model is set up and passed to the template -
 | Environment           | Environment variables                                               |
 | ExcelParser           | Excel parser exposing a `parse` method                              |
 | JsonPath              | JSON Parser                                                         |
+| JsoupParser           | Jsoup HTML parser                                                   |
 | ObjectConstructor     | Creata Java instances using reflection                              |
 | PropertiesParser      | Properties parser exposing a `parse` method                         |
 | ReportData            | Bean containing some convinience data, e.g. `user` and `host`       |
