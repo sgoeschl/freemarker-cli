@@ -16,14 +16,15 @@ The goal of `freemarker-cli` is to automate repeated transformation tasks
 Assuming that you are still interested - install [Apache Groovy](http://groovy-lang.org/install.html) and run `./run-samples.sh`
 
 ```text
-freemarker-cli> ./run-samples.sh 
 templates/demo.ftl
 templates/csv/html/transform.ftl
 templates/csv/md/transform.ftl
 templates/csv/fo/transform.ftl
 fop -fo target/out/locker-test-users.fo target/out/locker-test-users.pdf
 templates/csv/fo/transactions.ftl
-fop -fo target/out/transactions.fo target/out/transactions.pdf
+fop -fo target/out/transactions.fo target/out/transactions-fo.pdf
+templates/csv/html/transform.ftl
+wkhtmltopdf -O landscape target/out/transactions.html target/out/transactions-html.pdf
 templates/excel/html/transform.ftl
 templates/excel/md/transform.ftl
 templates/html/csv/dependencies.ftl
@@ -35,26 +36,28 @@ templates/json/md/github-users.ftl
 templates/properties/csv/locker-test-users.ftl
 templates/xml/txt/recipients.ftl
 Created the following sample files in ./target/out
-total 1008
--rw-r--r--  1 sgoeschl  staff   22412 Feb  7 00:35 contract.html
--rw-r--r--  1 sgoeschl  staff    7933 Feb  7 00:35 contract.md
--rw-r--r--  1 sgoeschl  staff  103504 Feb  7 00:35 customer-user-products.html
--rw-r--r--  1 sgoeschl  staff   35017 Feb  7 00:35 customer-user-products.md
--rw-r--r--  1 sgoeschl  staff  114592 Feb  7 00:35 customer-user-products.pdf
--rw-r--r--  1 sgoeschl  staff    4026 Feb  7 00:35 demo.txt
--rw-r--r--  1 sgoeschl  staff    1310 Feb  7 00:35 dependencies.csv
--rw-r--r--  1 sgoeschl  staff    2029 Feb  7 00:35 github-users-curl.md
--rw-r--r--  1 sgoeschl  staff     235 Feb  7 00:35 locker-test-users.csv
--rw-r--r--  1 sgoeschl  staff    6291 Feb  7 00:35 locker-test-users.fo
--rw-r--r--  1 sgoeschl  staff    5503 Feb  7 00:35 locker-test-users.pdf
--rw-r--r--  1 sgoeschl  staff     921 Feb  7 00:36 recipients.txt
--rw-r--r--  1 sgoeschl  staff     341 Feb  7 00:35 swagger-spec.csv
--rw-r--r--  1 sgoeschl  staff    1907 Feb  7 00:35 test-multiple-sheets.xlsx.html
--rw-r--r--  1 sgoeschl  staff     389 Feb  7 00:35 test-multiple-sheets.xlsx.md
--rw-r--r--  1 sgoeschl  staff    1546 Feb  7 00:35 test.xls.html
--rw-r--r--  1 sgoeschl  staff    1548 Feb  7 00:35 test.xslx.html
--rw-r--r--  1 sgoeschl  staff  106685 Feb  7 00:35 transactions.fo
--rw-r--r--  1 sgoeschl  staff   11363 Feb  7 00:35 transactions.pdf
+total 1168
+-rw-r--r--@ 1 sgoeschl  staff   22412 May 26 20:47 contract.html
+-rw-r--r--@ 1 sgoeschl  staff    7933 May 26 20:47 contract.md
+-rw-r--r--@ 1 sgoeschl  staff  103477 May 26 20:48 customer-user-products.html
+-rw-r--r--@ 1 sgoeschl  staff   34990 May 26 20:48 customer-user-products.md
+-rw-r--r--  1 sgoeschl  staff  114668 May 26 20:48 customer-user-products.pdf
+-rw-r--r--  1 sgoeschl  staff    4028 May 26 20:47 demo.txt
+-rw-r--r--  1 sgoeschl  staff    1310 May 26 20:48 dependencies.csv
+-rw-r--r--@ 1 sgoeschl  staff    2029 May 26 20:48 github-users-curl.md
+-rw-r--r--@ 1 sgoeschl  staff     235 May 26 20:48 locker-test-users.csv
+-rw-r--r--  1 sgoeschl  staff    6291 May 26 20:47 locker-test-users.fo
+-rw-r--r--  1 sgoeschl  staff    5503 May 26 20:47 locker-test-users.pdf
+-rw-r--r--  1 sgoeschl  staff     921 May 26 20:48 recipients.txt
+-rw-r--r--  1 sgoeschl  staff     341 May 26 20:48 swagger-spec.csv
+-rw-r--r--  1 sgoeschl  staff    1907 May 26 20:48 test-multiple-sheets.xlsx.html
+-rw-r--r--  1 sgoeschl  staff     389 May 26 20:48 test-multiple-sheets.xlsx.md
+-rw-r--r--  1 sgoeschl  staff    1546 May 26 20:48 test.xls.html
+-rw-r--r--  1 sgoeschl  staff    1548 May 26 20:48 test.xslx.html
+-rw-r--r--@ 1 sgoeschl  staff   11352 May 26 20:47 transactions-fo.pdf
+-rw-r--r--@ 1 sgoeschl  staff   33294 May 26 20:48 transactions-html.pdf
+-rw-r--r--  1 sgoeschl  staff  106462 May 26 20:47 transactions.fo
+-rw-r--r--@ 1 sgoeschl  staff   18148 May 26 20:48 transactions.html
 ```
 
 # 2. Once Upon A Time
