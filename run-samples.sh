@@ -38,8 +38,21 @@ echo "templates/csv/fo/transactions.ftl"
 groovy freemarker-cli.groovy -t templates/csv/fo/transactions.ftl site/sample/csv/transactions.csv > target/out/transactions.fo || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 if hash fop 2>/dev/null; then
-	echo "fop -fo target/out/transactions.fo target/out/transactions.pdf"
-    fop -fo target/out/transactions.fo target/out/transactions.pdf 2>/dev/null || { echo >&2 "Test failed.  Aborting."; exit 1; }
+	echo "fop -fo target/out/transactions.fo target/out/transactions-fo.pdf"
+    fop -fo target/out/transactions.fo target/out/transactions-fo.pdf 2>/dev/null || { echo >&2 "Test failed.  Aborting."; exit 1; }
+fi
+
+#############################################################################
+# CSV to HTML & PDF
+#############################################################################
+
+echo "templates/csv/html/transform.ftl"
+
+groovy freemarker-cli.groovy -t templates/csv/html/transactions.ftl site/sample/csv/transactions.csv > target/out/transactions.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+if hash wkhtmltopdf 2>/dev/null; then
+	echo "wkhtmltopdf -O landscape target/out/transactions.html target/out/transactions-html.pdf"
+    wkhtmltopdf -O landscape target/out/transactions.html target/out/transactions-html.pdf 2>/dev/null || { echo >&2 "Test failed.  Aborting."; exit 1; }
 fi
 
 #############################################################################

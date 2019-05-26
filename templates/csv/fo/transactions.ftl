@@ -1,6 +1,6 @@
 <#ftl output_format="XML" >
 <#assign name = documents[0].name>
-<#assign cvsFormat = CSVFormat.TDF.withHeader()>
+<#assign cvsFormat = CSVFormat.DEFAULT.withDelimiter(';').withHeader()>
 <#assign csvParser = CSVParser.parse(documents[0], cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
