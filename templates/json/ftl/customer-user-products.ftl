@@ -17,11 +17,23 @@
 <body>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <a class="navbar-brand" href="/">
-        <img src="/logo.jpg" alt="Logo" style="width:30px;">
+        <img src="/logo.png" alt="Logo" style="width:30px;">
     </a>
     <ul class="navbar-nav">
         <li class="nav-item">
-            <a class="nav-link" href="/ui/tenants">Tenants</a>
+            <a class="nav-link" href="/ui/tenants">Users</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/ui/request-user-token">Token</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/ui/product-overview">Products</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/ui/configurations">Configuration</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/actuator/info">Version</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="/actuator/logfile">Logfile</a>
