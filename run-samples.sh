@@ -22,6 +22,9 @@ groovy freemarker-cli.groovy -t templates/csv/html/transform.ftl site/sample/csv
 echo "templates/csv/md/transform.ftl"
 groovy freemarker-cli.groovy -t templates/csv/md/transform.ftl site/sample/csv/contract.csv > target/out/contract.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
+echo "templates/csv/shell/curl.ftl"
+groovy freemarker-cli.groovy -t ./templates/csv/shell/curl.ftl site/sample/csv/user.csv > target/out/curl.sh || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
 #############################################################################
 # CSV To XML-FO & PDF
 #############################################################################

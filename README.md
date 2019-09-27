@@ -708,7 +708,7 @@ date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',${record.disposer},%{http_c
 Rendering the FreeMarker template 
 
 ```
-groovy freemarker-cli.groovy -t ./templates/csv/shell/curl.md site/sample/csv/user.csv
+groovy freemarker-cli.groovy -t ./templates/csv/shell/curl.ftl site/sample/csv/user.csv
 ```
 
 generates the following shell script
