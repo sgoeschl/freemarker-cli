@@ -679,10 +679,12 @@ stax,stax-api,1.0.1,jar,The Apache Software License Version 2.0
 
 ## 5.10 Transform CSV To Shell Script
 
-For a customer project we wanted to record REST request / responses using WireMock - really quick and dirty. So we decided to avoid any sophistacted test tool but generate a ready-tu-use shell script executing cURL commands. It turned out that handling of dollar signs is a bit tricky
+For a customer project we wanted to record REST request / responses using WireMock - really quick and dirty. So we decided to avoid any sophistacted test tool but generate a ready-to-use shell script executing cURL commands. It turned out that handling of dollar signs is a bit tricky
 
 * Using ```noparse``` directive to disable parsing of dollar signs
 * Using ```${r"${MY_BASE_URL}"``` to generate output with dollar signs
+
+and the final FTL is found below
 
 ```
 <#ftl output_format="plainText">
@@ -694,34 +696,49 @@ For a customer project we wanted to record REST request / responses using WireMo
 
 <#noparse>
 MY_BASE_URL=${MY_BASE_URL:=https://postman-echo.com}
-echo "MY_BASE_URL = ${MY_BASE_URL}" 
 </#noparse>
  
-echo "Executing ${records?size} requests - starting at `date`"
-echo "status,time,user"
+echo "time,user,status,duration,size"
 <#list records as record>
-curl --write-out '%{http_code},%{time_total},${record.disposer}' --insecure --silent --show-error --output /dev/null -H "Authorization: Bearer ${record.token}" "${r"${MY_BASE_URL}"}/get?__=${record.disposer}"; echo
+date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',${record.disposer},%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${r"${MY_BASE_URL}"}/get"
 </#list>
-echo "Finished at `date`"
+
 ```
 
-Rendering the FreeMarker template generates the following shell script
+Rendering the FreeMarker template 
+
+```
+groovy freemarker-cli.groovy -t ./templates/csv/shell/curl.md site/sample/csv/user.csv
+```
+
+generates the following shell script
 
 ```
 #!/bin/sh
 
 MY_BASE_URL=${MY_BASE_URL:=https://postman-echo.com}
-echo "MY_BASE_URL = ${MY_BASE_URL}" 
  
-echo "Executing 4 requests - starting at `date`"
-echo "status,time,user"
-curl --write-out '%{http_code},%{time_total},0401126' --insecure --silent --show-error --output /dev/null -H "Authorization: Bearer 0401126-0000-0000-0000-0123456789012" "${MY_BASE_URL}/get?__=0401126"; echo
-curl --write-out '%{http_code},%{time_total},0401133' --insecure --silent --show-error --output /dev/null -H "Authorization: Bearer 0401133-0000-0000-0000-0123456789012" "${MY_BASE_URL}/get?__=0401133"; echo
-curl --write-out '%{http_code},%{time_total},0401173' --insecure --silent --show-error --output /dev/null -H "Authorization: Bearer 0401173-0000-0000-0000-0123456789012" "${MY_BASE_URL}/get?__=0401173"; echo
-curl --write-out '%{http_code},%{time_total},0401234' --insecure --silent --show-error --output /dev/null -H "Authorization: Bearer 0401234-0000-0000-0000-0123456789012" "${MY_BASE_URL}/get?__=0401234"; echo
-echo "Finished at `date`"
+echo "time,user,status,duration,size"
+date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',0401126,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
+date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',0401133,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
+date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',0401173,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
+date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',0401234,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
 ```
 
+Looks a bit complicated but lets dissect the things
+
+* `date "+%FT%H:%M:%S" | tr -d '\n'` creates a timestamp and removes the line feed
+* `curl --write-out` allows to print runtime data (see [https://ec.haxx.se/usingcurl-writeout.html](https://ec.haxx.se/usingcurl-writeout.html))
+
+Executing the result shell script creates the following output (which is a nice CSV for further processing)
+
+```
+time,user,status,duration,size
+2019-09-27T21:02:52,0401126,200,0.522473,206
+2019-09-27T21:02:53,0401133,200,0.498093,206
+2019-09-27T21:02:54,0401173,200,0.529013,206
+2019-09-27T21:02:54,0401234,200,0.528268,206
+```
 
 ## 5.11 Using Advanced FreeMarker Features
 
