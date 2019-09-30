@@ -25,7 +25,7 @@ java.math.RoundingMode#UP: ${Enums["java.math.RoundingMode"].UP}
 ---------------------------------------------------------------------------
 List all files:
 <#list documents as document>
-- Document: name=${document.name} location=${document.location} length=${document.length} encoding=${document.encoding}
+- Document: name=${document.name} location=${document.location} length=${document.length} encoding=${document.encoding!""}
 </#list>
 
 7) Access System Properties
@@ -41,6 +41,7 @@ description  : ${ReportData["description"]}
 host         : ${ReportData["host"]}
 user         : ${ReportData["user"]}
 date         : ${ReportData["date"]}
+time         : ${ReportData["time"]}
 
 9) Environment
 ---------------------------------------------------------------------------
@@ -64,5 +65,14 @@ List all files having "md" extension
 </#list>
 Get all documents
 <#list Documents.getAll() as document>
-    - ${document.name}
+    - ${document.name} => ${document.location}
+</#list>
+
+11) Data Model
+---------------------------------------------------------------------------
+
+List a entries in the current data model
+
+<#list .data_model?keys as key>
+- ${key}
 </#list>

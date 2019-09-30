@@ -1,7 +1,7 @@
 Buchungsdatum;Partnername;Partner IBAN;Partner BIC;Partner Kontonummer;Partner Bank-Code (BLZ);Betrag;Währung;Buchungstext;Valutadatum
 04.01.2016;Julia Mobilgruber;ATXXXXXXXXXXXXXXXXXX;GIBAATW0XXX;YYYYYYYYYYY;20111;11,00;EUR;Test für Dauerauftrag Julia Mobilgruber Nexus 7 Dauerauftrag;04.01.2016
 04.01.2016;Hans Testuser;ATXXXXXXXXXXXXXXXXXX;GIBAATW0XXX;;;-9,61;EUR;m Hans Testuser;04.01.2016
-04.01.2016;Hans Testuser;ATXXXXXXXXXXXXXXXXXX;;;;-4,61;EUR;Netbanking-Überweisung Hans Testuser;04.01.2016
+04.01.2016;Hans Testuser;ATXXXXXXXXXXXXXXXXXX;;;;-4,61;EUR;Überweisung Hans Testuser;04.01.2016
 04.01.2016;Hans Testuser;ATXXXXXXXXXXXXXXXXXX;GIBAATW0XXX;YYYYYYYYYYY;20111;4,61;EUR;SEPA-Gutschrift Hans Testuser;04.01.2016
 04.01.2016;1 - Alias Test2 very long name;ATXXXXXXXXXXXXXXXXXX;;;;-5,61;EUR;test 1 - Alias Test2 very long name;04.01.2016
 04.01.2016;Hans Testuser;ATXXXXXXXXXXXXXXXXXX;GIBAATW0XXX;YYYYYYYYYYY;20111;5,61;EUR;test Hans Testuser;04.01.2016
@@ -28,7 +28,7 @@ Buchungsdatum;Partnername;Partner IBAN;Partner BIC;Partner Kontonummer;Partner B
 08.01.2016;;;;;;0,00;EUR;*Information gemäß VKrG per 07.01.2016* Sollzinsen: 12,75000 % Verzugszinsen: 5,00000 % Ablebensrisikoprovision: 1,30000 % Eine Änderung der Konditionen kann entsprechend den in den Allgemeinen Geschäftsbedingungen enthaltenen Änderungsklauseln erfolgen.;08.01.2016
 08.01.2016;;;;;;0,00;EUR;*Information gemäß VKrG per 07.01.2016* Sollzinsen: 12,75000 % Verzugszinsen: 5,00000 % Ablebensrisikoprovision: 1,30000 % Eine Änderung der Konditionen kann entsprechend den in den Allgemeinen Geschäftsbedingungen enthaltenen Änderungsklauseln erfolgen.;08.01.2016
 11.01.2016;Caritas;ATXXXXXXXXXXXXXXXXXX;;;;-1,00;EUR;6M Caritas test signing;11.01.2016
-11.01.2016;Stadt Wien, MA6-BA32;ATXXXXXXXXXXXXXXXXXX;;;;-1,23;EUR;Netbanking-Überweisung Stadt Wien, MA6;11.01.2016
+11.01.2016;Stadt Wien, MA6-BA32;ATXXXXXXXXXXXXXXXXXX;;;;-1,23;EUR;Überweisung Stadt Wien, MA6;11.01.2016
 11.01.2016;Daenemark;DKXXXXXXXXXXXXXXXX;DABADKK0XXX;;;1,00;EUR;Kontoname/Kontonummer/IBAN falsch Closed Daenemark;11.01.2016
 11.01.2016;Hans Testuser;ATXXXXXXXXXXXXXXXXXX;;;;-1,00;EUR;Mobile Transfer Hans Testuser;11.01.2016
 11.01.2016;Hans Testuser;ATXXXXXXXXXXXXXXXXXX;;;;-1,00;EUR;Mobile Transfer Hans Testuser;11.01.2016
