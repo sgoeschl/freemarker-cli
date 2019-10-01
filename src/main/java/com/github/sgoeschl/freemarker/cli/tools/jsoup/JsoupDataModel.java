@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.extensions.excel;
+package com.github.sgoeschl.freemarker.cli.tools.jsoup;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ExcelDataModel {
+public class JsoupDataModel {
 
     public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("ExcelParser", new ExcelParserBean());
+        dataModel.put("JsoupBean", new JsoupParserBean());
         return dataModel;
     }
 }

@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.extensions.xml;
+package com.github.sgoeschl.freemarker.cli.tools.excel;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class XmlParserDataModel {
+public class ExcelDataModel {
 
     public Map<String, Object> create() {
-        final Map<String, Object> dataModel = new HashMap<String, Object>();
-        dataModel.put("XmlParser", new XmlParserBean());
+        final Map<String, Object> dataModel = new HashMap<>();
+        dataModel.put("ExcelParser", new ExcelParserBean());
         return dataModel;
     }
 }

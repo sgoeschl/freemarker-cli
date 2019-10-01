@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.extensions.jsoup;
+package com.github.sgoeschl.freemarker.cli.tools.environment;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class JsoupDataModel {
+public class EnvironmentDataModel {
 
     public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("JsoupBean", new JsoupParserBean());
+        dataModel.put("Environment", System.getenv());
         return dataModel;
     }
 }

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.extensions.reportdata;
+package com.github.sgoeschl.freemarker.cli.tools.reportdata;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

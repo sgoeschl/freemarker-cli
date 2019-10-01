@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.extensions.propertiesparser;
+package com.github.sgoeschl.freemarker.cli.tools.systemproperties;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class PropertiesParserDataModel {
+public class SystemPropertiesDataModel {
 
     public Map<String, Object> create() {
-        final Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("PropertiesParser", new PropertiesParserBean());
+        final Map<String, Object> dataModel = new HashMap<String, Object>();
+        dataModel.put("SystemProperties", System.getProperties());
         return dataModel;
     }
 }

@@ -16,17 +16,8 @@
  */
 package com.github.sgoeschl.freemarker.cli.model;
 
-import com.github.sgoeschl.freemarker.cli.extensions.commonscsv.CommonsCsvDataModel;
-import com.github.sgoeschl.freemarker.cli.extensions.environment.EnvironmentDataModel;
-import com.github.sgoeschl.freemarker.cli.extensions.excel.ExcelDataModel;
-import com.github.sgoeschl.freemarker.cli.extensions.freemarker.FreeMarkerDataModel;
-import com.github.sgoeschl.freemarker.cli.extensions.jsonpath.JsonPathDataModel;
-import com.github.sgoeschl.freemarker.cli.extensions.jsoup.JsoupDataModel;
-import com.github.sgoeschl.freemarker.cli.extensions.propertiesparser.PropertiesParserDataModel;
-import com.github.sgoeschl.freemarker.cli.extensions.reportdata.ReportDataModel;
-import com.github.sgoeschl.freemarker.cli.extensions.systemproperties.SystemPropertiesDataModel;
-import com.github.sgoeschl.freemarker.cli.extensions.xml.XmlParserDataModel;
 import com.github.sgoeschl.freemarker.cli.resolver.DocumentResolver;
+import com.github.sgoeschl.freemarker.cli.tools.Tools;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
@@ -50,11 +41,13 @@ import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.codec.Charsets.UTF_8;
 
-public class Provider {
+public class FreeMarkerTask {
+
+    private final static String APP_HOME = "app.home";
 
     private final Settings settings;
 
-    public Provider(Settings settings) {
+    public FreeMarkerTask(Settings settings) {
         this.settings = requireNonNull(settings);
     }
 
@@ -78,7 +71,6 @@ public class Provider {
     private Configuration configuration() {
         try {
             final Configuration configuration = new Configuration(Configuration.VERSION_2_3_28);
-            configuration.setDirectoryForTemplateLoading(new File(settings.getBaseDir()));
             configuration.setTemplateLoader(templateLoader());
             configuration.setDefaultEncoding(UTF_8.name());
             configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
@@ -93,27 +85,17 @@ public class Provider {
         final Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("documents", documents.getAll());
         dataModel.put("Documents", documents);
-
-        dataModel.putAll(new EnvironmentDataModel().create());
-        dataModel.putAll(new FreeMarkerDataModel().create());
-        dataModel.putAll(new ReportDataModel().create(settings.getDescription()));
-        dataModel.putAll(new SystemPropertiesDataModel().create());
-
-        dataModel.putAll(new CommonsCsvDataModel().create());
-        dataModel.putAll(new ExcelDataModel().create());
-        dataModel.putAll(new JsonPathDataModel().create());
-        dataModel.putAll(new JsoupDataModel().create());
-        dataModel.putAll(new PropertiesParserDataModel().create());
-        dataModel.putAll(new XmlParserDataModel().create());
+        dataModel.putAll(new Tools(settings).create());
         return dataModel;
     }
 
     private Documents documents() {
         final List<Document> documents = new ArrayList<>(documentResolver().resolve());
 
-        // Add optional document from STDIN at the and of the list
+        // Add optional document from STDIN at the start of the list since
+        // this allows easy sequence slicing in FreeMarker.
         if (settings.getStdin() != null) {
-            documents.add(new Document("stdin", settings.getStdin()));
+            documents.add(0, new Document("stdin", settings.getStdin()));
         }
 
         return new Documents(documents);
@@ -137,10 +119,10 @@ public class Provider {
 
     private TemplateLoader templateLoader() throws IOException {
         final List<TemplateLoader> loaders = new ArrayList<>();
-        final String appHome = SystemProperties.getProperty("app.home");
+        final String appHome = SystemProperties.getProperty(APP_HOME);
 
         if (!isNullOrEmtpty(appHome)) {
-            loaders.add(new FileTemplateLoader(new File(SystemProperties.getProperty("app.home"))));
+            loaders.add(new FileTemplateLoader(new File(SystemProperties.getProperty(APP_HOME))));
         }
 
         if (!isNullOrEmtpty(settings.getBaseDir())) {

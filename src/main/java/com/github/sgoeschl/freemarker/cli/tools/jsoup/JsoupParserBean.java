@@ -14,17 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.extensions.jsonpath;
+package com.github.sgoeschl.freemarker.cli.tools.jsoup;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.github.sgoeschl.freemarker.cli.model.Document;
+import com.github.sgoeschl.freemarker.cli.util.StreamUtils;
+import org.jsoup.Jsoup;
 
-public class JsonPathDataModel {
+import java.io.IOException;
+import java.io.InputStream;
 
-    public Map<String, Object> create() {
-        final Map<String, Object> dataModel = new HashMap<String, Object>();
-        dataModel.put("JsonPath", new JsonPathBean());
-        return dataModel;
+public class JsoupParserBean {
+
+    public org.jsoup.nodes.Document parse(Document document) {
+        try (InputStream is = document.getInputStream()) {
+            final byte[] bytes = StreamUtils.toByteArray(is);
+            return Jsoup.parse(new String(bytes, document.getCharset()));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to parse HTML document: " + document, e);
+        }
     }
-
 }

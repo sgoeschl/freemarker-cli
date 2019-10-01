@@ -14,16 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.extensions.environment;
+package com.github.sgoeschl.freemarker.cli.tools.jsonpath;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.github.sgoeschl.freemarker.cli.model.Document;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 
-public class EnvironmentDataModel {
+import java.io.IOException;
+import java.io.InputStream;
 
-    public Map<String, Object> create() {
-        final Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("Environment", System.getenv());
-        return dataModel;
+public class JsonPathBean {
+
+    public DocumentContext parse(Document document) throws IOException {
+        try (InputStream is = document.getInputStream()) {
+            return JsonPath.parse(is);
+        }
     }
+
 }

@@ -16,7 +16,7 @@
  */
 package com.github.sgoeschl.freemarker.cli;
 
-import com.github.sgoeschl.freemarker.cli.model.Provider;
+import com.github.sgoeschl.freemarker.cli.model.FreeMarkerTask;
 import com.github.sgoeschl.freemarker.cli.model.Settings;
 import com.github.sgoeschl.freemarker.cli.util.IOUtils;
 import picocli.CommandLine;
@@ -32,7 +32,7 @@ import java.util.concurrent.Callable;
 @Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, version = "2.0.0")
 public class Main implements Callable<Integer> {
 
-    @Option(names = { "-b", "--basedir" }, description = "Base directory to resolve FreeMarker templates", defaultValue = ".")
+    @Option(names = { "-b", "--basedir" }, description = "Base directory to resolve FreeMarker templates")
     private String baseDir;
 
     @Option(names = { "-t", "--template" }, description = "FreeMarker template used for rendering", required = true)
@@ -101,7 +101,7 @@ public class Main implements Callable<Integer> {
         // Set default locale for the whole JVM
         Locale.setDefault(settings.getLocale());
 
-        new Provider(settings).run();
+        new FreeMarkerTask(settings).run();
 
         return 0;
     }

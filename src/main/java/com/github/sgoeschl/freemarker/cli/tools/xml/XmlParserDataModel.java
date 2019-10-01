@@ -14,19 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.extensions.xml;
+package com.github.sgoeschl.freemarker.cli.tools.xml;
 
-import com.github.sgoeschl.freemarker.cli.model.Document;
-import freemarker.ext.dom.NodeModel;
-import org.xml.sax.InputSource;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.io.InputStream;
+public class XmlParserDataModel {
 
-public class XmlParserBean {
-
-    public NodeModel parse(Document document) throws Exception {
-        try (InputStream is = document.getInputStream()) {
-            return NodeModel.parse(new InputSource(is));
-        }
+    public Map<String, Object> create() {
+        final Map<String, Object> dataModel = new HashMap<String, Object>();
+        dataModel.put("XmlParser", new XmlParserBean());
+        return dataModel;
     }
 }

@@ -14,26 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.extensions.commonscsv;
+package com.github.sgoeschl.freemarker.cli.tools.propertiesparser;
 
 import com.github.sgoeschl.freemarker.cli.model.Document;
-import com.github.sgoeschl.freemarker.cli.util.StreamUtils;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
-public class CommonsCsvParserBean {
+public class PropertiesParserBean {
 
-    public CSVParser parse(Document document, CSVFormat format) {
-        try {
-            // The input stream would be closed by CSVParser#close but it
-            // is unlikely to be called so we load the file into a byte[].
-            final ByteArrayInputStream bais = new ByteArrayInputStream(StreamUtils.toByteArray(document.getInputStream()));
-            return CSVParser.parse(bais, document.getCharset(), format);
+    public Properties parse(Document document) {
+        try (InputStream is = document.getInputStream()) {
+            final Properties properties = new Properties();
+            properties.load(is);
+            return properties;
         } catch (IOException e) {
-            throw new RuntimeException("Failed to parse CSV: " + document, e);
+            throw new RuntimeException("Failed to parse Properties document: " + document, e);
         }
     }
 }

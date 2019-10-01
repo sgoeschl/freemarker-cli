@@ -14,23 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.extensions.propertiesparser;
+package com.github.sgoeschl.freemarker.cli.tools.xml;
 
 import com.github.sgoeschl.freemarker.cli.model.Document;
+import freemarker.ext.dom.NodeModel;
+import org.xml.sax.InputSource;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
 
-public class PropertiesParserBean {
+public class XmlParserBean {
 
-    public Properties parse(Document document) {
+    public NodeModel parse(Document document) throws Exception {
         try (InputStream is = document.getInputStream()) {
-            final Properties properties = new Properties();
-            properties.load(is);
-            return properties;
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to parse Properties document: " + document, e);
+            return NodeModel.parse(new InputSource(is));
         }
     }
 }

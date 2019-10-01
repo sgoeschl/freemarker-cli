@@ -14,25 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.extensions.freemarker;
-
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.ext.beans.BeansWrapperBuilder;
-import freemarker.template.Configuration;
-import freemarker.template.utility.ObjectConstructor;
+package com.github.sgoeschl.freemarker.cli.tools.propertiesparser;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class FreeMarkerDataModel {
+public class PropertiesParserDataModel {
 
     public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();
-        final BeansWrapperBuilder builder = new BeansWrapperBuilder(Configuration.VERSION_2_3_28);
-        final BeansWrapper beansWrapper = builder.build();
-        dataModel.put("ObjectConstructor", new ObjectConstructor());
-        dataModel.put("Statics", beansWrapper.getStaticModels());
-        dataModel.put("Enums", beansWrapper.getEnumModels());
+        dataModel.put("PropertiesParser", new PropertiesParserBean());
         return dataModel;
     }
 }
