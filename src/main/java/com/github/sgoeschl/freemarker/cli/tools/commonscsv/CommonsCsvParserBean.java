@@ -20,9 +20,13 @@ import com.github.sgoeschl.freemarker.cli.model.Document;
 import com.github.sgoeschl.freemarker.cli.util.StreamUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CommonsCsvParserBean {
 
@@ -35,5 +39,11 @@ public class CommonsCsvParserBean {
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse CSV: " + document, e);
         }
+    }
+
+    public Map<String, CSVRecord> toMap(CSVParser csvParser, List<CSVRecord> csvRecords, String key) {
+        final Integer index = csvParser.getHeaderMap().get(key);
+        final Map<String, CSVRecord> collect = csvRecords.stream().collect(Collectors.toMap(r -> r.get(index), r -> r));
+        return collect;
     }
 }

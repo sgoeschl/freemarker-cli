@@ -16,7 +16,7 @@
  */
 package com.github.sgoeschl.freemarker.cli;
 
-import com.github.sgoeschl.freemarker.cli.model.FreeMarkerTask;
+import com.github.sgoeschl.freemarker.cli.model.Task;
 import com.github.sgoeschl.freemarker.cli.model.Settings;
 import com.github.sgoeschl.freemarker.cli.util.IOUtils;
 import picocli.CommandLine;
@@ -101,7 +101,7 @@ public class Main implements Callable<Integer> {
         // Set default locale for the whole JVM
         Locale.setDefault(settings.getLocale());
 
-        new FreeMarkerTask(settings).run();
+        new Task(settings).run();
 
         return 0;
     }

@@ -41,13 +41,13 @@ import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.codec.Charsets.UTF_8;
 
-public class FreeMarkerTask {
+public class Task {
 
-    private final static String APP_HOME = "app.home";
+    private static final String APP_HOME = "app.home";
 
     private final Settings settings;
 
-    public FreeMarkerTask(Settings settings) {
+    public Task(Settings settings) {
         this.settings = requireNonNull(settings);
     }
 
