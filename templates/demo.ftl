@@ -73,8 +73,29 @@ Get all documents
 11) Data Model
 ---------------------------------------------------------------------------
 
-List a entries in the current data model
+Zop-level entries in the current data model
 
 <#list .data_model?keys as key>
 - ${key}
 </#list>
+
+12) Create a UUID
+---------------------------------------------------------------------------
+
+See https://stackoverflow.com/questions/43501297/i-have-a-simplescalar-i-need-its-strings-getbytes-return-value-what-can-i-d
+
+<#assign uuidSource = "value and salt">
+<#assign buffer = Statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
+<#assign bytes = buffer.array()[0..<buffer.limit()]>
+<#assign uuid = Statics["java.util.UUID"].nameUUIDFromBytes(bytes)>
+Random UUID           : ${Statics["java.util.UUID"].randomUUID()}
+Name UUID from bytes  : ${uuid}
+Name UUID as function : ${uuidFromValueAndSalt("value and ", "salt")}
+
+<#--------------------------------------------------------------------------->
+<#function uuidFromValueAndSalt value salt>
+    <#assign uuidSource = value + salt>
+    <#assign buffer = Statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
+    <#assign bytes = buffer.array()[0..<buffer.limit()]>
+    <#return Statics["java.util.UUID"].nameUUIDFromBytes(bytes)>
+</#function>
