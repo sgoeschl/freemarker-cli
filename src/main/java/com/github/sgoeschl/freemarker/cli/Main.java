@@ -25,8 +25,10 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 @Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, version = "2.0.0")
@@ -44,7 +46,7 @@ public class Main implements Callable<Integer> {
     @Option(names = { "--output-encoding" }, description = "Encoding of output file, e.g. UTF-8", defaultValue = "UTF-8")
     String outputEncoding;
 
-    @Option(names = { "-d", "--description" }, description = "Optional report description")
+    @Option(names = { "-d", "--description" }, description = "Pptional report description")
     private String description;
 
     @Option(names = { "-v", "--verbose" }, description = "Verbose mode")
@@ -59,15 +61,18 @@ public class Main implements Callable<Integer> {
     @Option(names = { "-l", "--locale" }, description = "Locale being used for output file, e.g. 'en_US")
     private String locale;
 
-    @Option(names = { "--stdin" }, description = "Read from stdin")
+    @Option(names = { "--stdin" }, description = "Read source document from stdin")
     private boolean readFromStdin;
+
+    @Option(names = {"-D"}, description = "Set a system property")
+    private Map<String, String> properties;
 
     @Parameters(description = "Any number of input source files and/or directories")
     private List<String> sources;
 
     private String stdin;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         try {
             System.exit(new CommandLine(new Main()).execute(args));
         } catch (RuntimeException e) {
@@ -79,8 +84,13 @@ public class Main implements Callable<Integer> {
     @Override
     public Integer call() {
 
-        // Read from stdin if we have no positional command line arguments or requested by the caller
-        if (sources == null || sources.isEmpty() || readFromStdin) {
+        // set system properties as soon as possible
+        if(properties != null && !properties.isEmpty()) {
+            System.getProperties().putAll(properties);
+        }
+
+        // read from stdin if we have no positional command line arguments or requested by the caller
+        if (readFromStdin) {
             stdin = IOUtils.readStdin();
         }
 
@@ -96,6 +106,7 @@ public class Main implements Callable<Integer> {
                 .setLocale(locale)
                 .setStdin(stdin)
                 .setSources(sources != null ? sources : new ArrayList<>())
+                .setProperties(properties != null ? properties : new HashMap<>())
                 .build();
 
         // Set default locale for the whole JVM

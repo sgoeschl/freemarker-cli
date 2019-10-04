@@ -20,6 +20,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
 
@@ -36,6 +37,7 @@ public class Settings {
     private final Locale locale;
     private final String stdin;
     private final List<String> sources;
+    private final Map<String, String> properties;
 
     private Settings(
             String baseDir,
@@ -48,7 +50,8 @@ public class Settings {
             String include,
             Locale locale,
             String stdin,
-            List<String> sources) {
+            List<String> sources,
+            Map<String, String> properties) {
         this.baseDir = baseDir;
         this.template = template;
         this.sourceEncoding = sourceEncoding;
@@ -60,6 +63,7 @@ public class Settings {
         this.locale = locale;
         this.stdin = stdin;
         this.sources = sources;
+        this.properties = properties;
     }
 
     public static SettingsBuilder builder() {
@@ -110,6 +114,10 @@ public class Settings {
         return sources;
     }
 
+    public Map<String, String> getProperties() {
+        return properties;
+    }
+
     public boolean hasOutputFile() {
         return outputFile != null;
     }
@@ -128,6 +136,7 @@ public class Settings {
                 ", locale=" + locale +
                 ", stdin='" + stdin + '\'' +
                 ", sources=" + sources +
+                ", properties=" + properties +
                 '}';
     }
 
@@ -143,6 +152,7 @@ public class Settings {
         private String locale;
         private String stdin;
         private List<String> sources;
+        private Map<String, String> properties;
 
         private SettingsBuilder() {
         }
@@ -202,6 +212,11 @@ public class Settings {
             return this;
         }
 
+        public SettingsBuilder setProperties(Map<String, String> properties) {
+            this.properties = properties;
+            return this;
+        }
+
         public Settings build() {
             return new Settings(
                     baseDir,
@@ -214,7 +229,8 @@ public class Settings {
                     include,
                     parseLocale(locale),
                     stdin,
-                    sources);
+                    sources,
+                    properties);
         }
 
         private static Locale parseLocale(String value) {

@@ -33,7 +33,7 @@ public class ReportDataModel {
         properties.put("user", System.getProperty("user.name", "unknown"));
         properties.put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         properties.put("time", new SimpleDateFormat("hh:mm:ss").format(new Date()));
-        final Map<String, Object> dataModel = new HashMap<String, Object>();
+        final Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("ReportData", properties);
         return dataModel;
     }

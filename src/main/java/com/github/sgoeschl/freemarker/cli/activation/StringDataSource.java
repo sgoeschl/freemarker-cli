@@ -36,12 +36,12 @@ public class StringDataSource implements DataSource {
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
+    public InputStream getInputStream() {
         return new ByteArrayInputStream(content.getBytes(UTF_8));
     }
 
     @Override
-    public OutputStream getOutputStream() throws IOException {
+    public OutputStream getOutputStream()  {
         return null;
     }
 

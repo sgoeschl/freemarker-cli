@@ -26,7 +26,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toSet;
 
 public class CommonsCsvParserBean {
 
@@ -42,8 +45,18 @@ public class CommonsCsvParserBean {
     }
 
     public Map<String, CSVRecord> toMap(CSVParser csvParser, List<CSVRecord> csvRecords, String key) {
-        final Integer index = csvParser.getHeaderMap().get(key);
-        final Map<String, CSVRecord> collect = csvRecords.stream().collect(Collectors.toMap(r -> r.get(index), r -> r));
-        return collect;
+        return toMap(csvRecords, csvParser.getHeaderMap().get(key));
+    }
+
+    public Map<String, CSVRecord> toMap(List<CSVRecord> csvRecords, Integer index) {
+        return csvRecords.stream().collect(Collectors.toMap(r -> r.get(index), r -> r));
+    }
+
+    public Set<String> keySet(CSVParser csvParser, List<CSVRecord> csvRecords, String key) {
+        return keySet(csvRecords, csvParser.getHeaderMap().get(key));
+    }
+
+    public Set<String> keySet(List<CSVRecord> csvRecords, Integer index) {
+        return csvRecords.stream().map(r -> r.get(index)).collect(toSet());
     }
 }

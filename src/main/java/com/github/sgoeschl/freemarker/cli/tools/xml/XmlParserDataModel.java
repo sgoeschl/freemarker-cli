@@ -22,7 +22,7 @@ import java.util.Map;
 public class XmlParserDataModel {
 
     public Map<String, Object> create() {
-        final Map<String, Object> dataModel = new HashMap<String, Object>();
+        final Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("XmlParser", new XmlParserBean());
         return dataModel;
     }

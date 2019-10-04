@@ -35,7 +35,7 @@ public class CommonsCsvDataModel {
         csvFormats.put("RFC4180", CSVFormat.RFC4180);
         csvFormats.put("TDF", CSVFormat.TDF);
 
-        final Map<String, Object> dataModel = new HashMap<String, Object>();
+        final Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("CSVFormat", csvFormats);
         dataModel.put("CSVParser", new CommonsCsvParserBean());
         return dataModel;

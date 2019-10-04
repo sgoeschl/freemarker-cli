@@ -72,6 +72,9 @@ $FREEMARKER_CMD -t templates/excel/html/transform.ftl site/sample/excel/test-mul
 echo "templates/excel/md/transform.ftl"
 $FREEMARKER_CMD -t templates/excel/md/transform.ftl site/sample/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
+echo "templates/excel/csv/transform.ftl"
+$FREEMARKER_CMD -t templates/excel/csv/transform.ftl site/sample/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
 #############################################################################
 # HTML
 #############################################################################

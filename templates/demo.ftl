@@ -53,8 +53,10 @@ time         : ${ReportData["time"]}
 ---------------------------------------------------------------------------
 Get the number of documents:
     - ${Documents.size()}
+<#if !Documents.isEmpty()>
 Get the first document
-    - ${Documents.get(0)}
+    - ${Documents.get(0)!"NA"}
+</#if>
 List all files containing "README" in the name
 <#list Documents.findByName("README") as document>
     - ${document.name}

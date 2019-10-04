@@ -45,6 +45,10 @@ public class Documents {
         return documents.size();
     }
 
+    public boolean isEmpty() {
+        return documents == null || documents.isEmpty();
+    }
+
     public List<Document> getAll() {
         return documents;
     }
