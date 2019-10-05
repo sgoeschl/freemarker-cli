@@ -454,7 +454,7 @@ The FTL uses a couple of interesting features
 * We process a list of property files
 * The `strip_text` and `compress` strips any whitespaces and linebreaks from the output so we can create a proper CSV file
 * We use FTL functions to extract the `tenant` and `site`, e.g. `extractTenant`
-* We add a manual line break using ```${'\n'}``
+* We add a manual line break using ```${'\n'}```
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
