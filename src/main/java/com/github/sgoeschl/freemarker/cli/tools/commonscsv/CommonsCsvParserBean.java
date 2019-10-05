@@ -33,13 +33,15 @@ public class CommonsCsvParserBean {
 
     public CSVParser parse(Document document, CSVFormat format) {
         try {
-            // The input stream would be closed by CSVParser#close but it
-            // is unlikely to be called so we load the file into a byte[].
-            // final ByteArrayInputStream bais = new ByteArrayInputStream(StreamUtils.toByteArray(document.getInputStream()));
+            // TODO ensure that the input stream is closed
             return CSVParser.parse(document.getInputStream(), document.getCharset(), format);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse CSV: " + document, e);
         }
+    }
+
+    public CSVRecordReader getReader(Document document, CSVFormat format) {
+        return new CSVRecordReader(parse(document, format).iterator());
     }
 
     public Map<String, CSVRecord> toMap(CSVParser csvParser, List<CSVRecord> csvRecords, String key) {

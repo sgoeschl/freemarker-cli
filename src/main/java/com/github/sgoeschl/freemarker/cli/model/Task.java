@@ -87,7 +87,7 @@ public class Task {
 
     private DefaultObjectWrapper objectWrapper() {
         final DefaultObjectWrapperBuilder builder = new DefaultObjectWrapperBuilder(VERSION_2_3_29);
-        builder.setIterableSupport(true);
+        builder.setIterableSupport(false);
         return builder.build();
     }
 
