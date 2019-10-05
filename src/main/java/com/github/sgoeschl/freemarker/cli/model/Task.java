@@ -22,6 +22,8 @@ import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapper;
+import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
 import org.apache.xmlbeans.SystemProperties;
@@ -38,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
+import static freemarker.template.Configuration.VERSION_2_3_29;
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.codec.Charsets.UTF_8;
 
@@ -70,7 +73,8 @@ public class Task {
 
     private Configuration configuration() {
         try {
-            final Configuration configuration = new Configuration(Configuration.VERSION_2_3_28);
+            final Configuration configuration = new Configuration(VERSION_2_3_29);
+            configuration.setObjectWrapper(objectWrapper());
             configuration.setTemplateLoader(templateLoader());
             configuration.setDefaultEncoding(UTF_8.name());
             configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
@@ -79,6 +83,12 @@ public class Task {
         } catch (IOException e) {
             throw new RuntimeException("Unable to configure FreeMarker", e);
         }
+    }
+
+    private DefaultObjectWrapper objectWrapper() {
+        final DefaultObjectWrapperBuilder builder = new DefaultObjectWrapperBuilder(VERSION_2_3_29);
+        builder.setIterableSupport(true);
+        return builder.build();
     }
 
     private Map<String, Object> dataModel(Documents documents) {

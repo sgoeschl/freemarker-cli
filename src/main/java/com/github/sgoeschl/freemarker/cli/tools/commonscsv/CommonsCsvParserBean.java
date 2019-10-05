@@ -17,12 +17,10 @@
 package com.github.sgoeschl.freemarker.cli.tools.commonscsv;
 
 import com.github.sgoeschl.freemarker.cli.model.Document;
-import com.github.sgoeschl.freemarker.cli.util.StreamUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -37,8 +35,8 @@ public class CommonsCsvParserBean {
         try {
             // The input stream would be closed by CSVParser#close but it
             // is unlikely to be called so we load the file into a byte[].
-            final ByteArrayInputStream bais = new ByteArrayInputStream(StreamUtils.toByteArray(document.getInputStream()));
-            return CSVParser.parse(bais, document.getCharset(), format);
+            // final ByteArrayInputStream bais = new ByteArrayInputStream(StreamUtils.toByteArray(document.getInputStream()));
+            return CSVParser.parse(document.getInputStream(), document.getCharset(), format);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse CSV: " + document, e);
         }
