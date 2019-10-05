@@ -40,8 +40,8 @@ public class CommonsCsvParserBean {
         }
     }
 
-    public CommonsCSVRecordReader getReader(Document document, CSVFormat format) {
-        return new CommonsCSVRecordReader(parse(document, format).iterator());
+    public CommonsCsvRecordReader getReader(Document document, CSVFormat format) {
+        return new CommonsCsvRecordReader(parse(document, format).iterator());
     }
 
     public Map<String, CSVRecord> toMap(CSVParser csvParser, List<CSVRecord> csvRecords, String key) {

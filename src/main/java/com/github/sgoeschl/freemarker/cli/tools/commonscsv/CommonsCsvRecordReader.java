@@ -10,11 +10,11 @@ import java.util.Iterator;
  * to handle CSVParser as "Iterable" but CVSRecord also exposes "Iterable"
  * to I got a collection instead of map (in FreeMarker speak).
  */
-public class CommonsCSVRecordReader {
+public class CommonsCsvRecordReader {
 
     private final Iterator<CSVRecord> iterator;
 
-    public CommonsCSVRecordReader(Iterator<CSVRecord> iterator) {
+    public CommonsCsvRecordReader(Iterator<CSVRecord> iterator) {
         this.iterator = iterator;
     }
 
