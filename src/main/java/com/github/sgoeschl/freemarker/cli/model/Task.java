@@ -76,10 +76,11 @@ public class Task {
             final Configuration configuration = new Configuration(VERSION_2_3_29);
             configuration.setObjectWrapper(objectWrapper());
             configuration.setTemplateLoader(templateLoader());
+            // assume that FTLs are in UTF-8
             configuration.setDefaultEncoding(UTF_8.name());
             configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
             configuration.setLogTemplateExceptions(false);
-            configuration.setOutputEncoding(UTF_8.name());
+            configuration.setOutputEncoding(settings.getOutputEncoding().name());
             return configuration;
         } catch (IOException e) {
             throw new RuntimeException("Unable to configure FreeMarker", e);

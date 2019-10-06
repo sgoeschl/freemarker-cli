@@ -69,6 +69,7 @@
                 <configuration>
                     <repositoryLayout>flat</repositoryLayout>
                     <repositoryName>lib</repositoryName>
+                    <extraJvmArguments>-Xmx256m</extraJvmArguments>
                     <programs>
                         <program>
                             <platforms>

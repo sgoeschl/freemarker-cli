@@ -104,6 +104,11 @@ Random UUID           : ${Statics["java.util.UUID"].randomUUID()}
 Name UUID from bytes  : ${uuid}
 Name UUID as function : ${uuidFromValueAndSalt("value and ", "salt")}
 
+13) Printing Special Characters
+---------------------------------------------------------------------------
+
+German Special Characters: äöüßÄÖÜ
+
 <#--------------------------------------------------------------------------->
 <#function uuidFromValueAndSalt value salt>
     <#assign uuidSource = value + salt>
