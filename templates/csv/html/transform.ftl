@@ -2,8 +2,7 @@
 <#assign name = documents[0].name>
 <#assign cvsFormat = CSVFormat.DEFAULT.withHeader()>
 <#assign csvParser = CSVParser.parse(documents[0], cvsFormat)>
-<#assign csvHeaders = csvParser.getHeaderMap()?keys>
-<#assign csvRecords = csvParser.records>
+<#assign csvHeaders = csvParser.getHeaderNames()>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
 <html>
@@ -15,8 +14,10 @@
 </head>
 <body>
 <table class="table table-striped">
-    <@writeHeaders headers=csvHeaders/>
-    <@writeColums columns=csvRecords/>
+    <@writeHeaders csvParser.getHeaderNames()/>
+    <#list csvParser.iterator() as record>
+        <@writeColumns record/>
+    </#list>
 </table>
 </body>
 </html>
@@ -29,12 +30,10 @@
     </tr>
 </#macro>
 <#--------------------------------------------------------------------------->
-<#macro writeColums columns>
-    <#list columns as column>
-        <tr>
-            <#list column.iterator() as field>
-                <td>${field}</td>
-            </#list>
-        </tr>
-    </#list>
+<#macro writeColumns record>
+    <tr>
+        <#list record.iterator() as field>
+            <th>${field}</th>
+        </#list>
+    </tr>
 </#macro>

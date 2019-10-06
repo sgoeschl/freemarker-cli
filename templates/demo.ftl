@@ -1,6 +1,15 @@
-1) Language-specific Date Format
+<#ftl output_format="plainText" >
+
+1) FreeMarker Special Variables
 ---------------------------------------------------------------------------
-Report generated at ${.now}
+
+FreeMarker version     : ${.version}
+Template name          : ${.current_template_name}
+Language               : ${.lang}
+Locale                 : ${.locale}
+Timestamp              : ${.now}
+Output encoding        : ${.output_encoding!"not set"}
+Output format          : ${.output_format}
 
 2) Invoke a constructor of a Java class
 ---------------------------------------------------------------------------
@@ -30,10 +39,13 @@ List all files:
 
 7) Access System Properties
 ---------------------------------------------------------------------------
+app.dir      : ${SystemProperties["app.dir"]!""}
+app.home     : ${SystemProperties["app.home"]!""}
+app.pid      : ${SystemProperties["app.pid"]!""}
+java.version : ${SystemProperties["java.version"]!""}
 user.name    : ${SystemProperties["user.name"]!""}
 user.dir     : ${SystemProperties["user.dir"]!""}
 user.home    : ${SystemProperties["user.home"]!""}
-java.version : ${SystemProperties["java.version"]!""}
 
 8) Report Data
 ---------------------------------------------------------------------------
@@ -43,13 +55,13 @@ user         : ${ReportData["user"]}
 date         : ${ReportData["date"]}
 time         : ${ReportData["time"]}
 
-9) Environment
+9) Environment Variables
 ---------------------------------------------------------------------------
 <#list Environment as name,value>
 * ${name} ==> ${value}
 </#list>
 
-10) Documents
+10) Accessing Documents
 ---------------------------------------------------------------------------
 Get the number of documents:
     - ${Documents.size()}
@@ -70,10 +82,10 @@ Get all documents
     - ${document.name} => ${document.location}
 </#list>
 
-11) Data Model
+11) Document Data Model
 ---------------------------------------------------------------------------
 
-Zop-level entries in the current data model
+Top-level entries in the current data model
 
 <#list .data_model?keys as key>
 - ${key}

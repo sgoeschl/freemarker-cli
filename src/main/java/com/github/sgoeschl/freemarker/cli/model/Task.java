@@ -79,6 +79,7 @@ public class Task {
             configuration.setDefaultEncoding(UTF_8.name());
             configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
             configuration.setLogTemplateExceptions(false);
+            configuration.setOutputEncoding(UTF_8.name());
             return configuration;
         } catch (IOException e) {
             throw new RuntimeException("Unable to configure FreeMarker", e);
