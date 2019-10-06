@@ -42,6 +42,7 @@ List all files:
 app.dir      : ${SystemProperties["app.dir"]!""}
 app.home     : ${SystemProperties["app.home"]!""}
 app.pid      : ${SystemProperties["app.pid"]!""}
+basedir      : ${SystemProperties["basedir"]!""}
 java.version : ${SystemProperties["java.version"]!""}
 user.name    : ${SystemProperties["user.name"]!""}
 user.dir     : ${SystemProperties["user.dir"]!""}
