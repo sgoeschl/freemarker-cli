@@ -204,6 +204,11 @@
             <artifactId>slf4j-nop</artifactId>
             <version>1.7.21</version>
         </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.21</version>
+        </dependency>
         <!-- Apache POI -->
         <dependency>
             <groupId>org.apache.poi</groupId>

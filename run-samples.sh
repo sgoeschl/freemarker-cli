@@ -113,6 +113,13 @@ echo "templates/properties/csv/locker-test-users.ftl"
 $FREEMARKER_CMD -t templates/properties/csv/locker-test-users.ftl site/sample/properties > target/out/locker-test-users.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
+# YAML
+#############################################################################
+
+echo "templates/yaml/txt/transform.ftl"
+$FREEMARKER_CMD -t ./templates/yaml/txt/transform.ftl ./site/sample/yaml/customer.yaml > target/out/customer.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+#############################################################################
 # XML
 #############################################################################
 

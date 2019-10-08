@@ -32,9 +32,9 @@ public class DocumentsResolverTest {
 
     @Test
     public void shouldResolveFilesOfDirectory() {
-        assertEquals(16, resolver(ANY_DIRECTORY, null).resolve().size());
-        assertEquals(16, resolver(ANY_DIRECTORY, "").resolve().size());
-        assertEquals(16, resolver(ANY_DIRECTORY, "*").resolve().size());
+        assertEquals(17, resolver(ANY_DIRECTORY, null).resolve().size());
+        assertEquals(17, resolver(ANY_DIRECTORY, "").resolve().size());
+        assertEquals(17, resolver(ANY_DIRECTORY, "*").resolve().size());
         assertEquals(4, resolver(ANY_DIRECTORY, "*.csv").resolve().size());
         assertEquals(4, resolver(ANY_DIRECTORY, "*.x*").resolve().size());
     }
