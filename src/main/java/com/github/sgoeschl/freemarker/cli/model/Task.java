@@ -26,7 +26,6 @@ import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
-import org.apache.xmlbeans.SystemProperties;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -41,8 +40,9 @@ import java.util.Map;
 
 import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
 import static freemarker.template.Configuration.VERSION_2_3_29;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
-import static org.apache.commons.codec.Charsets.UTF_8;
+
 
 public class Task {
 
@@ -131,14 +131,23 @@ public class Task {
 
     private TemplateLoader templateLoader() throws IOException {
         final List<TemplateLoader> loaders = new ArrayList<>();
-        final String appHome = SystemProperties.getProperty(APP_HOME);
+        final String appHome = System.getProperty(APP_HOME);
+        final String baseDir = settings.getBaseDir();
+        final String currentDir = System.getProperty("user.dir", ".");
 
+        // When started with the shell script we pick up the templates of the installation
         if (!isNullOrEmtpty(appHome)) {
-            loaders.add(new FileTemplateLoader(new File(SystemProperties.getProperty(APP_HOME))));
+            loaders.add(new FileTemplateLoader(new File(System.getProperty(APP_HOME))));
         }
 
-        if (!isNullOrEmtpty(settings.getBaseDir())) {
-            loaders.add(new FileTemplateLoader(new File(settings.getBaseDir())));
+        // User has provided a template directory
+        if (!isNullOrEmtpty(baseDir)) {
+            loaders.add(new FileTemplateLoader(new File(baseDir)));
+        }
+
+        // If nothing is set use the current working directory
+        if(isNullOrEmtpty(appHome) && isNullOrEmtpty(baseDir)) {
+            loaders.add(new FileTemplateLoader(new File(currentDir)));
         }
 
         return new MultiTemplateLoader(loaders.toArray(new TemplateLoader[0]));

@@ -23,7 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
-import static org.apache.commons.codec.Charsets.UTF_8;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Settings {
 
