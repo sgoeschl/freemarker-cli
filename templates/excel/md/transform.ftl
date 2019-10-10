@@ -1,6 +1,6 @@
 <#ftl output_format="plainText" strip_text="true">
 <#assign documentName = documents[0].name>
-<#assign workbook = ExcelParser.parse(documents[0])>
+<#assign workbook = ExcelTool.parse(documents[0])>
 <#assign date = .now?iso_utc>
 
 <#compress>
@@ -13,7 +13,7 @@ ${'\n'}
 <#-- writeSheets                                                           -->
 <#--------------------------------------------------------------------------->
 <#macro writeSheets workbook>
-    <#assign sheets = ExcelParser.getAllSheets(workbook)>
+    <#assign sheets = ExcelTool.getSheets(workbook)>
     <#list sheets as sheet>
         <@writeSheet sheet/>
     </#list>
@@ -23,7 +23,7 @@ ${'\n'}
 <#-- writeSheet                                                            -->
 <#--------------------------------------------------------------------------->
 <#macro writeSheet sheet>
-    <#assign rows = ExcelParser.parseSheet(sheet)>
+    <#assign rows = ExcelTool.parseSheet(sheet)>
     ## ${sheet.getSheetName()}
     ${'\n'}
     <@writeRows rows/>

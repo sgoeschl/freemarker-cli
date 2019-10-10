@@ -23,7 +23,7 @@ public class ExcelDataModel {
 
     public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("ExcelParser", new ExcelParserBean());
+        dataModel.put("ExcelTool", new ExcelTool());
         return dataModel;
     }
 }

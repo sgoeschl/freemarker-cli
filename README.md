@@ -365,7 +365,7 @@ The provided FTL transforms an Excel into a HTML document supporting multiple Ex
 ```text
 <#ftl output_format="HTML" >
 <#assign documentName = documents[0].name>
-<#assign workbook = ExcelParser.parse(documents[0])>
+<#assign workbook = ExcelTool.parse(documents[0])>
 <#assign date =  ReportData["date"]>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
@@ -390,7 +390,7 @@ The provided FTL transforms an Excel into a HTML document supporting multiple Ex
 <#-- writeSheets                                                           -->
 <#--------------------------------------------------------------------------->
 <#macro writeSheets workbook>
-    <#assign sheets = ExcelParser.getAllSheets(workbook)>
+    <#assign sheets = ExcelTool.getAllSheets(workbook)>
     <#list sheets as sheet>
         <@writeSheet sheet/>
     </#list>
@@ -400,7 +400,7 @@ The provided FTL transforms an Excel into a HTML document supporting multiple Ex
 <#-- writeSheet                                                            -->
 <#--------------------------------------------------------------------------->
 <#macro writeSheet sheet>
-    <#assign rows = ExcelParser.parseSheet(sheet)>
+    <#assign rows = ExcelTool.parseSheet(sheet)>
     <h2>${sheet.getSheetName()}</h2>
     <@writeRows rows/>
 </#macro>
@@ -912,7 +912,7 @@ Within the script a FreeMarker data model is set up and passed to the template -
 | Documents             | Helper to find documents, e.g. by name or extension                 |
 | Enums                 | Helper to work with Java enumerations                               |
 | Environment           | Environment variables                                               |
-| ExcelParser           | Excel parser exposing a `parse` method                              |
+| ExcelTool             | Excel parser exposing a `parse` method                              |
 | JsonPath              | JSON Parser                                                         |
 | JsoupParser           | Jsoup HTML parser                                                   |
 | ObjectConstructor     | Creata Java instances using reflection                              |

@@ -1,6 +1,6 @@
 <#ftl output_format="HTML" >
 <#assign documentName = documents[0].name>
-<#assign workbook = ExcelParser.parse(documents[0])>
+<#assign workbook = ExcelTool.parse(documents[0])>
 <#assign date = .now?iso_utc>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
@@ -25,7 +25,7 @@
 <#-- writeSheets                                                           -->
 <#--------------------------------------------------------------------------->
 <#macro writeSheets workbook>
-    <#assign sheets = ExcelParser.getAllSheets(workbook)>
+    <#assign sheets = ExcelTool.getSheets(workbook)>
     <#list sheets as sheet>
         <@writeSheet sheet/>
     </#list>
@@ -35,7 +35,7 @@
 <#-- writeSheet                                                            -->
 <#--------------------------------------------------------------------------->
 <#macro writeSheet sheet>
-    <#assign rows = ExcelParser.parseSheet(sheet)>
+    <#assign rows = ExcelTool.parseSheet(sheet)>
     <h2>${sheet.getSheetName()}</h2>
     <@writeRows rows/>
 </#macro>

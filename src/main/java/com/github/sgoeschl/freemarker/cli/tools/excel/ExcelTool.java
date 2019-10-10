@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ExcelParserBean {
+public class ExcelTool {
 
     public Workbook parse(Document document) {
         try (InputStream is = document.getInputStream()) {
@@ -40,7 +40,7 @@ public class ExcelParserBean {
         }
     }
 
-    public List<Sheet> getAllSheets(Workbook workbook) {
+    public List<Sheet> getSheets(Workbook workbook) {
         final List<Sheet> result = new ArrayList<>();
         for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
             result.add(workbook.getSheetAt(i));
@@ -48,14 +48,14 @@ public class ExcelParserBean {
         return result;
     }
 
-    public List<List<Object>> parseSheet(Sheet sheet) {
+    public List<List<String>> parseSheet(Sheet sheet) {
         final DataFormatter formatter = new DataFormatter();
         final Iterator<Row> iterator = sheet.iterator();
-        final List<List<Object>> result = new ArrayList<>();
+        final List<List<String>> result = new ArrayList<>();
 
         while (iterator.hasNext()) {
             final Row nextRow = iterator.next();
-            final List<Object> currRowValues = new ArrayList<>();
+            final List<String> currRowValues = new ArrayList<>();
             final Iterator<Cell> cellIterator = nextRow.cellIterator();
             result.add(currRowValues);
             while (cellIterator.hasNext()) {
