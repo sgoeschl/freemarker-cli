@@ -22,10 +22,11 @@ import java.io.File;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 
 public class DocumentsTest {
 
+    private static final String STDIN = "stdin";
     private static final String UNKNOWN = "unknown";
     private static final String ANY_TEXT = "Hello World";
     private static final String ANY_FILE_NAME = "pom.xml";
@@ -33,34 +34,41 @@ public class DocumentsTest {
     private static final File ANY_FILE = new File(ANY_FILE_NAME);
 
     @Test
-    public void shouldFindByName() {
+    public void shouldFindByWildcard() {
         final Documents documents = documents();
 
-        assertEquals(1, documents.findByName(ANY_FILE_NAME).size());
-        assertEquals(0, documents.findByName(UNKNOWN).size());
-        assertEquals(0, documents.findByName("").size());
-        assertEquals(0, documents.findByName(null).size());
+        assertEquals(0, documents.find(null).size());
+        assertEquals(0, documents.find("").size());
+        assertEquals(0, documents.find("*.bar").size());
+        assertEquals(0, documents.find("foo.*").size());
+        assertEquals(0, documents.find("foo.bar").size());
+
+        assertEquals(1, documents.find("*.*").size());
+        assertEquals(1, documents.find("*." + ANY_FILE_EXTENSION).size());
+        assertEquals(1, documents.find("*.???").size());
+        assertEquals(1, documents.find("*o*").size());
+        assertEquals(1, documents.find("*o*.xml").size());
+
+        assertEquals(1, documents.find(ANY_FILE_NAME).size());
+        assertEquals(1, documents.find(ANY_FILE_NAME.charAt(0) + "*").size());
+        assertEquals(1, documents.find(STDIN).size());
+
+        assertEquals(2, documents.find("*").size());
     }
 
     @Test
-    public void shouldFindByExtension() {
-        final Documents documents = documents();
-
-        assertEquals(1, documents.findByExtension(ANY_FILE_EXTENSION).size());
-        assertEquals(ANY_FILE_NAME, documents.findByExtension(ANY_FILE_EXTENSION).get(0).getName());
-        assertEquals(0, documents.findByExtension(UNKNOWN).size());
-        assertEquals(0, documents.findByExtension("").size());
-        assertEquals(0, documents.findByExtension(null).size());
+    public void shouldGetDocument() {
+        assertNotNull(documents().get(ANY_FILE_NAME));
     }
 
-    @Test
-    public void shouldGetByName() {
-        final Documents documents = documents();
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenGetDoesNotFindDocument() {
+        documents().get(UNKNOWN);
+    }
 
-        assertEquals(ANY_FILE_NAME, documents.get(ANY_FILE_NAME).getName());
-        assertNull(documents.get(UNKNOWN));
-        assertNull(documents.get(""));
-        assertNull(documents.get(null));
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenGetFindsMultipleDocuments() {
+        documents().get("*");
     }
 
     @Test

@@ -71,11 +71,11 @@ Get the first document
     - ${Documents.get(0)!"NA"}
 </#if>
 List all files containing "README" in the name
-<#list Documents.findByName("README") as document>
+<#list Documents.find("*README*") as document>
     - ${document.name}
 </#list>
 List all files having "md" extension
-<#list Documents.findByExtension("md") as document>
+<#list Documents.find("*.md") as document>
     - ${document.name}
 </#list>
 Get all documents

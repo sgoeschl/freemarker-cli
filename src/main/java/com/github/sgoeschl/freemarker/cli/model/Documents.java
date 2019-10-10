@@ -16,14 +16,11 @@
  */
 package com.github.sgoeschl.freemarker.cli.model;
 
-import org.apache.commons.io.FilenameUtils;
-
 import java.util.List;
 
-import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
-import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.io.FilenameUtils.wildcardMatch;
 
 /**
  * Container for documents with a couple of convinience functions to select
@@ -60,27 +57,23 @@ public class Documents {
     }
 
     public Document get(String name) {
-        final List<Document> list = findByName(name);
-        return (list.isEmpty() ? null : list.get(0));
-    }
+        final List<Document> list = find(name);
 
-    public List<Document> findByName(String name) {
-        if (isNullOrEmtpty(name)) {
-            return emptyList();
+        if (list.isEmpty()) {
+            throw new IllegalArgumentException("Document not found : " + name);
         }
 
-        return documents.stream()
-                .filter(d -> name.equals(d.getName()))
-                .collect(toList());
-    }
-
-    public List<Document> findByExtension(String extension) {
-        if (isNullOrEmtpty(extension)) {
-            return emptyList();
+        if (list.size() > 1) {
+            throw new IllegalArgumentException("More than one document found : " + name);
         }
 
+        return list.get(0);
+    }
+
+
+    public List<Document> find(String wildcard) {
         return documents.stream()
-                .filter(d -> extension.equalsIgnoreCase(FilenameUtils.getExtension(d.getName())))
+                .filter(d -> wildcardMatch(d.getName(), wildcard))
                 .collect(toList());
     }
 
