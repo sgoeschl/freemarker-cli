@@ -17,7 +17,7 @@
 package com.github.sgoeschl.freemarker.cli;
 
 import com.github.sgoeschl.freemarker.cli.model.Settings;
-import com.github.sgoeschl.freemarker.cli.util.IOUtils;
+import org.apache.commons.io.IOUtils;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -100,7 +100,11 @@ public class Main implements Callable<Integer> {
 
         // read from stdin if requested by the caller
         if (readFromStdin) {
-            stdin = IOUtils.readStdin();
+            try {
+                stdin = IOUtils.toString(System.in, sourceEncoding);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to read from System.in");
+            }
         }
 
         final Settings settings = Settings.builder()

@@ -16,10 +16,11 @@
  */
 package com.github.sgoeschl.freemarker.cli.model;
 
-import com.github.sgoeschl.freemarker.cli.util.IOUtils;
+import org.apache.commons.io.FilenameUtils;
 
 import java.util.List;
 
+import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
 import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
@@ -79,7 +80,7 @@ public class Documents {
         }
 
         return documents.stream()
-                .filter(d -> extension.equalsIgnoreCase(IOUtils.getFileExtension(d.getName())))
+                .filter(d -> extension.equalsIgnoreCase(FilenameUtils.getExtension(d.getName())))
                 .collect(toList());
     }
 
@@ -89,9 +90,4 @@ public class Documents {
                 "documents=" + documents +
                 '}';
     }
-
-    private static boolean isNullOrEmtpty(String value) {
-        return (value == null) || value.trim().isEmpty();
-    }
-
 }

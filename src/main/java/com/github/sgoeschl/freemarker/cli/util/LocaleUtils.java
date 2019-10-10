@@ -16,25 +16,18 @@
  */
 package com.github.sgoeschl.freemarker.cli.util;
 
-import java.util.Scanner;
+import java.util.Locale;
 
-public class IOUtils {
+import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
 
-    public static String getFileExtension(String name) {
-        final int lastIndexOf = name.lastIndexOf(".");
-        if (lastIndexOf == -1) {
-            return null;
+public class LocaleUtils {
+
+    public static Locale parseLocale(String value) {
+        if (isNullOrEmtpty(value)) {
+            return Locale.getDefault();
         }
-        return name.substring(lastIndexOf + 1);
-    }
 
-    public static String readStdin() {
-        final StringBuilder buffer = new StringBuilder();
-        try (Scanner scanner = new Scanner(System.in)) {
-            while (scanner.hasNext()) {
-                buffer.append(scanner.nextLine());
-            }
-        }
-        return buffer.toString();
+        final String[] parts = value.split("_");
+        return parts.length == 1 ? new Locale(parts[0]) : new Locale(parts[0], parts[1]);
     }
 }
