@@ -30,6 +30,7 @@ import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty
 public class TemplateLoaderResolver {
 
     private static final String APP_HOME = "app.home";
+    private static final String USER_DIR = "user.dir";
 
     private final String baseDir;
 
@@ -41,7 +42,7 @@ public class TemplateLoaderResolver {
         try {
             final List<TemplateLoader> loaders = new ArrayList<>();
             final String appHome = System.getProperty(APP_HOME);
-            final String currentDir = System.getProperty("user.dir", ".");
+            final String currentDir = System.getProperty(USER_DIR, ".");
 
             // When started with the shell script we pick up the templates of the installation
             if (!isNullOrEmtpty(appHome)) {

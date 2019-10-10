@@ -27,7 +27,7 @@ public class SystemTool {
         return System.getProperty(key, def);
     }
 
-    public Map<String,String> getEnvironment() {
+    public Map<String, String> getEnvironment() {
         return System.getenv();
     }
 

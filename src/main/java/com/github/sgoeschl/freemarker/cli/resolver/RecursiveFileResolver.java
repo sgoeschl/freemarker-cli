@@ -37,7 +37,8 @@ import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Resolve a list of files or directories recursively.
+ * Resolve a list of files or directories recursively and
+ * skip hidden files & directories.
  */
 public class RecursiveFileResolver {
 

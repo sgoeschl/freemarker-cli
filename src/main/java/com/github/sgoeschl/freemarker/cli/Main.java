@@ -149,7 +149,9 @@ public class Main implements Callable<Integer> {
 
     private void close(Writer writer) {
         try {
-            writer.close();
+            if (writer != null) {
+                writer.close();
+            }
         } catch (IOException e) {
             throw new RuntimeException("Failed to close output writer", e);
         }
