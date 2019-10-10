@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
+import static java.util.Objects.requireNonNull;
 
 @Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, version = "2.0.0")
 public class Main implements Callable<Integer> {
@@ -77,8 +78,15 @@ public class Main implements Callable<Integer> {
 
     private String stdin;
 
+    private Writer userSuppliedWriter;
+
     private Main(String[] args) {
-        this.args = args;
+        this.args = requireNonNull(args);
+    }
+
+    private Main(String[] args, Writer userSuppliedWriter) {
+        this.args = requireNonNull(args);
+        this.userSuppliedWriter = requireNonNull(userSuppliedWriter);
     }
 
     public static void main(String[] args) {
@@ -92,6 +100,10 @@ public class Main implements Callable<Integer> {
 
     public static int execute(String[] args) {
         return new CommandLine(new Main(args)).execute(args);
+    }
+
+    public static int execute(String[] args, Writer writer) {
+        return new CommandLine(new Main(args, writer)).execute(args);
     }
 
     @Override
@@ -134,6 +146,7 @@ public class Main implements Callable<Integer> {
             return new FreeMarkerTask(settings).call();
         } finally {
             if (settings.hasOutputFile()) {
+                // Avoid closing stdin
                 close(settings.getWriter());
             }
         }
@@ -141,7 +154,9 @@ public class Main implements Callable<Integer> {
 
     private Writer writer(String outputFile, String ouputEncoding) {
         try {
-            if (!isNullOrEmtpty(outputFile)) {
+            if (userSuppliedWriter != null) {
+                return userSuppliedWriter;
+            } else if (!isNullOrEmtpty(outputFile)) {
                 return new BufferedWriter(new FileWriter(outputFile));
             } else {
                 return new BufferedWriter(new OutputStreamWriter(System.out, ouputEncoding));
@@ -151,7 +166,7 @@ public class Main implements Callable<Integer> {
         }
     }
 
-    private void close(Writer writer) {
+    private static void close(Writer writer) {
         try {
             if (writer != null) {
                 writer.close();

@@ -1,19 +1,16 @@
 package com.github.sgoeschl.freemarker.cli;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Arrays;
-import java.util.List;
 
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class MainTest {
+public class MainExamplesTest {
 
     private static final int MIN_OUTPUT_SIZE = 128;
 
@@ -70,29 +67,14 @@ public class MainTest {
     }
 
     private String execute(String line) throws IOException {
-        final File file = tempFile();
-        final String[] args = line.split(" ");
-        try {
-            if (Main.execute(addOutputFileToArgs(args, file)) == 0) {
-                return FileUtils.readFileToString(file, "UTF-8");
+        try (final Writer writer = new StringWriter()) {
+            final String[] args = line.split(" ");
+            if (Main.execute(args, writer) == 0) {
+                return writer.toString();
+            } else {
+                throw new RuntimeException("Executing freemarker-cli failed: " + Arrays.toString(args));
             }
-            throw new RuntimeException("Executing freemarker-cli failed: " + Arrays.toString(args));
-        } finally {
-            FileUtils.deleteQuietly(file);
         }
-    }
-
-    private File tempFile() throws IOException {
-        final File file = File.createTempFile("freemarker-cli", null);
-        file.deleteOnExit();
-        return file;
-    }
-
-    private String[] addOutputFileToArgs(String[] args, File file) {
-        final List<String> list = new ArrayList<>(asList(args));
-        list.add("-o");
-        list.add(file.getAbsolutePath());
-        return list.toArray(new String[0]);
     }
 
     private static void assertValid(String output) {

@@ -80,7 +80,7 @@ $FREEMARKER_CMD -t templates/excel/csv/transform.ftl site/sample/excel/test-mult
 #############################################################################
 
 echo "templates/html/csv/dependencies.ftl"
- $FREEMARKER_CMD -t templates/html/csv/dependencies.ftl site/sample/html/dependencies.html > target/out/dependencies.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t templates/html/csv/dependencies.ftl site/sample/html/dependencies.html > target/out/dependencies.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # JSON

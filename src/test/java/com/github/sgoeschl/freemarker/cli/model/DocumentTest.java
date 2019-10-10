@@ -22,6 +22,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -39,6 +40,7 @@ public class DocumentTest {
         assertEquals("stdin", document.getLocation());
         assertNull(document.getCharset());
         assertTrue(document.getLength() > 0);
+        assertEquals(ANY_TEXT, document.getText());
     }
 
     @Test
@@ -49,5 +51,6 @@ public class DocumentTest {
         assertEquals(ANY_FILE.getAbsolutePath(), document.getLocation());
         assertEquals(Charset.defaultCharset(), document.getCharset());
         assertTrue(document.getLength() > 0);
+        assertFalse(document.getText().isEmpty());
     }
 }

@@ -17,6 +17,7 @@
 package com.github.sgoeschl.freemarker.cli.model;
 
 import com.github.sgoeschl.freemarker.cli.activation.StringDataSource;
+import org.apache.commons.io.IOUtils;
 
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -24,6 +25,7 @@ import javax.activation.URLDataSource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
 
 import static java.nio.charset.Charset.defaultCharset;
@@ -106,11 +108,22 @@ public class Document {
         }
     }
 
+    public String getText() {
+        try {
+            final StringWriter writer = new StringWriter();
+            IOUtils.copy(getInputStream(), writer, charset);
+            return writer.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load the text: " + getName());
+        }
+    }
+
     @Override
     public String toString() {
         return "Document{" +
                 "name='" + name + '\'' +
                 ", location=" + getLocation() +
+                ", length='" + getLength() + '\'' +
                 ", charset='" + charset + '\'' +
                 '}';
     }
