@@ -3,8 +3,8 @@
 <#assign json = JsonPath.parse(documents[0])>
 <#assign users = json.read("$[*]")>
 <#assign userDetails = json.read("$[*].user")>
-<#assign description = ReportData["description"]>
-<#assign date =  ReportData["date"]>
+<#assign description = SystemTool.getProperty("description", "")>
+<#assign date = .now?iso_utc>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
 <html>

@@ -16,7 +16,6 @@
  */
 package com.github.sgoeschl.freemarker.cli;
 
-import com.github.sgoeschl.freemarker.cli.model.Task;
 import com.github.sgoeschl.freemarker.cli.model.Settings;
 import com.github.sgoeschl.freemarker.cli.util.IOUtils;
 import picocli.CommandLine;
@@ -24,6 +23,11 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,8 +35,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
+
 @Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, version = "2.0.0")
 public class Main implements Callable<Integer> {
+
+    private final String[] args;
 
     @Option(names = { "-b", "--basedir" }, description = "Base directory to resolve FreeMarker templates")
     private String baseDir;
@@ -45,9 +53,6 @@ public class Main implements Callable<Integer> {
 
     @Option(names = { "--output-encoding" }, description = "Encoding of output file, e.g. UTF-8", defaultValue = "UTF-8")
     String outputEncoding;
-
-    @Option(names = { "-d", "--description" }, description = "Pptional report description")
-    private String description;
 
     @Option(names = { "-v", "--verbose" }, description = "Verbose mode")
     private boolean verbose;
@@ -64,7 +69,7 @@ public class Main implements Callable<Integer> {
     @Option(names = { "--stdin" }, description = "Read source document from stdin")
     private boolean readFromStdin;
 
-    @Option(names = {"-D"}, description = "Set a system property")
+    @Option(names = { "-D" }, description = "Set a system property")
     private Map<String, String> properties;
 
     @Parameters(description = "Any number of input source files and/or directories")
@@ -72,9 +77,13 @@ public class Main implements Callable<Integer> {
 
     private String stdin;
 
+    public Main(String[] args) {
+        this.args = args;
+    }
+
     public static void main(String[] args) {
         try {
-            System.exit(new CommandLine(new Main()).execute(args));
+            System.exit(new CommandLine(new Main(args)).execute(args));
         } catch (RuntimeException e) {
             System.err.println(e.getMessage());
             System.exit(1);
@@ -85,21 +94,21 @@ public class Main implements Callable<Integer> {
     public Integer call() {
 
         // set system properties as soon as possible
-        if(properties != null && !properties.isEmpty()) {
+        if (properties != null && !properties.isEmpty()) {
             System.getProperties().putAll(properties);
         }
 
-        // read from stdin if we have no positional command line arguments or requested by the caller
+        // read from stdin if requested by the caller
         if (readFromStdin) {
             stdin = IOUtils.readStdin();
         }
 
         final Settings settings = Settings.builder()
+                .setArgs(args)
                 .setBaseDir(baseDir)
                 .setTemplate(template)
                 .setSourceEncoding(sourceEncoding)
                 .setOutputEncoding(outputEncoding)
-                .setDescription(description)
                 .setVerbose(verbose)
                 .setOutputFile(outputFile)
                 .setInclude(include)
@@ -107,13 +116,38 @@ public class Main implements Callable<Integer> {
                 .setStdin(stdin)
                 .setSources(sources != null ? sources : new ArrayList<>())
                 .setProperties(properties != null ? properties : new HashMap<>())
+                .setWriter(writer(outputFile, sourceEncoding))
                 .build();
 
         // Set default locale for the whole JVM
         Locale.setDefault(settings.getLocale());
 
-        new Task(settings).run();
+        try {
+            return new FreeMarkerTask(settings).call();
+        } finally {
+            if (settings.hasOutputFile()) {
+                close(settings.getWriter());
+            }
+        }
+    }
 
-        return 0;
+    private static Writer writer(String outputFile, String ouputEncoding) {
+        try {
+            if (!isNullOrEmtpty(outputFile)) {
+                return new BufferedWriter(new FileWriter(outputFile));
+            } else {
+                return new BufferedWriter(new OutputStreamWriter(System.out, ouputEncoding));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to create writer", e);
+        }
+    }
+
+    private void close(Writer writer) {
+        try {
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to close output writer", e);
+        }
     }
 }

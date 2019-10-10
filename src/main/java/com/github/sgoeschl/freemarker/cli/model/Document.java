@@ -36,8 +36,13 @@ import static java.util.Objects.requireNonNull;
  */
 public class Document {
 
+    /** Name of the document */
     private final String name;
+
+    /** Optional charset for files */
     private final Charset charset;
+
+    /** The underlying data source */
     private final DataSource dataSource;
 
     public Document(String name, String content) {
@@ -88,6 +93,7 @@ public class Document {
         } else if (dataSource instanceof StringDataSource) {
             return ((StringDataSource) dataSource).getContent().length();
         } else {
+            // Don't determine the length of an arbitray input stream
             return -1;
         }
     }

@@ -21,6 +21,7 @@ import com.github.sgoeschl.freemarker.cli.util.IOUtils;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -32,7 +33,7 @@ public class Documents {
     private final List<Document> documents;
 
     public Documents(List<Document> documents) {
-        this.documents = documents;
+        this.documents = requireNonNull(documents);
     }
 
     public List<String> getNames() {

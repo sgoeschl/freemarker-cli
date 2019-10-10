@@ -1,7 +1,7 @@
 <#ftl output_format="plainText" strip_text="true">
 <#assign documentName = documents[0].name>
 <#assign workbook = ExcelParser.parse(documents[0])>
-<#assign date =  ReportData["date"]>
+<#assign date = .now?iso_utc>
 
 <#compress>
     # ${documentName}

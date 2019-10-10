@@ -1,5 +1,5 @@
 <#ftl output_format="plainText">
-<#assign map = SnakeYAML.parse(documents[0])>
+<#assign map = YAMLTool.parse(documents[0])>
 <#--------------------------------------------------------------------------->
 <#compress>
 <@print map 1/>

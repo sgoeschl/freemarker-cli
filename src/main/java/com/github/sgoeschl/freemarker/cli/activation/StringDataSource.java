@@ -18,7 +18,6 @@ package com.github.sgoeschl.freemarker.cli.activation;
 
 import javax.activation.DataSource;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -41,7 +40,7 @@ public class StringDataSource implements DataSource {
     }
 
     @Override
-    public OutputStream getOutputStream()  {
+    public OutputStream getOutputStream() {
         return null;
     }
 

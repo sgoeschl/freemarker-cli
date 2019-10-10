@@ -37,7 +37,15 @@ List all files:
 - Document: name=${document.name} location=${document.location} length=${document.length} encoding=${document.encoding!""}
 </#list>
 
-7) Access System Properties
+7) SystemTool
+---------------------------------------------------------------------------
+Host name       : ${SystemTool.getHostName()}
+Command line    : ${SystemTool.getSettings().getArgs()?join(", ")}
+User name       : ${SystemTool.getProperty("user.name", "N.A.")}
+Timestamp       : ${SystemTool.currentTimeMillis()?c}
+Environment     : ${SystemTool.getEnvironment("foo", SystemTool.getProperty("foo", "N.A."))}
+
+8) Access System Properties
 ---------------------------------------------------------------------------
 app.dir      : ${SystemProperties["app.dir"]!""}
 app.home     : ${SystemProperties["app.home"]!""}
@@ -47,14 +55,6 @@ java.version : ${SystemProperties["java.version"]!""}
 user.name    : ${SystemProperties["user.name"]!""}
 user.dir     : ${SystemProperties["user.dir"]!""}
 user.home    : ${SystemProperties["user.home"]!""}
-
-8) Report Data
----------------------------------------------------------------------------
-description  : ${ReportData["description"]}
-host         : ${ReportData["host"]}
-user         : ${ReportData["user"]}
-date         : ${ReportData["date"]}
-time         : ${ReportData["time"]}
 
 9) Environment Variables
 ---------------------------------------------------------------------------

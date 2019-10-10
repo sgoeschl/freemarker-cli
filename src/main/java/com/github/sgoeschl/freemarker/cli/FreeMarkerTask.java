@@ -14,12 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.model;
+package com.github.sgoeschl.freemarker.cli;
 
+import com.github.sgoeschl.freemarker.cli.model.Document;
+import com.github.sgoeschl.freemarker.cli.model.Documents;
+import com.github.sgoeschl.freemarker.cli.model.Settings;
 import com.github.sgoeschl.freemarker.cli.resolver.DocumentResolver;
+import com.github.sgoeschl.freemarker.cli.resolver.TemplateLoaderResolver;
 import com.github.sgoeschl.freemarker.cli.tools.Tools;
-import freemarker.cache.FileTemplateLoader;
-import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
@@ -27,43 +29,37 @@ import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
-import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
 import static freemarker.template.Configuration.VERSION_2_3_29;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 
-
-public class Task {
-
-    private static final String APP_HOME = "app.home";
+public class FreeMarkerTask implements Callable<Integer> {
 
     private final Settings settings;
 
-    public Task(Settings settings) {
+    public FreeMarkerTask(Settings settings) {
         this.settings = requireNonNull(settings);
     }
 
-    public void run() {
+    @Override
+    public Integer call() {
         try {
             final Documents documents = documents();
             final Configuration configuration = configuration();
             final Map<String, Object> dataModel = dataModel(documents);
             final Template template = configuration.getTemplate(settings.getTemplate());
 
-            try (Writer out = writer()) {
+            try (Writer out = settings.getWriter()) {
                 template.process(dataModel, out);
             }
+
+            return 0;
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -72,19 +68,14 @@ public class Task {
     }
 
     private Configuration configuration() {
-        try {
-            final Configuration configuration = new Configuration(VERSION_2_3_29);
-            configuration.setObjectWrapper(objectWrapper());
-            configuration.setTemplateLoader(templateLoader());
-            // assume that FTLs are in UTF-8
-            configuration.setDefaultEncoding(UTF_8.name());
-            configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-            configuration.setLogTemplateExceptions(false);
-            configuration.setOutputEncoding(settings.getOutputEncoding().name());
-            return configuration;
-        } catch (IOException e) {
-            throw new RuntimeException("Unable to configure FreeMarker", e);
-        }
+        final Configuration configuration = new Configuration(VERSION_2_3_29);
+        configuration.setObjectWrapper(objectWrapper());
+        configuration.setTemplateLoader(templateLoader());
+        configuration.setDefaultEncoding(settings.getTemplateEncoding().name());
+        configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        configuration.setLogTemplateExceptions(false);
+        configuration.setOutputEncoding(settings.getOutputEncoding().name());
+        return configuration;
     }
 
     private DefaultObjectWrapper objectWrapper() {
@@ -113,43 +104,11 @@ public class Task {
         return new Documents(documents);
     }
 
-    private Writer writer() {
-        try {
-            if (settings.hasOutputFile()) {
-                return new BufferedWriter(new FileWriter(settings.getOutputFile()));
-            } else {
-                return new BufferedWriter(new OutputStreamWriter(System.out, settings.getOutputEncoding()));
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Unable to create writer", e);
-        }
-    }
-
     private DocumentResolver documentResolver() {
         return new DocumentResolver(settings.getSources(), settings.getInclude(), settings.getSourceEncoding());
     }
 
-    private TemplateLoader templateLoader() throws IOException {
-        final List<TemplateLoader> loaders = new ArrayList<>();
-        final String appHome = System.getProperty(APP_HOME);
-        final String baseDir = settings.getBaseDir();
-        final String currentDir = System.getProperty("user.dir", ".");
-
-        // When started with the shell script we pick up the templates of the installation
-        if (!isNullOrEmtpty(appHome)) {
-            loaders.add(new FileTemplateLoader(new File(System.getProperty(APP_HOME))));
-        }
-
-        // User has provided a template directory
-        if (!isNullOrEmtpty(baseDir)) {
-            loaders.add(new FileTemplateLoader(new File(baseDir)));
-        }
-
-        // If nothing is set use the current working directory
-        if(isNullOrEmtpty(appHome) && isNullOrEmtpty(baseDir)) {
-            loaders.add(new FileTemplateLoader(new File(currentDir)));
-        }
-
-        return new MultiTemplateLoader(loaders.toArray(new TemplateLoader[0]));
+    private TemplateLoader templateLoader() {
+        return new TemplateLoaderResolver(settings.getBaseDir()).resolve();
     }
 }

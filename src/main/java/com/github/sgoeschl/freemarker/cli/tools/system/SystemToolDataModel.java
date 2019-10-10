@@ -14,16 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.tools.systemproperties;
+package com.github.sgoeschl.freemarker.cli.tools.system;
+
+import com.github.sgoeschl.freemarker.cli.model.Settings;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SystemPropertiesDataModel {
+public class SystemToolDataModel {
 
-    public Map<String, Object> create() {
+    public Map<String, Object> create(Settings settings) {
         final Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("SystemProperties", System.getProperties());
+        dataModel.put("SystemTool", new SystemTool(settings));
         return dataModel;
     }
 }

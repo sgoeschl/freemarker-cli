@@ -8,8 +8,8 @@ import com.github.sgoeschl.freemarker.cli.tools.freemarker.FreeMarkerDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.jsonpath.JsonPathDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.jsoup.JsoupDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.propertiesparser.PropertiesParserDataModel;
-import com.github.sgoeschl.freemarker.cli.tools.reportdata.ReportDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.snakeyaml.SnakeYamlDataModel;
+import com.github.sgoeschl.freemarker.cli.tools.system.SystemToolDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.systemproperties.SystemPropertiesDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.xml.XmlParserDataModel;
 
@@ -29,7 +29,6 @@ public class Tools {
 
         dataModel.putAll(new EnvironmentDataModel().create());
         dataModel.putAll(new FreeMarkerDataModel().create());
-        dataModel.putAll(new ReportDataModel().create(settings.getDescription()));
         dataModel.putAll(new SystemPropertiesDataModel().create());
 
         dataModel.putAll(new CommonsCsvDataModel().create());
@@ -38,6 +37,7 @@ public class Tools {
         dataModel.putAll(new JsoupDataModel().create());
         dataModel.putAll(new PropertiesParserDataModel().create());
         dataModel.putAll(new SnakeYamlDataModel().create());
+        dataModel.putAll(new SystemToolDataModel().create(settings));
         dataModel.putAll(new XmlParserDataModel().create());
 
         return dataModel;
