@@ -77,17 +77,21 @@ public class Main implements Callable<Integer> {
 
     private String stdin;
 
-    public Main(String[] args) {
+    private Main(String[] args) {
         this.args = args;
     }
 
     public static void main(String[] args) {
         try {
-            System.exit(new CommandLine(new Main(args)).execute(args));
+            System.exit(execute(args));
         } catch (RuntimeException e) {
             System.err.println(e.getMessage());
             System.exit(1);
         }
+    }
+
+    public static int execute(String[] args) {
+        return new CommandLine(new Main(args)).execute(args);
     }
 
     @Override
@@ -135,7 +139,7 @@ public class Main implements Callable<Integer> {
         }
     }
 
-    private static Writer writer(String outputFile, String ouputEncoding) {
+    private Writer writer(String outputFile, String ouputEncoding) {
         try {
             if (!isNullOrEmtpty(outputFile)) {
                 return new BufferedWriter(new FileWriter(outputFile));
