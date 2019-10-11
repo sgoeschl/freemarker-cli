@@ -23,7 +23,7 @@ public class PropertiesParserDataModel {
 
     public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("PropertiesParser", new PropertiesParserBean());
+        dataModel.put("PropertiesTool", new PropertiesTool());
         return dataModel;
     }
 }

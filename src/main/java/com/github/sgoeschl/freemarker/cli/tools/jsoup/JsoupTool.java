@@ -14,16 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.tools.xml;
+package com.github.sgoeschl.freemarker.cli.tools.jsoup;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.github.sgoeschl.freemarker.cli.model.Document;
+import org.apache.commons.io.IOUtils;
+import org.jsoup.Jsoup;
 
-public class XmlParserDataModel {
+import java.io.IOException;
+import java.io.InputStream;
 
-    public Map<String, Object> create() {
-        final Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("XmlParser", new XmlParserBean());
-        return dataModel;
+public class JsoupTool {
+
+    public org.jsoup.nodes.Document parse(Document document) {
+        try (InputStream is = document.getInputStream()) {
+            final byte[] bytes = IOUtils.toByteArray(is);
+            return Jsoup.parse(new String(bytes, document.getCharset()));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to parse HTML document: " + document, e);
+        }
     }
 }

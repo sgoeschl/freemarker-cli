@@ -14,21 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.tools.jsonpath;
+package com.github.sgoeschl.freemarker.cli.tools.propertiesparser;
 
 import com.github.sgoeschl.freemarker.cli.model.Document;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 
-public class JsonPathBean {
+public class PropertiesTool {
 
-    public DocumentContext parse(Document document) throws IOException {
+    public Properties parse(Document document) {
         try (InputStream is = document.getInputStream()) {
-            return JsonPath.parse(is);
+            final Properties properties = new Properties();
+            properties.load(is);
+            return properties;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to parse Properties document: " + document, e);
         }
     }
-
 }

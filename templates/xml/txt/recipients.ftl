@@ -1,5 +1,5 @@
 <#ftl output_format="plainText" >
-<#assign xml = XmlParser.parse(documents[0])>
+<#assign xml = XmlTool.parse(documents[0])>
 <#list xml.recipients.person as recipient>
 To: ${recipient.name}
 ${recipient.address}

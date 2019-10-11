@@ -1,5 +1,5 @@
 <#ftl output_format="plainText">
-<#assign map = YAMLTool.parse(documents[0])>
+<#assign map = YamlTool.parse(documents[0])>
 <#--------------------------------------------------------------------------->
 <#compress>
 <@print map 1/>

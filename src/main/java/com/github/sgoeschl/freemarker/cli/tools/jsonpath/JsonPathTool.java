@@ -14,23 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.tools.jsoup;
+package com.github.sgoeschl.freemarker.cli.tools.jsonpath;
 
 import com.github.sgoeschl.freemarker.cli.model.Document;
-import com.github.sgoeschl.freemarker.cli.util.StreamUtils;
-import org.jsoup.Jsoup;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-public class JsoupParserBean {
+public class JsonPathTool {
 
-    public org.jsoup.nodes.Document parse(Document document) {
+    public DocumentContext parse(Document document) throws IOException {
         try (InputStream is = document.getInputStream()) {
-            final byte[] bytes = StreamUtils.toByteArray(is);
-            return Jsoup.parse(new String(bytes, document.getCharset()));
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to parse HTML document: " + document, e);
+            return JsonPath.parse(is);
         }
     }
+
 }

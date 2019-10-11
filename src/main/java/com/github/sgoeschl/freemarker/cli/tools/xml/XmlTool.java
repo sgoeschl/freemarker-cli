@@ -22,7 +22,7 @@ import org.xml.sax.InputSource;
 
 import java.io.InputStream;
 
-public class XmlParserBean {
+public class XmlTool {
 
     public NodeModel parse(Document document) throws Exception {
         try (InputStream is = document.getInputStream()) {

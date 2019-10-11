@@ -1,6 +1,6 @@
 <#ftl output_format="HTML" >
 <#assign sourceDocumentName = documents[0].name>
-<#assign json = JsonPath.parse(documents[0])>
+<#assign json = JsonPathTool.parse(documents[0])>
 <#assign users = json.read("$[*]")>
 <#assign userDetails = json.read("$[*].user")>
 <#assign description = SystemTool.getProperty("description", "")>

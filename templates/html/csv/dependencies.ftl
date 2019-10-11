@@ -1,6 +1,6 @@
 <#ftl output_format="plainText" strip_text="true">
 <#assign documentName = documents[0].name>
-<#assign html = JsoupBean.parse(documents[0])>
+<#assign html = JsoupTool.parse(documents[0])>
 
 <#compress>
     <@writeHeader/>

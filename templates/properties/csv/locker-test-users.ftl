@@ -2,7 +2,7 @@
 <#compress>
     TENANT,SITE,USER_ID,DISPOSER_ID,PASSWORD,SMS_OTP,NAME,DESCRIPTION
     <#list documents as document>
-        <#assign properties = PropertiesParser.parse(document)>
+        <#assign properties = PropertiesTool.parse(document)>
         <#assign environments = properties["ENVIRONMENTS"]!"">
         <#assign tenant = extractTenant(environments)>
         <#assign site = extractSite(environments)>

@@ -70,7 +70,6 @@ public class Documents {
         return list.get(0);
     }
 
-
     public List<Document> find(String wildcard) {
         return documents.stream()
                 .filter(d -> wildcardMatch(d.getName(), wildcard))

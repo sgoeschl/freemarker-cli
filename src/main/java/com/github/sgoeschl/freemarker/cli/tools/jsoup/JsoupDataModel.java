@@ -23,7 +23,7 @@ public class JsoupDataModel {
 
     public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("JsoupBean", new JsoupParserBean());
+        dataModel.put("JsoupTool", new JsoupTool());
         return dataModel;
     }
 }

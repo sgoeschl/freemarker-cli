@@ -1,5 +1,5 @@
 <#ftl output_format="plainText" strip_text="true">
-<#assign json = JsonPath.parse(documents[0])>
+<#assign json = JsonPathTool.parse(documents[0])>
 <#assign basePath = json.read("$.basePath")>
 <#assign paths = json.read("$.paths")>
 

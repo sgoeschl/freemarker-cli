@@ -11,7 +11,7 @@ import com.github.sgoeschl.freemarker.cli.tools.propertiesparser.PropertiesParse
 import com.github.sgoeschl.freemarker.cli.tools.snakeyaml.SnakeYamlDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.system.SystemToolDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.systemproperties.SystemPropertiesDataModel;
-import com.github.sgoeschl.freemarker.cli.tools.xml.XmlParserDataModel;
+import com.github.sgoeschl.freemarker.cli.tools.xml.XmlDataModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +38,7 @@ public class Tools {
         dataModel.putAll(new PropertiesParserDataModel().create());
         dataModel.putAll(new SnakeYamlDataModel().create());
         dataModel.putAll(new SystemToolDataModel().create(settings));
-        dataModel.putAll(new XmlParserDataModel().create());
+        dataModel.putAll(new XmlDataModel().create());
 
         return dataModel;
     }

@@ -7,7 +7,7 @@ public class SnakeYamlDataModel {
 
     public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("YAMLTool", new SnakeYamlParserBean());
+        dataModel.put("YamlTool", new SnakeYamlParserBean());
         return dataModel;
     }
 }

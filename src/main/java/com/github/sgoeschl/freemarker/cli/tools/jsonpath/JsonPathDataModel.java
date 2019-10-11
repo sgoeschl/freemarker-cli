@@ -23,7 +23,7 @@ public class JsonPathDataModel {
 
     public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("JsonPath", new JsonPathBean());
+        dataModel.put("JsonPathTool", new JsonPathTool());
         return dataModel;
     }
 

@@ -14,23 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.tools.propertiesparser;
+package com.github.sgoeschl.freemarker.cli.tools.xml;
 
-import com.github.sgoeschl.freemarker.cli.model.Document;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+public class XmlDataModel {
 
-public class PropertiesParserBean {
-
-    public Properties parse(Document document) {
-        try (InputStream is = document.getInputStream()) {
-            final Properties properties = new Properties();
-            properties.load(is);
-            return properties;
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to parse Properties document: " + document, e);
-        }
+    public Map<String, Object> create() {
+        final Map<String, Object> dataModel = new HashMap<>();
+        dataModel.put("XmlTool", new XmlTool());
+        return dataModel;
     }
 }
