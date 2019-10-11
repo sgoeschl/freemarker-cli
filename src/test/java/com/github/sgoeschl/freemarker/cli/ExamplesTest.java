@@ -19,14 +19,11 @@ package com.github.sgoeschl.freemarker.cli;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.Arrays;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class MainExamplesTest {
+public class ExamplesTest extends AbstractMainTest {
 
     private static final int MIN_OUTPUT_SIZE = 128;
 
@@ -80,17 +77,6 @@ public class MainExamplesTest {
     @Test
     public void shouldRunXmlExamples() throws IOException {
         assertValid(execute("-t ./templates/xml/txt/recipients.ftl site/sample/xml/recipients.xml"));
-    }
-
-    private String execute(String line) throws IOException {
-        try (final Writer writer = new StringWriter()) {
-            final String[] args = line.split(" ");
-            if (Main.execute(args, writer) == 0) {
-                return writer.toString();
-            } else {
-                throw new RuntimeException("Executing freemarker-cli failed: " + Arrays.toString(args));
-            }
-        }
     }
 
     private static void assertValid(String output) {

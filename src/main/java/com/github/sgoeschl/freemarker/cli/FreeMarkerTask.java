@@ -75,6 +75,7 @@ public class FreeMarkerTask implements Callable<Integer> {
         configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         configuration.setLogTemplateExceptions(false);
         configuration.setOutputEncoding(settings.getOutputEncoding().name());
+        configuration.setLocale(settings.getLocale());
         return configuration;
     }
 

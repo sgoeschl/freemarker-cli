@@ -41,8 +41,6 @@ import static java.util.Objects.requireNonNull;
 @Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, version = "2.0.0")
 public class Main implements Callable<Integer> {
 
-    private final String[] args;
-
     @Option(names = { "-b", "--basedir" }, description = "Base directory to resolve FreeMarker templates")
     private String baseDir;
 
@@ -76,8 +74,8 @@ public class Main implements Callable<Integer> {
     @Parameters(description = "Any number of input source files and/or directories")
     private List<String> sources;
 
+    private final String[] args;
     private String stdin;
-
     private Writer userSuppliedWriter;
 
     private Main(String[] args) {
@@ -139,14 +137,10 @@ public class Main implements Callable<Integer> {
                 .setWriter(writer(outputFile, sourceEncoding))
                 .build();
 
-        // Set default locale for the whole JVM
-        Locale.setDefault(settings.getLocale());
-
         try {
             return new FreeMarkerTask(settings).call();
         } finally {
             if (settings.hasOutputFile()) {
-                // Avoid closing stdin
                 close(settings.getWriter());
             }
         }

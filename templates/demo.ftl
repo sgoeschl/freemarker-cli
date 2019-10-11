@@ -110,6 +110,18 @@ Name UUID as function : ${uuidFromValueAndSalt("value and ", "salt")}
 
 German Special Characters: äöüßÄÖÜ
 
+14) Locale-specific output
+---------------------------------------------------------------------------
+<#setting number_format=",##0.00">
+<#assign smallNumber = 1.234>
+<#assign largeNumber = 12345678.9>
+
+Small Number :  ${smallNumber}
+Large Number :  ${largeNumber}
+Currency     :  ${largeNumber} EUR
+Date         :  ${.now?date}
+Time         :  ${.now?time}
+
 <#--------------------------------------------------------------------------->
 <#function uuidFromValueAndSalt value salt>
     <#assign uuidSource = value + salt>
