@@ -29,10 +29,9 @@ Output format          : ${.output_format}
 Documents
 ---------------------------------------------------------------------------
 <#list documents as document>
-- [${document?counter?left_pad(2)}] ${document.name}, ${document.location}, ${document.length} Bytes
+[${document?counter}] ${document.name}, ${document.location}, ${document.length} Bytes
 </#list>
 </#if>
-
 <#if SystemTool.getSettings().getProperties()?has_content>
 User Supplied Properties
 ---------------------------------------------------------------------------
@@ -40,6 +39,12 @@ User Supplied Properties
 - ${name} ==> ${value}
 </#list>
 </#if>
+
+Template Directories
+---------------------------------------------------------------------------
+<#list SystemTool.getSettings().getTemplateDirectories() as directory>
+[${directory?counter}] ${directory}
+</#list>
 
 SystemTool
 ---------------------------------------------------------------------------
@@ -52,4 +57,3 @@ FreeMarker Document Model
 <#list .data_model?keys as key>
 - ${key}
 </#list>
-${'\n'}

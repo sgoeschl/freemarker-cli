@@ -110,6 +110,6 @@ public class FreeMarkerTask implements Callable<Integer> {
     }
 
     private TemplateLoader templateLoader() {
-        return new TemplateLoaderResolver(settings.getBaseDir()).resolve();
+        return new TemplateLoaderResolver(settings.getTemplateDirectories()).resolve();
     }
 }

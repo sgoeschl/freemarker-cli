@@ -38,8 +38,8 @@ public class Settings {
     /** User-supplied command line arguments */
     private final List<String> args;
 
-    /** Optional template bse directory */
-    private final String baseDir;
+    /** Optional template directories */
+    private final List<File> templateDirectories;
 
     /** Template to be rendered */
     private final String template;
@@ -76,7 +76,7 @@ public class Settings {
 
     private Settings(
             List<String> args,
-            String baseDir,
+            List<File> templateDirectories,
             String template,
             Charset sourceEncoding,
             Charset outputEncoding,
@@ -89,7 +89,7 @@ public class Settings {
             Map<String, String> properties,
             Writer writer) {
         this.args = requireNonNull(args);
-        this.baseDir = baseDir;
+        this.templateDirectories = requireNonNull(templateDirectories);
         this.template = requireNonNull(template);
         this.sourceEncoding = sourceEncoding;
         this.outputEncoding = outputEncoding;
@@ -111,8 +111,8 @@ public class Settings {
         return args;
     }
 
-    public String getBaseDir() {
-        return baseDir;
+    public List<File> getTemplateDirectories() {
+        return templateDirectories;
     }
 
     public String getTemplate() {
@@ -171,7 +171,7 @@ public class Settings {
     public String toString() {
         return "Settings{" +
                 "args='" + args + '\'' +
-                ", baseDir='" + baseDir + '\'' +
+                ", templateDirectories='" + templateDirectories + '\'' +
                 ", template='" + template + '\'' +
                 ", sourceEncoding=" + sourceEncoding +
                 ", outputEncoding=" + outputEncoding +
@@ -187,7 +187,7 @@ public class Settings {
 
     public static class SettingsBuilder {
         private List<String> args;
-        private String baseDir;
+        private List<File> templateDirectories;
         private String template;
         private String sourceEncoding;
         private String outputEncoding;
@@ -205,6 +205,7 @@ public class Settings {
             this.sources = emptyList();
             this.setSourceEncoding(UTF_8.name());
             this.setOutputEncoding(UTF_8.name());
+            this.templateDirectories = emptyList();
             this.properties = new HashMap<>();
         }
 
@@ -218,8 +219,8 @@ public class Settings {
             return this;
         }
 
-        public SettingsBuilder setBaseDir(String baseDir) {
-            this.baseDir = baseDir;
+        public SettingsBuilder setTemplateDirectories(List<File> list) {
+            this.templateDirectories = list;
             return this;
         }
 
@@ -284,7 +285,7 @@ public class Settings {
 
             return new Settings(
                     args,
-                    baseDir,
+                    templateDirectories,
                     template,
                     sourceEncoding,
                     outputEncoding,

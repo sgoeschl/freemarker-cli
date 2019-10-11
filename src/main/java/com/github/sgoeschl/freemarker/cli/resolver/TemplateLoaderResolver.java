@@ -22,46 +22,29 @@ import freemarker.cache.TemplateLoader;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
 
 public class TemplateLoaderResolver {
 
-    private static final String APP_HOME = "app.home";
-    private static final String USER_DIR = "user.dir";
+    private final List<File> templateDirectories;
 
-    private final String baseDir;
-
-    public TemplateLoaderResolver(String baseDir) {
-        this.baseDir = baseDir;
+    public TemplateLoaderResolver(List<File> templateDirectories) {
+        this.templateDirectories = templateDirectories;
     }
 
     public TemplateLoader resolve() {
+        return new MultiTemplateLoader(
+                templateDirectories.stream()
+                        .map(this::fileTemplateLoader)
+                        .toArray(TemplateLoader[]::new));
+    }
+
+    private FileTemplateLoader fileTemplateLoader(File directory) {
         try {
-            final List<TemplateLoader> loaders = new ArrayList<>();
-            final String appHome = System.getProperty(APP_HOME);
-            final String currentDir = System.getProperty(USER_DIR, ".");
-
-            // When started with the shell script we pick up the templates of the installation
-            if (!isNullOrEmtpty(appHome)) {
-                loaders.add(new FileTemplateLoader(new File(System.getProperty(APP_HOME))));
-            }
-
-            // User has provided a template directory
-            if (!isNullOrEmtpty(baseDir)) {
-                loaders.add(new FileTemplateLoader(new File(baseDir)));
-            }
-
-            // If nothing is set use the current working directory
-            if (isNullOrEmtpty(appHome) && isNullOrEmtpty(baseDir)) {
-                loaders.add(new FileTemplateLoader(new File(currentDir)));
-            }
-
-            return new MultiTemplateLoader(loaders.toArray(new TemplateLoader[0]));
+            return new FileTemplateLoader(directory);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to create MultiTemplateLoader", e);
+            throw new RuntimeException("Failed to create MultiTemplateLoader: " + directory, e);
         }
     }
+
 }

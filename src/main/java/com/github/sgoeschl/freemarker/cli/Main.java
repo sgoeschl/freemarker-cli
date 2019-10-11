@@ -17,6 +17,7 @@
 package com.github.sgoeschl.freemarker.cli;
 
 import com.github.sgoeschl.freemarker.cli.model.Settings;
+import com.github.sgoeschl.freemarker.cli.resolver.TemplateDirectoryResolver;
 import org.apache.commons.io.IOUtils;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -24,6 +25,7 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -34,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
+import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNotEmpty;
 import static java.util.Objects.requireNonNull;
 
 @Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, version = "2.0.0")
@@ -73,8 +75,13 @@ public class Main implements Callable<Integer> {
     @Parameters(description = "Any number of input source files and/or directories")
     private List<String> sources;
 
+    /** User-supplied command line parameters */
     private final String[] args;
+
+    /** The content from "stdin" */
     private String stdin;
+
+    /** User-supplied writer */
     private Writer userSuppliedWriter;
 
     private Main(String[] args) {
@@ -99,6 +106,7 @@ public class Main implements Callable<Integer> {
         return new CommandLine(new Main(args)).execute(args);
     }
 
+    /** User for testing to inject a writer */
     public static int execute(String[] args, Writer writer) {
         return new CommandLine(new Main(args, writer)).execute(args);
     }
@@ -111,7 +119,7 @@ public class Main implements Callable<Integer> {
             System.getProperties().putAll(properties);
         }
 
-        // read from stdin if requested by the caller
+        // read from stdin if requested by the user
         if (readFromStdin) {
             try {
                 stdin = IOUtils.toString(System.in, sourceEncoding);
@@ -120,9 +128,11 @@ public class Main implements Callable<Integer> {
             }
         }
 
+        final List<File> templateDirectories = getTemplateDirectories(baseDir);
+
         final Settings settings = Settings.builder()
                 .setArgs(args)
-                .setBaseDir(baseDir)
+                .setTemplateDirectories(templateDirectories)
                 .setTemplate(template)
                 .setSourceEncoding(sourceEncoding)
                 .setOutputEncoding(outputEncoding)
@@ -149,7 +159,7 @@ public class Main implements Callable<Integer> {
         try {
             if (userSuppliedWriter != null) {
                 return userSuppliedWriter;
-            } else if (!isNullOrEmtpty(outputFile)) {
+            } else if (isNotEmpty(outputFile)) {
                 return new BufferedWriter(new FileWriter(outputFile));
             } else {
                 return new BufferedWriter(new OutputStreamWriter(System.out, ouputEncoding));
@@ -167,5 +177,9 @@ public class Main implements Callable<Integer> {
         } catch (IOException e) {
             throw new RuntimeException("Failed to close output writer", e);
         }
+    }
+
+    private static List<File> getTemplateDirectories(String baseDir) {
+        return new TemplateDirectoryResolver(baseDir).resolve();
     }
 }
