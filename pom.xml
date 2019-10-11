@@ -102,7 +102,7 @@
                         <configuration>
                             <target>
                                 <copy file="README.md" todir="./target/appassembler"/>
-                                <copy file="run-samples.sh" todir="./target/appassembler"/>
+                                <copy file="./src/main/scripts/run-samples.sh" todir="./target/appassembler"/>
                                 <copy todir="./target/appassembler/site">
                                     <fileset dir="site"/>
                                 </copy>
