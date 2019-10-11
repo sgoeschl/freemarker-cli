@@ -4,21 +4,23 @@
 
 You somehow found this GitHub project and wonder if it solves a problem you might have?!
 
-* You need to transform some structured text document (CSV, HTML, JSON, XML, Java Property file) into CSV, HTML, Markdown or Confluence markup 
-* You need to convert an Excel document into CSV, HTML or Markdown
-* You need to create a nice-looking PDF from some boring-looking CSV or JSON content 
+* You need to transform some structured text document (CSV, HTML, JSON, XML, YAML, Java Property files) into CSV, HTML, Markdown or Confluence markup?
+* You need to convert an Excel document into CSV, HTML or Markdown?
+* You need to create a nice-looking PDF from some boring-looking CSV or JSON content ?
 
 The goal of `freemarker-cli` is to automate repeated transformation tasks 
 
 * Which are too boring to be done manually 
 * Which happen not often enough to write a dedicated script or program
 
-Assuming that you are still interested - install [Apache Groovy](http://groovy-lang.org/install.html) and run `./run-samples.sh`
+Assuming that you are still interested - run `./run-samples.sh` and have a look at the generated output
 
 ```text
+./run-samples.sh 
 templates/demo.ftl
 templates/csv/html/transform.ftl
 templates/csv/md/transform.ftl
+templates/csv/shell/curl.ftl
 templates/csv/fo/transform.ftl
 fop -fo target/out/locker-test-users.fo target/out/locker-test-users.pdf
 templates/csv/fo/transactions.ftl
@@ -27,6 +29,8 @@ templates/csv/html/transform.ftl
 wkhtmltopdf -O landscape target/out/transactions.html target/out/transactions-html.pdf
 templates/excel/html/transform.ftl
 templates/excel/md/transform.ftl
+templates/excel/csv/transform.ftl
+templates/excel/csv/custom.ftl
 templates/html/csv/dependencies.ftl
 templates/json/csv/swagger-endpoints.ftl
 templates/json/html/customer-user-products.ftl
@@ -34,30 +38,36 @@ wkhtmltopdf -O landscape target/out/customer-user-products.html target/out/custo
 templates/json/md/customer-user-products.ftl
 templates/json/md/github-users.ftl
 templates/properties/csv/locker-test-users.ftl
+templates/yaml/txt/transform.ftl
 templates/xml/txt/recipients.ftl
 Created the following sample files in ./target/out
-total 1168
--rw-r--r--@ 1 sgoeschl  staff   22412 May 26 20:47 contract.html
--rw-r--r--@ 1 sgoeschl  staff    7933 May 26 20:47 contract.md
--rw-r--r--@ 1 sgoeschl  staff  103477 May 26 20:48 customer-user-products.html
--rw-r--r--@ 1 sgoeschl  staff   34990 May 26 20:48 customer-user-products.md
--rw-r--r--  1 sgoeschl  staff  114668 May 26 20:48 customer-user-products.pdf
--rw-r--r--  1 sgoeschl  staff    4028 May 26 20:47 demo.txt
--rw-r--r--  1 sgoeschl  staff    1310 May 26 20:48 dependencies.csv
--rw-r--r--@ 1 sgoeschl  staff    2029 May 26 20:48 github-users-curl.md
--rw-r--r--@ 1 sgoeschl  staff     235 May 26 20:48 locker-test-users.csv
--rw-r--r--  1 sgoeschl  staff    6291 May 26 20:47 locker-test-users.fo
--rw-r--r--  1 sgoeschl  staff    5503 May 26 20:47 locker-test-users.pdf
--rw-r--r--  1 sgoeschl  staff     921 May 26 20:48 recipients.txt
--rw-r--r--  1 sgoeschl  staff     341 May 26 20:48 swagger-spec.csv
--rw-r--r--  1 sgoeschl  staff    1907 May 26 20:48 test-multiple-sheets.xlsx.html
--rw-r--r--  1 sgoeschl  staff     389 May 26 20:48 test-multiple-sheets.xlsx.md
--rw-r--r--  1 sgoeschl  staff    1546 May 26 20:48 test.xls.html
--rw-r--r--  1 sgoeschl  staff    1548 May 26 20:48 test.xslx.html
--rw-r--r--@ 1 sgoeschl  staff   11352 May 26 20:47 transactions-fo.pdf
--rw-r--r--@ 1 sgoeschl  staff   33294 May 26 20:48 transactions-html.pdf
--rw-r--r--  1 sgoeschl  staff  106462 May 26 20:47 transactions.fo
--rw-r--r--@ 1 sgoeschl  staff   18148 May 26 20:48 transactions.html
+total 1208
+-rw-r--r--  1 sgoeschl  staff   22548 Oct 11 23:16 contract.html
+-rw-r--r--  1 sgoeschl  staff    7933 Oct 11 23:16 contract.md
+-rw-r--r--  1 sgoeschl  staff     784 Oct 11 23:16 curl.sh
+-rw-r--r--  1 sgoeschl  staff  103487 Oct 11 23:16 customer-user-products.html
+-rw-r--r--  1 sgoeschl  staff   34990 Oct 11 23:16 customer-user-products.md
+-rw-r--r--  1 sgoeschl  staff  113654 Oct 11 23:16 customer-user-products.pdf
+-rw-r--r--  1 sgoeschl  staff     232 Oct 11 23:16 customer.txt
+-rw-r--r--  1 sgoeschl  staff    5917 Oct 11 23:16 demo.txt
+-rw-r--r--  1 sgoeschl  staff    1310 Oct 11 23:16 dependencies.csv
+-rw-r--r--  1 sgoeschl  staff    2029 Oct 11 23:16 github-users-curl.md
+-rw-r--r--  1 sgoeschl  staff     239 Oct 11 23:16 locker-test-users.csv
+-rw-r--r--  1 sgoeschl  staff    6288 Oct 11 23:16 locker-test-users.fo
+-rw-r--r--@ 1 sgoeschl  staff    5488 Oct 11 23:16 locker-test-users.pdf
+-rw-r--r--  1 sgoeschl  staff     921 Oct 11 23:16 recipients.txt
+-rw-r--r--  1 sgoeschl  staff     341 Oct 11 23:16 swagger-spec.csv
+-rw-r--r--  1 sgoeschl  staff     156 Oct 11 23:16 test-multiple-sheets.xlsx.csv
+-rw-r--r--  1 sgoeschl  staff    1917 Oct 11 23:16 test-multiple-sheets.xlsx.html
+-rw-r--r--  1 sgoeschl  staff     389 Oct 11 23:16 test-multiple-sheets.xlsx.md
+-rw-r--r--  1 sgoeschl  staff     150 Oct 11 23:16 test-transform-xls.csv
+-rw-r--r--  1 sgoeschl  staff    1556 Oct 11 23:16 test.xls.html
+-rw-r--r--  1 sgoeschl  staff    1558 Oct 11 23:16 test.xslx.html
+-rw-r--r--  1 sgoeschl  staff   11334 Oct 11 23:16 transactions-fo.pdf
+-rw-r--r--  1 sgoeschl  staff   33235 Oct 11 23:16 transactions-html.pdf
+-rw-r--r--  1 sgoeschl  staff  106441 Oct 11 23:16 transactions.fo
+-rw-r--r--  1 sgoeschl  staff   18126 Oct 11 23:16 transactions.html
+
 ```
 
 # 2. Once Upon A Time
@@ -86,6 +96,12 @@ Using Velocity actually created some minor issues so I migrated to [Apache FreeM
 
 While I love Apache Velocity (Apache Turbine anyone?) I decided to give FreeMarker a chance and migrated my [velocity-cli](https://github.com/sgoeschl/velocity-cli) to FreeMarker.
 
+Some years later the not-so-small Groovy script was still growing so I decided 
+
+* To ditch Groovy and migrate to plain JDK 8
+* Write unit tests since I had no more excuses
+* To ditch Commons CLI and migrate to [Picocli](https://picocli.info)
+
 # 3. Design Goals
 
 * Support multiple files/directories for a single transformation
@@ -93,34 +109,47 @@ While I love Apache Velocity (Apache Turbine anyone?) I decided to give FreeMark
 * Support transformation of CSV files using [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/)
 * Support transformation of JSON using [Jayway's JSONPath](https://github.com/jayway/JsonPath)
 * Support transformation of Excel using [Apache POI](https://poi.apache.org)
-* XML is supported by FreeMarker anyway - see http://freemarker.org/docs/xgui.html
+* Support transformation of YAML using [SnakeYAML](https://bitbucket.org/asomov/snakeyaml/wiki/Home)
+* XML is supported by FreeMarker out-of-the-box - see http://freemarker.org/docs/xgui.html
 * Support for reading document content from STDIN to integrate with command line tools
 * Add some commonly useful information such as `System Properties`, `Enviroment Variables`
+* Create a proper command-line tool which has Unix look & feel
 
 # 4. Usage
 
 ```text
-> groovy freemarker-cli.groovy
-usage: groovy freemarker-cli.groovy [options] file[s]
- -b,--basedir <arg>           Base directory to resolve templates
- -d,--description <arg>       Custom report description
- -e,--encoding <arg>          Encoding of output file, e.g. UTF-8
- -h,--help                    Usage information
- -i,--include <arg>           Ant file pattern for directory search
- -l,--locale <arg>            Locale being used for output file
- -o,--output <arg>            Generated output file
- -s,--source-encoding <arg>   Encoding of source file
- -t,--template <arg>          Template name
- -v,--verbose                 Verbose mode
+> ./bin/freemarker-cli -h
+Usage: freemarker-cli [-hvV] [--stdin] [-b=<baseDir>] [-e=<sourceEncoding>]
+                      [--include=<include>] [-l=<locale>] [-o=<outputFile>]
+                      [--output-encoding=<outputEncoding>] -t=<template>
+                      [-D=<String=String>]... [<sources>...]
+Apache FreeMarker CLI
+      [<sources>...]        Any number of input source files and/or directories
+  -b, --basedir=<baseDir>   Base directory to resolve FreeMarker templates
+  -D=<String=String>        Set a system property
+  -e, --source-encoding=<sourceEncoding>
+                            Encoding of source file
+  -h, --help                Show this help message and exit.
+      --include=<include>   File pattern for directory search
+  -l, --locale=<locale>     Locale being used for output file, e.g. 'en_US
+  -o, --output=<outputFile> Output file
+      --output-encoding=<outputEncoding>
+                            Encoding of output file, e.g. UTF-8
+      --stdin               Read source document from stdin
+  -t, --template=<template> FreeMarker template used for rendering
+  -v, --verbose             Verbose mode
+  -V, --version             Print version information and exit.
 ```
 
 # 5. Examples
 
-The examples were tested with Groovy 2.5.4 on Mac OS X so please upgrade your Groovy version if you have problems.
+The examples were tested with JDK 1.8 on Mac OS X
 
 ```text
-> groovy -v
-Groovy Version: 2.5.4 JVM: 1.8.0_192 Vendor: Oracle Corporation OS: Mac OS X
+> java -version
+java version "1.8.0_192"
+Java(TM) SE Runtime Environment (build 1.8.0_192-b12)
+Java HotSpot(TM) 64-Bit Server VM (build 25.192-b12, mixed mode)
 ```
 
 ## 5.1 Transforming GitHub JSON To Markdown
@@ -131,11 +160,11 @@ A simple example with real JSON data
 
 You can either use the existing JSON sample
 
-> groovy freemarker-cli.groovy -t templates/json/md/github-users.ftl site/sample/json/github-users.json
+> ./bin/freemarker-cli -t templates/json/md/github-users.ftl site/sample/json/github-users.json
 
 or pipe a cURL response
 
-> curl -s https://api.github.com/users | groovy freemarker-cli.groovy -t templates/json/md/github-users.ftl
+> curl -s https://api.github.com/users | ./bin/freemarker-cli -t templates/json/md/github-users.ftl --stdin
 
 ### FreeMarker Template
 
@@ -170,7 +199,7 @@ creates the following output
 For a customer I created a Groovy script to fetch all products for a list of users - the script generates a JSON file which can be easily transformed to Markdown
 
 ```text
-> groovy freemarker-cli.groovy -t templates/json/md/customer-user-products.ftl  site/sample/json/customer-user-products.json
+> ./bin/freemarker-cli -t templates/json/md/customer-user-products.ftl  site/sample/json/customer-user-products.json
 ```
 
 The resulting file can be viewed with any decent Markdown viewer
@@ -179,7 +208,7 @@ The resulting file can be viewed with any decent Markdown viewer
 
 Since many of our QA people have no Markdown viewer installed I also created a very similar HTML representaton
 
-> groovy freemarker-cli.groovy -t templates/json/html/customer-user-products.ftl  site/sample/json/customer-user-products.json
+> ./bin/freemarker-cli -t templates/json/html/customer-user-products.ftl  site/sample/json/customer-user-products.json
 
 ![Customer User Products HTML](./site/image/customer-user-products-html.png "Customer User Products HTML")
 
@@ -204,8 +233,8 @@ which creates the following PDF document (please note that even the links within
 Sometimes you have a CSV file which needs to be translated in Markdown or HTML - there are on-line solutions available such as [CSV To Markdown Table Generator](https://donatstudios.com/CsvToMarkdownTable) but having a local solution gives you more flexibility.
 
 ```text
-> groovy freemarker-cli.groovy -t templates/csv/md/transform.ftl site/sample/csv/contract.csv
-> groovy freemarker-cli.groovy -t templates/csv/html/transform.ftl site/sample/csv/contract.csv
+> ./bin/freemarker-cli -t templates/csv/md/transform.ftl site/sample/csv/contract.csv
+> ./bin/freemarker-cli -t templates/csv/html/transform.ftl site/sample/csv/contract.csv
 ```
 
 The FreeMarker template is shown below
@@ -214,9 +243,8 @@ The FreeMarker template is shown below
 <#ftl output_format="HTML" >
 <#assign name = documents[0].name>
 <#assign cvsFormat = CSVFormat.DEFAULT.withHeader()>
-<#assign csvParser = CSVParser.parse(documents[0], cvsFormat)>
-<#assign csvHeaders = csvParser.getHeaderMap()?keys>
-<#assign csvRecords = csvParser.records>
+<#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
+<#assign csvHeaders = csvParser.getHeaderNames()>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
 <html>
@@ -228,28 +256,28 @@ The FreeMarker template is shown below
 </head>
 <body>
 <table class="table table-striped">
-<@writeHeaders headers=csvHeaders/>
-    <@writeColums columns=csvRecords/>
+    <@writeHeaders csvParser.getHeaderNames()/>
+    <#list csvParser.iterator() as record>
+        <@writeColumns record/>
+    </#list>
 </table>
 </body>
 </html>
 <#--------------------------------------------------------------------------->
 <#macro writeHeaders headers>
-<tr>
-    <#list headers as header>
-        <th>${header}</th>
-    </#list>
-</tr>
-</#macro>
-<#--------------------------------------------------------------------------->
-<#macro writeColums columns>
-    <#list columns as column>
     <tr>
-        <#list column.iterator() as field>
-            <td>${field}</td>
+        <#list headers as header>
+            <th>${header}</th>
         </#list>
     </tr>
-    </#list>
+</#macro>
+<#--------------------------------------------------------------------------->
+<#macro writeColumns record>
+    <tr>
+        <#list record.iterator() as field>
+            <th>${field}</th>
+        </#list>
+    </tr>
 </#macro>
 
 ```
@@ -263,7 +291,7 @@ The resulting file actually looks pleasant when compared to raw CSV
 Of course you can also transform a XML document
 
 ```text
-> groovy freemarker-cli.groovy -t ./templates/xml/txt/recipients.ftl site/sample/xml/recipients.xml
+> ./bin/freemarker-cli -t ./templates/xml/txt/recipients.ftl site/sample/xml/recipients.xml
 ```
 
 using the following template
@@ -316,28 +344,32 @@ D. H.
 One day I was asked a to prepare a CSV files containind REST endpoints described by Swagger - technically this is a JSON to CSV transformation. Of course I could create that CSV manually but writing a FTL template doing that was simply more fun and saves time in the future.
 
 ```text
-<#ftl output_format="plainText" strip_text="true">
-<#assign json = JsonPath.parse(documents[0])>
-<#assign basePath = json.read("$.basePath")>
-<#assign paths = json.read("$.paths")>
+<#ftl output_format="plainText" >
+<#assign xml = XmlTool.parse(documents[0])>
+<#list xml.recipients.person as recipient>
+To: ${recipient.name}
+${recipient.address}
 
-<#compress>
-    ENDPOINT;METHOD;DESCRIPTION
-    <#list paths as endpoint,metadata>
-        <#assign relative_url = basePath + endpoint>
-        <#assign methods = metadata?keys>
-        <#list methods as method>
-            <#assign description = paths[endpoint][method]["description"]?replace(";", ",")>
-            ${relative_url};${method?upper_case};${description}
-        </#list>
-    </#list>
-</#compress>
-${'\n'}
+Dear ${recipient.name},
+
+Thank you for your interest in our products. We will be sending you a catalog shortly.
+To take advantage of our free gift offer, please fill in the survey attached to this
+letter and return it to the address on the reverse. Only one participant is allowed for
+each household.
+
+Sincere salutations,
+
+
+D. H.
+
+---------------------------------------------------------------------------------------
+</#list>
+
 ```
 
 Invoking the FTL template
 
-> groovy freemarker-cli.groovy -t templates/json/csv/swagger-endpoints.ftl site/sample/json/swagger-spec.json 
+> ./bin/freemarker-cli -t templates/json/csv/swagger-endpoints.ftl site/sample/json/swagger-spec.json 
 
 gives you
 
@@ -354,10 +386,10 @@ ENDPOINT;METHOD;DESCRIPTION
 Another day my project management asked me to create a CSV configuration file based on an Excel documents - as usual manual copying was not an option due to required data cleanup and data transformation. So I thought about Apache POI which support XLS and XLSX documents - integration of Apache POI was a breeze but the resulting code was not particulary useful example. So a more generic transformation was provided to show the transformation of Excel documents ...
 
 ```text
-> groovy freemarker-cli.groovy -t templates/excel/html/transform.ftl site/sample/excel/test.xls
-> groovy freemarker-cli.groovy -t templates/excel/html/transform.ftl site/sample/excel/test.xlsx
-> groovy freemarker-cli.groovy -t templates/excel/html/transform.ftl site/sample/excel/test-multiple-sheets.xlsx
-> groovy freemarker-cli.groovy -t templates/excel/md/transform.ftl site/sample/excel/test-multiple-sheets.xlsx
+> ./bin/freemarker-cli -t templates/excel/html/transform.ftl site/sample/excel/test.xls
+> ./bin/freemarker-cli -t templates/excel/html/transform.ftl site/sample/excel/test.xlsx
+> ./bin/freemarker-cli -t templates/excel/html/transform.ftl site/sample/excel/test-multiple-sheets.xlsx
+> ./bin/freemarker-cli -t templates/excel/md/transform.ftl site/sample/excel/test-multiple-sheets.xlsx
 ```
 
 The provided FTL transforms an Excel into a HTML document supporting multiple Excel sheets
@@ -365,8 +397,8 @@ The provided FTL transforms an Excel into a HTML document supporting multiple Ex
 ```text
 <#ftl output_format="HTML" >
 <#assign documentName = documents[0].name>
-<#assign workbook = ExcelParser.parse(documents[0])>
-<#assign date =  ReportData["date"]>
+<#assign workbook = ExcelTool.parse(documents[0])>
+<#assign date = .now?iso_utc>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
 <html>
@@ -390,7 +422,7 @@ The provided FTL transforms an Excel into a HTML document supporting multiple Ex
 <#-- writeSheets                                                           -->
 <#--------------------------------------------------------------------------->
 <#macro writeSheets workbook>
-    <#assign sheets = ExcelParser.getAllSheets(workbook)>
+    <#assign sheets = ExcelTool.getSheets(workbook)>
     <#list sheets as sheet>
         <@writeSheet sheet/>
     </#list>
@@ -400,13 +432,13 @@ The provided FTL transforms an Excel into a HTML document supporting multiple Ex
 <#-- writeSheet                                                            -->
 <#--------------------------------------------------------------------------->
 <#macro writeSheet sheet>
-    <#assign rows = ExcelParser.parseSheet(sheet)>
+    <#assign rows = ExcelTool.parseSheet(sheet)>
     <h2>${sheet.getSheetName()}</h2>
     <@writeRows rows/>
 </#macro>
 
 <#--------------------------------------------------------------------------->
-<#-- writeRow                                                              -->
+<#-- writeRows                                                             -->
 <#--------------------------------------------------------------------------->
 <#macro writeRows rows>
     <table class="table table-striped">
@@ -430,6 +462,7 @@ The provided FTL transforms an Excel into a HTML document supporting multiple Ex
     </table>
 </#macro>
 
+
 ```
 
 but the result looks reasonable
@@ -441,12 +474,12 @@ but the result looks reasonable
 In this sample we transform all property files found in a directory (recursive search using include pattern) to a CSV file
 
 ```text
-> groovy freemarker-cli.groovy -i **/*.properties -t templates/properties/csv/locker-test-users.ftl site/sample/properties
+> ./bin/freemarker-cli --include *.properties -t templates/properties/csv/locker-test-users.ftl site/sample/properties
 TENANT,SITE,USER_ID,DISPOSER_ID,PASSWORD,SMS_OTP,NAME,DESCRIPTION
-ro,fat,01303494,01303494,01303494,,,
-at,fat,205089760,205089760,205089760,,,
-sk,uat,9200021464,9200021464,9200021464,,,
-cz,fat,9422350309,9422350309,9422350309,000000,,
+???,fat,01303494,01303494,01303494,,,
+???,fat,9422350309,9422350309,9422350309,000000,,
+???,fat,205089760,205089760,205089760,,,
+???,uat,9200021464,9200021464,9200021464,,,
 ```
 
 The FTL uses a couple of interesting features
@@ -454,14 +487,14 @@ The FTL uses a couple of interesting features
 * We process a list of property files
 * The `strip_text` and `compress` strips any whitespaces and linebreaks from the output so we can create a proper CSV file
 * We use FTL functions to extract the `tenant` and `site`, e.g. `extractTenant`
-* We add a manual line break using ```${'\n'}``
+* We add a manual line break using ```${'\n'}```
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
 <#compress>
     TENANT,SITE,USER_ID,DISPOSER_ID,PASSWORD,SMS_OTP,NAME,DESCRIPTION
     <#list documents as document>
-        <#assign properties = PropertiesParser.parse(document)>
+        <#assign properties = PropertiesTool.parse(document)>
         <#assign environments = properties["ENVIRONMENTS"]!"">
         <#assign tenant = extractTenant(environments)>
         <#assign site = extractSite(environments)>
@@ -505,6 +538,7 @@ ${'\n'}
         <#return "???">
     </#if>
 </#function>
+
 ```
 
 ## 5.8 Transform CSV To XML-FO
@@ -514,8 +548,9 @@ For a POC (proof of concept) I created a sample transformation from CSV to XML-F
 ```text
 <#ftl output_format="XML" >
 <#assign name = documents[0].name>
-<#assign cvsFormat = CSVFormat.DEFAULT.withHeader()>
-<#assign csvParser = CSVParser.parse(documents[0], cvsFormat)>
+<#assign csvFormatName = SystemProperties["csv.format"]!"DEFAULT">
+<#assign cvsFormat = CSVFormat[csvFormatName].withHeader()>
+<#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
 <#--------------------------------------------------------------------------->
@@ -572,12 +607,13 @@ For a POC (proof of concept) I created a sample transformation from CSV to XML-F
         </#list>
     </fo:table-body>
 </#macro>
+
 ```
 
 In order to create the PDF you need to execute the following commands (assuming that you have Apache FOP installed)
 
 ```text
-> groovy freemarker-cli.groovy -t templates/csv/fo/transform.ftl site/sample/csv/locker-test-users.csv > sample.fo
+> ./bin/freemarker-cli -t templates/csv/fo/transform.ftl site/sample/csv/locker-test-users.csv > sample.fo
 > fop -fo sample.fo sample.pdf
 Dec 29, 2018 10:24:30 PM org.apache.fop.events.LoggingEventListener processEvent
 WARNING: Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
@@ -594,7 +630,7 @@ The result does not look very impressive but it is a PDF :-)
 Further along the line of the POC we converted a transaction export from CSV to PDF using Apache FOP
 
 ```text
-> freemarker-cli.groovy -t templates/csv/fo/transactions.ftl site/sample/csv/transactions.csv > transactions.fo
+> ./bin/freemarker-cli -t templates/csv/fo/transactions.ftl site/sample/csv/transactions.csv > transactions.fo
 > fop -fo transactions.fo transactions.pdf
 Jan 16, 2019 11:15:21 PM org.apache.fop.events.LoggingEventListener processEvent
 WARNING: Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
@@ -617,7 +653,7 @@ Recently I got the rather unusual question how to determine the list of dependec
 ```text
 <#ftl output_format="plainText" strip_text="true">
 <#assign documentName = documents[0].name>
-<#assign html = JsoupBean.parse(documents[0])>
+<#assign html = JsoupTool.parse(documents[0])>
 
 <#compress>
     <@writeHeader/>
@@ -648,12 +684,13 @@ Recently I got the rather unusual question how to determine the list of dependec
         </#list>
     </#if>
 </#macro>
+
 ```
 
 Your dependencies as CSV can be generated as shown below
 
 ```text
-> groovy freemarker-cli.groovy -t templates/html/csv/dependencies.ftl site/sample/html/dependencies.html 
+> ./bin/freemarker-cli -t templates/html/csv/dependencies.ftl site/sample/html/dependencies.html 
 GroupId,ArtifactId,Version,Type,Licenses
 com.jayway.jsonpath,json-path,2.4.0,jar,The Apache Software License Version 2.0
 commons-cli,commons-cli,1.4,jar,Apache License Version 2.0
@@ -689,8 +726,9 @@ and the final FTL is found below
 ```
 <#ftl output_format="plainText">
 <#assign cvsFormat = CSVFormat.DEFAULT.withHeader()>
-<#assign csvParser = CSVParser.parse(documents[0], cvsFormat)>
+<#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
 <#assign records = csvParser.records>
+<#assign csvMap = CSVTool.toMap(csvParser, records, "disposer")>
 <#--------------------------------------------------------------------------->
 #!/bin/sh
 
@@ -703,12 +741,13 @@ echo "time,user,status,duration,size"
 date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',${record.disposer},%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${r"${MY_BASE_URL}"}/get"
 </#list>
 
+
 ```
 
 Rendering the FreeMarker template 
 
 ```
-groovy freemarker-cli.groovy -t ./templates/csv/shell/curl.ftl site/sample/csv/user.csv
+> ./bin/freemarker-cli -t ./templates/csv/shell/curl.ftl site/sample/csv/user.csv
 ```
 
 generates the following shell script
@@ -719,10 +758,10 @@ generates the following shell script
 MY_BASE_URL=${MY_BASE_URL:=https://postman-echo.com}
  
 echo "time,user,status,duration,size"
-date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',0401126,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
-date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',0401133,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
-date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',0401173,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
-date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',0401234,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
+date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',AAAAAAA,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
+date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',BBBBBBB,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
+date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',CCCCCCC,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
+date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',DDDDDDD,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
 ```
 
 Looks a bit complicated but lets dissect the things
@@ -734,10 +773,10 @@ Executing the result shell script creates the following output (which is a nice 
 
 ```
 time,user,status,duration,size
-2019-09-27T21:02:52,0401126,200,0.522473,206
-2019-09-27T21:02:53,0401133,200,0.498093,206
-2019-09-27T21:02:54,0401173,200,0.529013,206
-2019-09-27T21:02:54,0401234,200,0.528268,206
+2019-09-27T21:02:52,AAAAAAA,200,0.522473,206
+2019-09-27T21:02:53,BBBBBBB,200,0.498093,206
+2019-09-27T21:02:54,CCCCCCC,200,0.529013,206
+2019-09-27T21:02:54,DDDDDDD,200,0.528268,206
 ```
 
 ## 5.11 Using Advanced FreeMarker Features
@@ -750,67 +789,23 @@ There is a `demo.ftl` which shows some advanced FreeMarker functionality
 * Access System properties
 * Access Environment variables
 
-```text
-1) Language-specific Date Format
----------------------------------------------------------------------------
-Report generated at ${.now}
+Running 
 
-2) Invoke a constructor of a Java class
----------------------------------------------------------------------------
-<#assign date = ObjectConstructor("java.util.Date", 1000 * 3600 * 24)>
-new java.utilDate(1000 * 3600 * 24): ${date?datetime}
+> ./bin/freemarker-cli -t templates/demo.ftl 
 
-3) Invoke a static method of an non-constructor class
----------------------------------------------------------------------------
-System.currentTimeMillis: ${Statics["java.lang.System"].currentTimeMillis()}
-
-4) Access an Enumeration
----------------------------------------------------------------------------
-java.math.RoundingMode#UP: ${Enums["java.math.RoundingMode"].UP}
-
-5) Loop Over The Values Of An Enumeration
----------------------------------------------------------------------------
-<#list Enums["java.math.RoundingMode"]?values as roundingMode>
-* java.math.RoundingMode.${roundingMode}
-</#list>
-
-6) Display input files
----------------------------------------------------------------------------
-<#list documents as document>
-Document: name=${document.name} location=${document.location} length=${document.length} encoding=${document.encoding}
-</#list>
-
-7) Access System Properties
----------------------------------------------------------------------------
-user.name    : ${SystemProperties["user.name"]!""}
-user.dir     : ${SystemProperties["user.dir"]!""}
-user.home    : ${SystemProperties["user.home"]!""}
-java.version : ${SystemProperties["java.version"]!""}
-
-8) Report Data
----------------------------------------------------------------------------
-description  : ${ReportData["description"]}
-host         : ${ReportData["host"]}
-user         : ${ReportData["user"]}
-date         : ${ReportData["date"]}
-
-9) Environment
----------------------------------------------------------------------------
-<#list Environment as name,value>
-* ${name} ==> ${value}
-</#list>
-```
-
-Running the command
-
-> groovy freemarker-cli.groovy -d "This is a description" -t ./templates/demo.ftl README.md
-
-generated the following output
+gives you
 
 ```text
-1) Language-specific Date Format
+1) FreeMarker Special Variables
 ---------------------------------------------------------------------------
-Report generated at Dec 29, 2018 8:35:10 PM
+
+FreeMarker version     : 2.3.29
+Template name          : templates/demo.ftl
+Language               : en
+Locale                 : en_AT
+Timestamp              : Oct 11, 2019 11:08:50 PM
+Output encoding        : UTF-8
+Output format          : plainText
 
 2) Invoke a constructor of a Java class
 ---------------------------------------------------------------------------
@@ -818,7 +813,7 @@ new java.utilDate(1000 * 3600 * 24): Jan 2, 1970 1:00:00 AM
 
 3) Invoke a static method of an non-constructor class
 ---------------------------------------------------------------------------
-System.currentTimeMillis: 1,546,112,110,295
+System.currentTimeMillis: 1,570,828,130,794
 
 4) Access an Enumeration
 ---------------------------------------------------------------------------
@@ -835,61 +830,122 @@ java.math.RoundingMode#UP: UP
 * java.math.RoundingMode.HALF_EVEN
 * java.math.RoundingMode.UNNECESSARY
 
-6) Display input files
+6) Display list of input files
 ---------------------------------------------------------------------------
-Document: name=README.md location=/Users/sgoeschl/work/github/sgoeschl/freemarker-cli/README.md length=19,502
+List all files:
 
-7) Access System Properties
+7) SystemTool
 ---------------------------------------------------------------------------
-user.name    : sgoeschl
-user.dir     : /Users/sgoeschl/work/github/sgoeschl/freemarker-cli
-user.home    : /Users/sgoeschl
+Host name       : murderbot.local
+Command line    : -t, templates/demo.ftl
+User name       : sgoeschl
+Timestamp       : 1570828130811
+Environment     : N.A.
+
+8) Access System Properties
+---------------------------------------------------------------------------
+app.dir      : 
+app.home     : /Users/sgoeschl/work/github/sgoeschl/freemarker-cli/target/appassembler
+app.pid      : 10497
+basedir      : /Users/sgoeschl/work/github/sgoeschl/freemarker-cli/target/appassembler
 java.version : 1.8.0_192
+user.name    : sgoeschl
+user.dir     : /Users/sgoeschl/work/github/sgoeschl/freemarker-cli/target/appassembler
+user.home    : /Users/sgoeschl
 
-8) Report Data
+9) Environment Variables
 ---------------------------------------------------------------------------
-description  : 
-host         : murderbot.local
-user         : sgoeschl
-date         : 2018-12-29
-
-9) Environment
----------------------------------------------------------------------------
-* PATH ==> /Users/sgoeschl/bin:/Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home/bin:/usr/local/Cellar/ruby/2.5.3//bin:/usr/local/Cellar/git/2.19.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+* PATH ==> /Users/sgoeschl/bin:/Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home/bin:/usr/local/Cellar/ruby/2.5.3//bin:/usr/local/Cellar/git/2.19.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/Java/apache-fop-2.3:/Applications/Java/freemarker-cli-2.0.0/bin:/Applications/Java/gatling-3.1.2/bin
 * GIT_HOME ==> /usr/local/Cellar/git/2.19.1
+* JAVA_MAIN_CLASS_10497 ==> com.github.sgoeschl.freemarker.cli.Main
+* JAVA_8_HOME ==> /Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home
 * JAVA_HOME ==> /Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home
+* FOP_HOME ==> /Applications/Java/apache-fop-2.3
 * TERM ==> xterm-256color
 * LANG ==> en_US
+* MAVEN_OPTS ==> -Xmx2048m
 * DISPLAY ==> :0.0
-* JAVA_MAIN_CLASS_32553 ==> org.codehaus.groovy.tools.GroovyStarter
+* JAVA_11_HOME ==> /Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home
+* BEEONE_NEXUS_CREDENTIALS ==> H50N0OB:fRidnevo0719!
 * LOGNAME ==> sgoeschl
 * XPC_SERVICE_NAME ==> 0
-* PWD ==> /Users/sgoeschl/work/github/sgoeschl/freemarker-cli
-* TERM_PROGRAM_VERSION ==> 421.1
-* JAVA_1_8_HOME ==> /Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home
+* PWD ==> /Users/sgoeschl/work/github/sgoeschl/freemarker-cli/target/appassembler
+* TERM_PROGRAM_VERSION ==> 421.2
 * RUBY_HOME ==> /usr/local/Cellar/ruby/2.5.3/
 * SHELL ==> /bin/bash
 * PROFILE_TYPE ==> development
 * TERM_PROGRAM ==> Apple_Terminal
 * LSCOLORS ==> ExFxCxDxBxegedabagacad
-* APP_ICON_32553 ==> /usr/local/Cellar/groovy/2.5.4/libexec/lib/groovy.icns
 * PROFILE_ENV ==> default
-* SECURITYSESSIONID ==> 186a8
-* OLDPWD ==> /usr/local/Cellar/groovy/2.5.4/libexec
+* SECURITYSESSIONID ==> 186af
 * USER ==> sgoeschl
 * CLICOLOR ==> 1
+* GATLING_HOME ==> /Applications/Java/gatling-3.1.2
 * TMPDIR ==> /var/folders/cd/jbgc9cg14ld7dlsqk44tpmrw0000gn/T/
-* APP_NAME_32553 ==> Groovy
-* SSH_AUTH_SOCK ==> /private/tmp/com.apple.launchd.ymn0c6f7kR/Listeners
+* SSH_AUTH_SOCK ==> /private/tmp/com.apple.launchd.iAFTu9i7PN/Listeners
 * EDITOR ==> vi
 * XPC_FLAGS ==> 0x0
-* TERM_SESSION_ID ==> CB91CF57-17A0-4623-96DD-6A2A3EB6D9CA
+* FREEMARKER_CLI_HOME ==> /Applications/Java/freemarker-cli-2.0.0
+* TERM_SESSION_ID ==> 9D1F5DAC-5E97-449C-8A67-D839477D8611
 * LC_ALL ==> en_US.utf-8
 * __CF_USER_TEXT_ENCODING ==> 0x1F5:0x0:0x0
-* Apple_PubSub_Socket_Render ==> /private/tmp/com.apple.launchd.EWTvdMJuxl/Render
+* Apple_PubSub_Socket_Render ==> /private/tmp/com.apple.launchd.ZtXUheG4n9/Render
 * LC_CTYPE ==> UTF-8
 * HOME ==> /Users/sgoeschl
 * SHLVL ==> 1
+
+10) Accessing Documents
+---------------------------------------------------------------------------
+Get the number of documents:
+    - 0
+List all files containing "README" in the name
+List all files having "md" extension
+Get all documents
+
+11) Document Data Model
+---------------------------------------------------------------------------
+
+Top-level entries in the current data model
+
+- YamlTool
+- Statics
+- SystemTool
+- documents
+- JsoupTool
+- JsonPathTool
+- XmlTool
+- Enums
+- SystemProperties
+- ExcelTool
+- Documents
+- PropertiesTool
+- ObjectConstructor
+- Environment
+- CSVTool
+- CSVFormat
+
+12) Create a UUID
+---------------------------------------------------------------------------
+
+See https://stackoverflow.com/questions/43501297/i-have-a-simplescalar-i-need-its-strings-getbytes-return-value-what-can-i-d
+
+Random UUID           : 9524a0c8-0414-4956-829a-d05e4f8eda2e
+Name UUID from bytes  : 298415f9-e888-3d98-90e7-6c0d63ad14dc
+Name UUID as function : 298415f9-e888-3d98-90e7-6c0d63ad14dc
+
+13) Printing Special Characters
+---------------------------------------------------------------------------
+
+German Special Characters: äöüßÄÖÜ
+
+14) Locale-specific output
+---------------------------------------------------------------------------
+
+Small Number :  1.23
+Large Number :  12,345,678.90
+Currency     :  12,345,678.90 EUR
+Date         :  Oct 11, 2019
+Time         :  11:08:50 PM
 ```
 
 # 6. Design Considerations
@@ -897,7 +953,7 @@ date         : 2018-12-29
 ## 6.1 How It Works
 
 * The user-supplied files are loaded into memory or if there are no file the script reads the from `stdin`
-* The FreeMarker data model containing the documents and helper object is created and passed tp the template
+* The FreeMarker data model containing the documents and helper object is created and passed to the template
 * The generated output is written to the user-supplied file or to `stdout`
 
 ## 6.2 FreeMarker Data Model
@@ -912,15 +968,16 @@ Within the script a FreeMarker data model is set up and passed to the template -
 | Documents             | Helper to find documents, e.g. by name or extension                 |
 | Enums                 | Helper to work with Java enumerations                               |
 | Environment           | Environment variables                                               |
-| ExcelParser           | Excel parser exposing a `parse` method                              |
-| JsonPath              | JSON Parser                                                         |
-| JsoupParser           | Jsoup HTML parser                                                   |
+| ExcelTool             | Excel parser exposing a `parse` method                              |
+| JsonPathTool          | JSON Parser                                                         |
+| JsoupTool             | Jsoup HTML parser                                                   |
 | ObjectConstructor     | Creata Java instances using reflection                              |
-| PropertiesParser      | Properties parser exposing a `parse` method                         |
+| PropertiesTool        | Properties parser exposing a `parse` method                         |
 | ReportData            | Bean containing some convinience data, e.g. `user` and `host`       |
 | Statics               | Invoke static Java methods using reflection                         |
 | SystemProperties      | JVM System properties                                               |
-| XmlParser             | XML parser exposing a `parse` method                                |
+| XmlTool               | XML parser exposing a `parse` method                                |
+| YamlTool              | SnakeYAML to parse YAML files                                       |
 
 # 7. Tips & Tricks
 
@@ -931,16 +988,10 @@ When doing some ad-hoc scripting it is useful to rely on a base directory to res
 * As a default the FTL templates are resolved relative to the script directory
 * The caller can provide a `-b` or `--basedir` command line parameter
 
-> groovy freemarker-cli/freemarker-cli.groovy -t templates/json/html/customer-user-products.ftl freemarker-cli/site/sample/json/customer-user-products.jso
+> ./bin/freemarker-cli -t templates/json/html/customer-user-products.ftl freemarker-cli/site/sample/json/customer-user-products.jso
 
 ## 7.2 Using Pipes
 
-When doing ad-hoc scripting it useful to pipe the output of one command directly into the Groovy script
+When doing ad-hoc scripting it useful to pipe the output of one command directly into "freemarker-cli"
 
-> cat site/sample/json/customer-user-products.json | groovy freemarker-cli.groovy -t ./templates/json/html/customer-user-products.ftl
-
-## 7.3 Executable Groovy Scripts
-
-When you run on Unix and are tired of always typing `groovy` there is light on the end of the tunnel - assuming that the `freemarker-cli.groovy` is executable you can use
-
-> ./freemarker-cli.groovy -t templates/json/html/customer-user-products.ftl site/sample/json/customer-user-products.json 
+> cat site/sample/json/customer-user-products.json | ./bin/freemarker-cli -t ./templates/json/html/customer-user-products.ftl --stdin
