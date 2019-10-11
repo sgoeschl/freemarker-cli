@@ -20,9 +20,10 @@ import static org.apache.commons.csv.CSVFormat.EXCEL;
 
 public class CommonsCsvToolTest {
 
-    private final String CONTRACT_ID = "contract_id";
-    private final File BOM_CSV = new File("./site/sample/csv/excel-export-utf8.csv");
-    private final File TEST_CSV = new File("./site/sample/csv/contract.csv");
+    private static final String ANY_TEMPLATE = "info.ftl";
+    private static final String CONTRACT_ID = "contract_id";
+    private static final File BOM_CSV = new File("./site/sample/csv/excel-export-utf8.csv");
+    private static final File TEST_CSV = new File("./site/sample/csv/contract.csv");
 
     @Test
     public void shallParseCvsFile() throws IOException {
@@ -83,7 +84,7 @@ public class CommonsCsvToolTest {
 
     private Settings settings() {
         return Settings.builder()
-                .setTemplate("template")
+                .setTemplate(ANY_TEMPLATE)
                 .setWriter(new StringWriter())
                 .build();
     }

@@ -34,7 +34,6 @@ import static java.util.stream.Collectors.toList;
 
 public class CommonsCsvTool {
 
-    private final boolean INCLUDE_BOM = false;
     private final Settings settings;
 
     public CommonsCsvTool(Settings settings) {
@@ -44,7 +43,7 @@ public class CommonsCsvTool {
     public CSVParser parse(Document document, CSVFormat format) {
         try {
             // TODO ensure that the input stream is closed?!
-            final BOMInputStream bomInputStream = new BOMInputStream(document.getInputStream(), INCLUDE_BOM);
+            final BOMInputStream bomInputStream = new BOMInputStream(document.getInputStream(), false);
             return CSVParser.parse(bomInputStream, document.getCharset(), format);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse CSV: " + document, e);
