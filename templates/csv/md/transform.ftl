@@ -1,6 +1,6 @@
 <#ftl output_format="plainText">
 <#assign cvsFormat = CSVFormat.DEFAULT.withHeader()>
-<#assign csvParser = CSVParser.parse(documents[0], cvsFormat)>
+<#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
 <#--------------------------------------------------------------------------->

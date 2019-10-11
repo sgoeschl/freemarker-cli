@@ -16,12 +16,21 @@
  */
 package com.github.sgoeschl.freemarker.cli.tools.commonscsv;
 
+import com.github.sgoeschl.freemarker.cli.model.Settings;
 import org.apache.commons.csv.CSVFormat;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Objects.requireNonNull;
+
 public class CommonsCsvDataModel {
+
+    private final Settings settings;
+
+    public CommonsCsvDataModel(Settings settings) {
+        this.settings = requireNonNull(settings);
+    }
 
     public Map<String, Object> create() {
         final Map<String, CSVFormat> csvFormats = new HashMap<>();
@@ -30,14 +39,15 @@ public class CommonsCsvDataModel {
         csvFormats.put("INFORMIX_UNLOAD", CSVFormat.INFORMIX_UNLOAD);
         csvFormats.put("INFORMIX_UNLOAD_CSV", CSVFormat.INFORMIX_UNLOAD_CSV);
         csvFormats.put("MYSQL", CSVFormat.MYSQL);
+        csvFormats.put("RFC4180", CSVFormat.RFC4180);
+        csvFormats.put("ORACLE", CSVFormat.ORACLE);
         csvFormats.put("POSTGRESQL_CSV", CSVFormat.POSTGRESQL_CSV);
         csvFormats.put("POSTGRESQL_TEXT", CSVFormat.POSTGRESQL_TEXT);
-        csvFormats.put("RFC4180", CSVFormat.RFC4180);
         csvFormats.put("TDF", CSVFormat.TDF);
 
         final Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("CSVFormat", csvFormats);
-        dataModel.put("CSVParser", new CommonsCsvParserBean());
+        dataModel.put("CSVTool", new CommonsCsvTool(settings));
         return dataModel;
     }
 }

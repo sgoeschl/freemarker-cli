@@ -1,8 +1,8 @@
 <#ftl output_format="plainText">
 <#assign cvsFormat = CSVFormat.DEFAULT.withHeader()>
-<#assign csvParser = CSVParser.parse(documents[0], cvsFormat)>
+<#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
 <#assign records = csvParser.records>
-<#assign csvMap = CSVParser.toMap(csvParser, records, "disposer")>
+<#assign csvMap = CSVTool.toMap(csvParser, records, "disposer")>
 <#--------------------------------------------------------------------------->
 #!/bin/sh
 

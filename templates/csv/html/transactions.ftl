@@ -1,7 +1,7 @@
 <#ftl output_format="HTML" >
 <#assign name = documents[0].name>
 <#assign cvsFormat = CSVFormat.DEFAULT.withDelimiter(';').withHeader()>
-<#assign csvParser = CSVParser.parse(documents[0], cvsFormat)>
+<#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
 <#--------------------------------------------------------------------------->

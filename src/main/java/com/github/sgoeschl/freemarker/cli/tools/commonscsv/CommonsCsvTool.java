@@ -17,24 +17,35 @@
 package com.github.sgoeschl.freemarker.cli.tools.commonscsv;
 
 import com.github.sgoeschl.freemarker.cli.model.Document;
+import com.github.sgoeschl.freemarker.cli.model.Settings;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.io.input.BOMInputStream;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toSet;
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
 
-public class CommonsCsvParserBean {
+public class CommonsCsvTool {
+
+    private final boolean INCLUDE_BOM = false;
+    private final Settings settings;
+
+    public CommonsCsvTool(Settings settings) {
+        this.settings = requireNonNull(settings);
+    }
 
     public CSVParser parse(Document document, CSVFormat format) {
         try {
-            // TODO ensure that the input stream is closed
-            return CSVParser.parse(document.getInputStream(), document.getCharset(), format);
+            // TODO ensure that the input stream is closed?!
+            final BOMInputStream bomInputStream = new BOMInputStream(document.getInputStream(), INCLUDE_BOM);
+            return CSVParser.parse(bomInputStream, document.getCharset(), format);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse CSV: " + document, e);
         }
@@ -48,11 +59,19 @@ public class CommonsCsvParserBean {
         return csvRecords.stream().collect(Collectors.toMap(r -> r.get(index), r -> r));
     }
 
-    public Set<String> keySet(CSVParser csvParser, List<CSVRecord> csvRecords, String key) {
-        return keySet(csvRecords, csvParser.getHeaderMap().get(key));
+    public List<String> toKeys(CSVParser csvParser, List<CSVRecord> csvRecords, String key) {
+        return toKeys(csvRecords, csvParser.getHeaderMap().get(key));
     }
 
-    public Set<String> keySet(List<CSVRecord> csvRecords, Integer index) {
-        return csvRecords.stream().map(r -> r.get(index)).collect(toSet());
+    public List<String> toKeys(List<CSVRecord> csvRecords, Integer index) {
+        return csvRecords.stream().map(r -> r.get(index)).distinct().collect(toList());
+    }
+
+    public CSVPrinter printer(CSVFormat csvFormat) throws IOException {
+        return new CSVPrinter(getSettings().getWriter(), csvFormat);
+    }
+
+    Settings getSettings() {
+        return settings;
     }
 }

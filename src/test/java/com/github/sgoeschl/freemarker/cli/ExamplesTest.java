@@ -49,6 +49,7 @@ public class ExamplesTest extends AbstractMainTest {
         assertValid(execute("-t templates/excel/html/transform.ftl site/sample/excel/test-multiple-sheets.xlsx"));
         assertValid(execute("-t templates/excel/md/transform.ftl site/sample/excel/test-multiple-sheets.xlsx"));
         assertValid(execute("-t templates/excel/csv/transform.ftl site/sample/excel/test-multiple-sheets.xlsx"));
+        assertValid(execute("-t templates/excel/csv/custom.ftl -Dcsv.format=MYSQL site/sample/excel/test.xls"));
     }
 
     @Test

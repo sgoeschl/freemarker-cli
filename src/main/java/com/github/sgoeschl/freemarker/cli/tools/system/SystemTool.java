@@ -2,6 +2,7 @@ package com.github.sgoeschl.freemarker.cli.tools.system;
 
 import com.github.sgoeschl.freemarker.cli.model.Settings;
 
+import java.io.Writer;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Map;
@@ -49,6 +50,10 @@ public class SystemTool {
         } catch (UnknownHostException ignored) {
             return "localhost";
         }
+    }
+
+    public Writer getWriter() {
+        return getSettings().getWriter();
     }
 
     public long currentTimeMillis() {

@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -119,11 +120,11 @@ public class Settings {
     }
 
     public Charset getSourceEncoding() {
-        return sourceEncoding != null ? sourceEncoding : UTF_8;
+        return sourceEncoding;
     }
 
     public Charset getOutputEncoding() {
-        return outputEncoding != null ? outputEncoding : UTF_8;
+        return outputEncoding;
     }
 
     public Charset getTemplateEncoding() {
@@ -200,6 +201,11 @@ public class Settings {
         private Writer writer;
 
         private SettingsBuilder() {
+            this.args = emptyList();
+            this.sources = emptyList();
+            this.setSourceEncoding(UTF_8.name());
+            this.setOutputEncoding(UTF_8.name());
+            this.properties = new HashMap<>();
         }
 
         public SettingsBuilder setArgs(String[] args) {

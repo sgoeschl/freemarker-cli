@@ -1,7 +1,7 @@
 <#ftl output_format="plainText" strip_text="true">
 <#assign name = documents[0].name>
 <#assign cvsFormat = CSVFormat.DEFAULT.withDelimiter(';')>
-<#assign csvParser = CSVParser.parse(documents[0], cvsFormat)>
+<#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
 <#assign csvRecords = csvParser.records>
 
 <#compress>

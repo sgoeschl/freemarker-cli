@@ -31,7 +31,7 @@ public class Tools {
         dataModel.putAll(new FreeMarkerDataModel().create());
         dataModel.putAll(new SystemPropertiesDataModel().create());
 
-        dataModel.putAll(new CommonsCsvDataModel().create());
+        dataModel.putAll(new CommonsCsvDataModel(settings).create());
         dataModel.putAll(new ExcelDataModel().create());
         dataModel.putAll(new JsonPathDataModel().create());
         dataModel.putAll(new JsoupDataModel().create());
