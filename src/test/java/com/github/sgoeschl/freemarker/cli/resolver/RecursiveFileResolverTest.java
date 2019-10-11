@@ -33,16 +33,23 @@ public class RecursiveFileResolverTest {
 
     @Test
     public void shouldResolveAllFilesOfDirectory() {
-        assertTrue(fileResolver(ANY_DIRECTORY, null).resolve().size() > 1);
+        assertTrue(fileResolver(ANY_DIRECTORY, null).resolve().size() > 100);
         assertTrue(fileResolver(ANY_DIRECTORY, UNKNOWN_FILE_NAME).resolve().isEmpty());
     }
 
     @Test
-    public void shouldResolveAllFilesOfDirectoryWithIncludePattern() {
+    public void shouldResolveSingleMatchingFile() {
         final List<File> files = fileResolver(ANY_DIRECTORY, ANY_FILE_NAME).resolve();
 
         assertEquals(1, files.size());
         assertEquals(ANY_FILE_NAME, files.get(0).getName());
+    }
+
+    @Test
+    public void shouldResolveMultipleFilesRecursivelyWithIncludes() {
+        final List<File> files = fileResolver("./site", "*.csv").resolve();
+
+        assertEquals(5, files.size());
     }
 
     private static RecursiveFileResolver fileResolver(String directory, String include) {
