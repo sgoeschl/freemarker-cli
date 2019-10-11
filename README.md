@@ -16,9 +16,11 @@ The goal of `freemarker-cli` is to automate repeated transformation tasks
 Assuming that you are still interested - run `./run-samples.sh` and have a look at the generated output
 
 ```text
+./run-samples.sh 
 templates/demo.ftl
 templates/csv/html/transform.ftl
 templates/csv/md/transform.ftl
+templates/csv/shell/curl.ftl
 templates/csv/fo/transform.ftl
 fop -fo target/out/locker-test-users.fo target/out/locker-test-users.pdf
 templates/csv/fo/transactions.ftl
@@ -27,6 +29,8 @@ templates/csv/html/transform.ftl
 wkhtmltopdf -O landscape target/out/transactions.html target/out/transactions-html.pdf
 templates/excel/html/transform.ftl
 templates/excel/md/transform.ftl
+templates/excel/csv/transform.ftl
+templates/excel/csv/custom.ftl
 templates/html/csv/dependencies.ftl
 templates/json/csv/swagger-endpoints.ftl
 templates/json/html/customer-user-products.ftl
@@ -34,30 +38,36 @@ wkhtmltopdf -O landscape target/out/customer-user-products.html target/out/custo
 templates/json/md/customer-user-products.ftl
 templates/json/md/github-users.ftl
 templates/properties/csv/locker-test-users.ftl
+templates/yaml/txt/transform.ftl
 templates/xml/txt/recipients.ftl
 Created the following sample files in ./target/out
-total 1168
--rw-r--r--@ 1 sgoeschl  staff   22412 May 26 20:47 contract.html
--rw-r--r--@ 1 sgoeschl  staff    7933 May 26 20:47 contract.md
--rw-r--r--@ 1 sgoeschl  staff  103477 May 26 20:48 customer-user-products.html
--rw-r--r--@ 1 sgoeschl  staff   34990 May 26 20:48 customer-user-products.md
--rw-r--r--  1 sgoeschl  staff  114668 May 26 20:48 customer-user-products.pdf
--rw-r--r--  1 sgoeschl  staff    4028 May 26 20:47 demo.txt
--rw-r--r--  1 sgoeschl  staff    1310 May 26 20:48 dependencies.csv
--rw-r--r--@ 1 sgoeschl  staff    2029 May 26 20:48 github-users-curl.md
--rw-r--r--@ 1 sgoeschl  staff     235 May 26 20:48 locker-test-users.csv
--rw-r--r--  1 sgoeschl  staff    6291 May 26 20:47 locker-test-users.fo
--rw-r--r--  1 sgoeschl  staff    5503 May 26 20:47 locker-test-users.pdf
--rw-r--r--  1 sgoeschl  staff     921 May 26 20:48 recipients.txt
--rw-r--r--  1 sgoeschl  staff     341 May 26 20:48 swagger-spec.csv
--rw-r--r--  1 sgoeschl  staff    1907 May 26 20:48 test-multiple-sheets.xlsx.html
--rw-r--r--  1 sgoeschl  staff     389 May 26 20:48 test-multiple-sheets.xlsx.md
--rw-r--r--  1 sgoeschl  staff    1546 May 26 20:48 test.xls.html
--rw-r--r--  1 sgoeschl  staff    1548 May 26 20:48 test.xslx.html
--rw-r--r--@ 1 sgoeschl  staff   11352 May 26 20:47 transactions-fo.pdf
--rw-r--r--@ 1 sgoeschl  staff   33294 May 26 20:48 transactions-html.pdf
--rw-r--r--  1 sgoeschl  staff  106462 May 26 20:47 transactions.fo
--rw-r--r--@ 1 sgoeschl  staff   18148 May 26 20:48 transactions.html
+total 1208
+-rw-r--r--  1 sgoeschl  staff   22548 Oct 11 23:16 contract.html
+-rw-r--r--  1 sgoeschl  staff    7933 Oct 11 23:16 contract.md
+-rw-r--r--  1 sgoeschl  staff     784 Oct 11 23:16 curl.sh
+-rw-r--r--  1 sgoeschl  staff  103487 Oct 11 23:16 customer-user-products.html
+-rw-r--r--  1 sgoeschl  staff   34990 Oct 11 23:16 customer-user-products.md
+-rw-r--r--  1 sgoeschl  staff  113654 Oct 11 23:16 customer-user-products.pdf
+-rw-r--r--  1 sgoeschl  staff     232 Oct 11 23:16 customer.txt
+-rw-r--r--  1 sgoeschl  staff    5917 Oct 11 23:16 demo.txt
+-rw-r--r--  1 sgoeschl  staff    1310 Oct 11 23:16 dependencies.csv
+-rw-r--r--  1 sgoeschl  staff    2029 Oct 11 23:16 github-users-curl.md
+-rw-r--r--  1 sgoeschl  staff     239 Oct 11 23:16 locker-test-users.csv
+-rw-r--r--  1 sgoeschl  staff    6288 Oct 11 23:16 locker-test-users.fo
+-rw-r--r--@ 1 sgoeschl  staff    5488 Oct 11 23:16 locker-test-users.pdf
+-rw-r--r--  1 sgoeschl  staff     921 Oct 11 23:16 recipients.txt
+-rw-r--r--  1 sgoeschl  staff     341 Oct 11 23:16 swagger-spec.csv
+-rw-r--r--  1 sgoeschl  staff     156 Oct 11 23:16 test-multiple-sheets.xlsx.csv
+-rw-r--r--  1 sgoeschl  staff    1917 Oct 11 23:16 test-multiple-sheets.xlsx.html
+-rw-r--r--  1 sgoeschl  staff     389 Oct 11 23:16 test-multiple-sheets.xlsx.md
+-rw-r--r--  1 sgoeschl  staff     150 Oct 11 23:16 test-transform-xls.csv
+-rw-r--r--  1 sgoeschl  staff    1556 Oct 11 23:16 test.xls.html
+-rw-r--r--  1 sgoeschl  staff    1558 Oct 11 23:16 test.xslx.html
+-rw-r--r--  1 sgoeschl  staff   11334 Oct 11 23:16 transactions-fo.pdf
+-rw-r--r--  1 sgoeschl  staff   33235 Oct 11 23:16 transactions-html.pdf
+-rw-r--r--  1 sgoeschl  staff  106441 Oct 11 23:16 transactions.fo
+-rw-r--r--  1 sgoeschl  staff   18126 Oct 11 23:16 transactions.html
+
 ```
 
 # 2. Once Upon A Time
@@ -86,9 +96,10 @@ Using Velocity actually created some minor issues so I migrated to [Apache FreeM
 
 While I love Apache Velocity (Apache Turbine anyone?) I decided to give FreeMarker a chance and migrated my [velocity-cli](https://github.com/sgoeschl/velocity-cli) to FreeMarker.
 
-Some years later the not-so-small Groovy script was growing so I decided 
+Some years later the not-so-small Groovy script was still growing so I decided 
 
 * To ditch Groovy and migrate to plain JDK 8
+* Write unit tests since I had no more excuses
 * To ditch Commons CLI and migrate to [Picocli](https://picocli.info)
 
 # 3. Design Goals
@@ -102,7 +113,7 @@ Some years later the not-so-small Groovy script was growing so I decided
 * XML is supported by FreeMarker out-of-the-box - see http://freemarker.org/docs/xgui.html
 * Support for reading document content from STDIN to integrate with command line tools
 * Add some commonly useful information such as `System Properties`, `Enviroment Variables`
-* Create a proper command-line tool 
+* Create a proper command-line tool which has Unix look & feel
 
 # 4. Usage
 
@@ -232,9 +243,8 @@ The FreeMarker template is shown below
 <#ftl output_format="HTML" >
 <#assign name = documents[0].name>
 <#assign cvsFormat = CSVFormat.DEFAULT.withHeader()>
-<#assign csvParser = CSVParser.parse(documents[0], cvsFormat)>
-<#assign csvHeaders = csvParser.getHeaderMap()?keys>
-<#assign csvRecords = csvParser.records>
+<#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
+<#assign csvHeaders = csvParser.getHeaderNames()>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
 <html>
@@ -246,28 +256,28 @@ The FreeMarker template is shown below
 </head>
 <body>
 <table class="table table-striped">
-<@writeHeaders headers=csvHeaders/>
-    <@writeColums columns=csvRecords/>
+    <@writeHeaders csvParser.getHeaderNames()/>
+    <#list csvParser.iterator() as record>
+        <@writeColumns record/>
+    </#list>
 </table>
 </body>
 </html>
 <#--------------------------------------------------------------------------->
 <#macro writeHeaders headers>
-<tr>
-    <#list headers as header>
-        <th>${header}</th>
-    </#list>
-</tr>
-</#macro>
-<#--------------------------------------------------------------------------->
-<#macro writeColums columns>
-    <#list columns as column>
     <tr>
-        <#list column.iterator() as field>
-            <td>${field}</td>
+        <#list headers as header>
+            <th>${header}</th>
         </#list>
     </tr>
-    </#list>
+</#macro>
+<#--------------------------------------------------------------------------->
+<#macro writeColumns record>
+    <tr>
+        <#list record.iterator() as field>
+            <th>${field}</th>
+        </#list>
+    </tr>
 </#macro>
 
 ```
@@ -334,23 +344,27 @@ D. H.
 One day I was asked a to prepare a CSV files containind REST endpoints described by Swagger - technically this is a JSON to CSV transformation. Of course I could create that CSV manually but writing a FTL template doing that was simply more fun and saves time in the future.
 
 ```text
-<#ftl output_format="plainText" strip_text="true">
-<#assign json = JsonPath.parse(documents[0])>
-<#assign basePath = json.read("$.basePath")>
-<#assign paths = json.read("$.paths")>
+<#ftl output_format="plainText" >
+<#assign xml = XmlTool.parse(documents[0])>
+<#list xml.recipients.person as recipient>
+To: ${recipient.name}
+${recipient.address}
 
-<#compress>
-    ENDPOINT;METHOD;DESCRIPTION
-    <#list paths as endpoint,metadata>
-        <#assign relative_url = basePath + endpoint>
-        <#assign methods = metadata?keys>
-        <#list methods as method>
-            <#assign description = paths[endpoint][method]["description"]?replace(";", ",")>
-            ${relative_url};${method?upper_case};${description}
-        </#list>
-    </#list>
-</#compress>
-${'\n'}
+Dear ${recipient.name},
+
+Thank you for your interest in our products. We will be sending you a catalog shortly.
+To take advantage of our free gift offer, please fill in the survey attached to this
+letter and return it to the address on the reverse. Only one participant is allowed for
+each household.
+
+Sincere salutations,
+
+
+D. H.
+
+---------------------------------------------------------------------------------------
+</#list>
+
 ```
 
 Invoking the FTL template
@@ -384,7 +398,7 @@ The provided FTL transforms an Excel into a HTML document supporting multiple Ex
 <#ftl output_format="HTML" >
 <#assign documentName = documents[0].name>
 <#assign workbook = ExcelTool.parse(documents[0])>
-<#assign date =  ReportData["date"]>
+<#assign date = .now?iso_utc>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
 <html>
@@ -408,7 +422,7 @@ The provided FTL transforms an Excel into a HTML document supporting multiple Ex
 <#-- writeSheets                                                           -->
 <#--------------------------------------------------------------------------->
 <#macro writeSheets workbook>
-    <#assign sheets = ExcelTool.getAllSheets(workbook)>
+    <#assign sheets = ExcelTool.getSheets(workbook)>
     <#list sheets as sheet>
         <@writeSheet sheet/>
     </#list>
@@ -424,7 +438,7 @@ The provided FTL transforms an Excel into a HTML document supporting multiple Ex
 </#macro>
 
 <#--------------------------------------------------------------------------->
-<#-- writeRow                                                              -->
+<#-- writeRows                                                             -->
 <#--------------------------------------------------------------------------->
 <#macro writeRows rows>
     <table class="table table-striped">
@@ -448,6 +462,7 @@ The provided FTL transforms an Excel into a HTML document supporting multiple Ex
     </table>
 </#macro>
 
+
 ```
 
 but the result looks reasonable
@@ -459,12 +474,12 @@ but the result looks reasonable
 In this sample we transform all property files found in a directory (recursive search using include pattern) to a CSV file
 
 ```text
-> ./bin/freemarker-cli --include **/*.properties -t templates/properties/csv/locker-test-users.ftl site/sample/properties
+> ./bin/freemarker-cli --include *.properties -t templates/properties/csv/locker-test-users.ftl site/sample/properties
 TENANT,SITE,USER_ID,DISPOSER_ID,PASSWORD,SMS_OTP,NAME,DESCRIPTION
-ro,fat,01303494,01303494,01303494,,,
-at,fat,205089760,205089760,205089760,,,
-sk,uat,9200021464,9200021464,9200021464,,,
-cz,fat,9422350309,9422350309,9422350309,000000,,
+???,fat,01303494,01303494,01303494,,,
+???,fat,9422350309,9422350309,9422350309,000000,,
+???,fat,205089760,205089760,205089760,,,
+???,uat,9200021464,9200021464,9200021464,,,
 ```
 
 The FTL uses a couple of interesting features
@@ -479,7 +494,7 @@ The FTL uses a couple of interesting features
 <#compress>
     TENANT,SITE,USER_ID,DISPOSER_ID,PASSWORD,SMS_OTP,NAME,DESCRIPTION
     <#list documents as document>
-        <#assign properties = PropertiesParser.parse(document)>
+        <#assign properties = PropertiesTool.parse(document)>
         <#assign environments = properties["ENVIRONMENTS"]!"">
         <#assign tenant = extractTenant(environments)>
         <#assign site = extractSite(environments)>
@@ -523,6 +538,7 @@ ${'\n'}
         <#return "???">
     </#if>
 </#function>
+
 ```
 
 ## 5.8 Transform CSV To XML-FO
@@ -532,8 +548,9 @@ For a POC (proof of concept) I created a sample transformation from CSV to XML-F
 ```text
 <#ftl output_format="XML" >
 <#assign name = documents[0].name>
-<#assign cvsFormat = CSVFormat.DEFAULT.withHeader()>
-<#assign csvParser = CSVParser.parse(documents[0], cvsFormat)>
+<#assign csvFormatName = SystemProperties["csv.format"]!"DEFAULT">
+<#assign cvsFormat = CSVFormat[csvFormatName].withHeader()>
+<#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
 <#--------------------------------------------------------------------------->
@@ -590,6 +607,7 @@ For a POC (proof of concept) I created a sample transformation from CSV to XML-F
         </#list>
     </fo:table-body>
 </#macro>
+
 ```
 
 In order to create the PDF you need to execute the following commands (assuming that you have Apache FOP installed)
@@ -635,7 +653,7 @@ Recently I got the rather unusual question how to determine the list of dependec
 ```text
 <#ftl output_format="plainText" strip_text="true">
 <#assign documentName = documents[0].name>
-<#assign html = JsoupBean.parse(documents[0])>
+<#assign html = JsoupTool.parse(documents[0])>
 
 <#compress>
     <@writeHeader/>
@@ -666,6 +684,7 @@ Recently I got the rather unusual question how to determine the list of dependec
         </#list>
     </#if>
 </#macro>
+
 ```
 
 Your dependencies as CSV can be generated as shown below
@@ -707,8 +726,9 @@ and the final FTL is found below
 ```
 <#ftl output_format="plainText">
 <#assign cvsFormat = CSVFormat.DEFAULT.withHeader()>
-<#assign csvParser = CSVParser.parse(documents[0], cvsFormat)>
+<#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
 <#assign records = csvParser.records>
+<#assign csvMap = CSVTool.toMap(csvParser, records, "disposer")>
 <#--------------------------------------------------------------------------->
 #!/bin/sh
 
@@ -720,6 +740,7 @@ echo "time,user,status,duration,size"
 <#list records as record>
 date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',${record.disposer},%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${r"${MY_BASE_URL}"}/get"
 </#list>
+
 
 ```
 
@@ -737,10 +758,10 @@ generates the following shell script
 MY_BASE_URL=${MY_BASE_URL:=https://postman-echo.com}
  
 echo "time,user,status,duration,size"
-date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',0401126,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
-date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',0401133,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
-date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',0401173,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
-date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',0401234,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
+date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',AAAAAAA,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
+date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',BBBBBBB,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
+date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',CCCCCCC,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
+date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',DDDDDDD,%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${MY_BASE_URL}/get"
 ```
 
 Looks a bit complicated but lets dissect the things
@@ -752,10 +773,10 @@ Executing the result shell script creates the following output (which is a nice 
 
 ```
 time,user,status,duration,size
-2019-09-27T21:02:52,0401126,200,0.522473,206
-2019-09-27T21:02:53,0401133,200,0.498093,206
-2019-09-27T21:02:54,0401173,200,0.529013,206
-2019-09-27T21:02:54,0401234,200,0.528268,206
+2019-09-27T21:02:52,AAAAAAA,200,0.522473,206
+2019-09-27T21:02:53,BBBBBBB,200,0.498093,206
+2019-09-27T21:02:54,CCCCCCC,200,0.529013,206
+2019-09-27T21:02:54,DDDDDDD,200,0.528268,206
 ```
 
 ## 5.11 Using Advanced FreeMarker Features
@@ -767,6 +788,12 @@ There is a `demo.ftl` which shows some advanced FreeMarker functionality
 * Work with Java enums
 * Access System properties
 * Access Environment variables
+
+Running 
+
+> ./bin/freemarker-cli -t templates/demo.ftl 
+
+gives you
 
 ```text
 1) FreeMarker Special Variables
