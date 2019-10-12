@@ -16,11 +16,13 @@
  */
 package com.github.sgoeschl.freemarker.cli;
 
+import com.github.sgoeschl.freemarker.cli.Main.GitVersionProvider;
 import com.github.sgoeschl.freemarker.cli.model.Settings;
 import com.github.sgoeschl.freemarker.cli.resolver.TemplateDirectoryResolver;
 import org.apache.commons.io.IOUtils;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.IVersionProvider;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
@@ -34,12 +36,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.Callable;
 
 import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNotEmpty;
+import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
 
-@Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, version = "2.0.0")
+@Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
 public class Main implements Callable<Integer> {
 
     @Option(names = { "-b", "--basedir" }, description = "Base directory to resolve FreeMarker templates")
@@ -130,6 +134,8 @@ public class Main implements Callable<Integer> {
 
         final List<File> templateDirectories = getTemplateDirectories(baseDir);
 
+        final Properties gitProperties = getGitProperties();
+
         final Settings settings = Settings.builder()
                 .setArgs(args)
                 .setTemplateDirectories(templateDirectories)
@@ -181,5 +187,47 @@ public class Main implements Callable<Integer> {
 
     private static List<File> getTemplateDirectories(String baseDir) {
         return new TemplateDirectoryResolver(baseDir).resolve();
+    }
+
+    private static Properties getGitProperties() {
+        Properties properties = null;
+        try {
+            properties = new Properties();
+            properties.load(Main.class.getClassLoader().getResourceAsStream("git.properties"));
+        } catch (IOException e) {
+            System.err.println("Error detected");
+            e.printStackTrace();
+        }
+        return properties;
+    }
+
+    public static final class GitVersionProvider implements IVersionProvider {
+
+        private final String gitBuildVersion;
+        private final String gitCommitId;
+        private final String gitCommitTime;
+
+        public GitVersionProvider() {
+            final Properties gitProperties = getGitProperties();
+            this.gitBuildVersion = gitProperties.getProperty("git.build.version", "unknown");
+            this.gitCommitId = gitProperties.getProperty("git.commit.id", "unknown");
+            this.gitCommitTime = gitProperties.getProperty("git.commit.time", "unknown");
+        }
+
+        @Override
+        public String[] getVersion() {
+            return new String[] { format("version=%s, time=%s, commit=%s", gitBuildVersion, gitCommitTime, gitCommitId) };
+        }
+
+        private static Properties getGitProperties() {
+            final Properties properties;
+            try {
+                properties = new Properties();
+                properties.load(Main.class.getClassLoader().getResourceAsStream("git.properties"));
+            } catch (IOException e) {
+                return new Properties();
+            }
+            return properties;
+        }
     }
 }
