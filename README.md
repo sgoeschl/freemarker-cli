@@ -71,11 +71,11 @@ total 1072
 -rw-r--r--  1 sgoeschl  staff   18126 Oct 12 22:10 transactions.html
 ```
 
-Please note that genrated PDF files are very likely not found since they require installation of `wkhtmltopdf` and `Apache FOP`.
+Please note that generated PDF files are very likely not found since they require `wkhtmltopdf` and `Apache FOP` installation.
 
 # 2. Once Upon A Time
 
-I needed a little bit of test data management for a customer project - to make a long story short (after writing a few more Groovy scripts) it boiled down to transforming one or more JSON files to something human readable.
+In December 2015 I needed a little bit of test data management for a customer project - to make a long story short (after writing a few more Groovy scripts) it boiled down to transforming one or more JSON files to something human readable.
 
 What are the options?
 
@@ -488,7 +488,7 @@ TENANT,SITE,USER_ID,DISPOSER_ID,PASSWORD,SMS_OTP,NAME,DESCRIPTION
 The FTL uses a couple of interesting features
 
 * We process a list of property files
-* The `strip_text` and `compress` strips any whitespaces and linebreaks from the output so we can create a proper CSV file
+* The `strip_text` and `compress` strips any white-spaces and line-breaks from the output so we can create a proper CSV file
 * We use FTL functions to extract the `tenant` and `site`, e.g. `extractTenant`
 * We add a manual line break using ```${'\n'}```
 
@@ -719,7 +719,7 @@ stax,stax-api,1.0.1,jar,The Apache Software License Version 2.0
 
 ## 5.10 Transform CSV To Shell Script
 
-For a customer project we wanted to record REST request / responses using WireMock - really quick and dirty. So we decided to avoid any sophistacted test tool but generate a ready-to-use shell script executing cURL commands. It turned out that handling of dollar signs is a bit tricky
+For a customer project we wanted to record REST request / responses using WireMock - really quick and dirty. So we decided to avoid any sophisticated test tool but generate a ready-to-use shell script executing cURL commands. It turned out that handling of dollar signs is a bit tricky
 
 * Using ```noparse``` directive to disable parsing of dollar signs
 * Using ```${r"${MY_BASE_URL}"``` to generate output with dollar signs
