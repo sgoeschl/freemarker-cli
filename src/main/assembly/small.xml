@@ -31,12 +31,12 @@
             <unpack>true</unpack>
             <scope>runtime</scope>
             <excludes>
+                <!-- Exclude Apache POI, Grok, JSoup -->
                 <exclude>com.github.virtuald:curvesapi</exclude>
                 <exclude>commons-codec:commons-codec</exclude>
                 <exclude>io.krakens:java-grok</exclude>
                 <exclude>org.apache.commons:commons-collections4</exclude>
                 <exclude>org.apache.commons:commons-compress</exclude>
-                <exclude>org.apache.commons:commons-csv</exclude>
                 <exclude>org.apache.commons:commons-lang3</exclude>
                 <exclude>org.apache.commons:commons-math3</exclude>
                 <exclude>org.apache.xmlbeans:xmlbeans</exclude>

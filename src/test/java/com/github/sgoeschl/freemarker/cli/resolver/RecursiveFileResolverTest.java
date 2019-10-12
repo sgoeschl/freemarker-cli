@@ -28,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 public class RecursiveFileResolverTest {
 
     private static final String ANY_DIRECTORY = ".";
-    private static final String ANY_FILE_NAME = "pom.xml";
+    private static final String ANY_FILE_NAME = "CHANGELOG.md";
     private static final String UNKNOWN_FILE_NAME = "unknown.file";
 
     @Test
