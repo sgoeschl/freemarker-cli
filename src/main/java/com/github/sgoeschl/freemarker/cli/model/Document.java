@@ -16,8 +16,10 @@
  */
 package com.github.sgoeschl.freemarker.cli.model;
 
+import com.github.sgoeschl.freemarker.cli.activation.InputStreamDataSource;
 import com.github.sgoeschl.freemarker.cli.activation.StringDataSource;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.LineIterator;
 
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -41,7 +43,7 @@ public class Document {
     /** Name of the document */
     private final String name;
 
-    /** Optional charset for files */
+    /** Optional charset for text-based content */
     private final Charset charset;
 
     /** The underlying data source */
@@ -54,9 +56,7 @@ public class Document {
     }
 
     public Document(File file) {
-        this.name = file.getName();
-        this.dataSource = new FileDataSource(file);
-        this.charset = defaultCharset();
+        this(file, defaultCharset());
     }
 
     public Document(File file, Charset charset) {
@@ -68,6 +68,12 @@ public class Document {
     public Document(DataSource dataSource) {
         this.name = dataSource.getName();
         this.dataSource = dataSource;
+        this.charset = null;
+    }
+
+    public Document(String name, InputStream is) {
+        this.name = requireNonNull(name);
+        this.dataSource = new InputStreamDataSource(name, is);
         this.charset = null;
     }
 
@@ -115,6 +121,14 @@ public class Document {
             return writer.toString();
         } catch (IOException e) {
             throw new RuntimeException("Failed to load the text: " + getName());
+        }
+    }
+
+    public LineIterator getLineIterator() {
+        try {
+            return IOUtils.lineIterator(getInputStream(), charset != null ? charset : defaultCharset());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create line iterator: " + getName(), e);
         }
     }
 

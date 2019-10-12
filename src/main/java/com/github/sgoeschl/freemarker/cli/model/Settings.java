@@ -62,8 +62,8 @@ public class Settings {
     /** The locale to use for rendering */
     private final Locale locale;
 
-    /** Content of "System.in" */
-    private final String stdin;
+    /** Read from "System.in" */
+    private final boolean stdin;
 
     /** User-supplied list of source files or directories */
     private final List<String> sources;
@@ -84,7 +84,7 @@ public class Settings {
             File outputFile,
             String include,
             Locale locale,
-            String stdin,
+            boolean stdin,
             List<String> sources,
             Map<String, String> properties,
             Writer writer) {
@@ -147,7 +147,7 @@ public class Settings {
         return locale;
     }
 
-    public String getStdin() {
+    public boolean isStdin() {
         return stdin;
     }
 
@@ -195,7 +195,7 @@ public class Settings {
         private String outputFile;
         private String include;
         private String locale;
-        private String stdin;
+        private boolean stdin;
         private List<String> sources;
         private Map<String, String> properties;
         private Writer writer;
@@ -259,7 +259,7 @@ public class Settings {
             return this;
         }
 
-        public SettingsBuilder setStdin(String stdin) {
+        public SettingsBuilder setStdin(boolean stdin) {
             this.stdin = stdin;
             return this;
         }

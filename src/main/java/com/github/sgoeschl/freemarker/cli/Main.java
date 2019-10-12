@@ -19,7 +19,6 @@ package com.github.sgoeschl.freemarker.cli;
 import com.github.sgoeschl.freemarker.cli.Main.GitVersionProvider;
 import com.github.sgoeschl.freemarker.cli.model.Settings;
 import com.github.sgoeschl.freemarker.cli.resolver.TemplateDirectoryResolver;
-import org.apache.commons.io.IOUtils;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.IVersionProvider;
@@ -123,15 +122,6 @@ public class Main implements Callable<Integer> {
             System.getProperties().putAll(properties);
         }
 
-        // read from stdin if requested by the user
-        if (readFromStdin) {
-            try {
-                stdin = IOUtils.toString(System.in, sourceEncoding);
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to read from System.in");
-            }
-        }
-
         final List<File> templateDirectories = getTemplateDirectories(baseDir);
 
         final Properties gitProperties = getGitProperties();
@@ -146,7 +136,7 @@ public class Main implements Callable<Integer> {
                 .setOutputFile(outputFile)
                 .setInclude(include)
                 .setLocale(locale)
-                .setStdin(stdin)
+                .setStdin(readFromStdin)
                 .setSources(sources != null ? sources : new ArrayList<>())
                 .setProperties(properties != null ? properties : new HashMap<>())
                 .setWriter(writer(outputFile, sourceEncoding))
