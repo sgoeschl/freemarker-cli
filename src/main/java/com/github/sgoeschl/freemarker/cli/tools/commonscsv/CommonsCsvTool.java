@@ -25,8 +25,12 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.input.BOMInputStream;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
@@ -50,27 +54,102 @@ public class CommonsCsvTool {
         }
     }
 
-    public Map<String, CSVRecord> toMap(CSVParser csvParser, List<CSVRecord> csvRecords, String key) {
-        return toMap(csvRecords, csvParser.getHeaderMap().get(key));
+    public List<String> toKeys(Collection<CSVRecord> csvRecords, String name) {
+        return toKeys(csvRecords, new ValueResolver(name));
     }
 
-    public Map<String, CSVRecord> toMap(List<CSVRecord> csvRecords, Integer index) {
-        return csvRecords.stream().collect(Collectors.toMap(r -> r.get(index), r -> r));
+    public List<String> toKeys(Collection<CSVRecord> csvRecords, Integer index) {
+        return toKeys(csvRecords, new ValueResolver(index));
     }
 
-    public List<String> toKeys(CSVParser csvParser, List<CSVRecord> csvRecords, String key) {
-        return toKeys(csvRecords, csvParser.getHeaderMap().get(key));
+    /**
+     * Map the given value of the CVS record into (key -> record). If duplicates
+     * are encountered return the first occurence of the CVS record. The map
+     * retains the insertion order of they keys.
+     *
+     * @param records records to process
+     * @param name    column name to map
+     */
+    public Map<String, CSVRecord> toMap(Collection<CSVRecord> records, String name) {
+        return toMap(records, new ValueResolver(name));
     }
 
-    public List<String> toKeys(List<CSVRecord> csvRecords, Integer index) {
-        return csvRecords.stream().map(r -> r.get(index)).distinct().collect(toList());
+    /**
+     * Map the given value of the CVS record into (key -> record). If duplicates
+     * are encountered return the first occurence of the CVS record. The map
+     * retains the insertion order of they keys.
+     *
+     * @param records records to process
+     * @param index   column index to map
+     */
+    public Map<String, CSVRecord> toMap(Collection<CSVRecord> records, Integer index) {
+        return toMap(records, new ValueResolver(index));
+    }
+
+    public Map<String, List<CSVRecord>> toMultiMap(Collection<CSVRecord> records, String name) {
+        return toMultiMap(records, new ValueResolver(name));
+    }
+
+    public Map<String, List<CSVRecord>> toMultiMap(Collection<CSVRecord> records, String name, boolean includeEmpty) {
+        return toMultiMap(records, new ValueResolver(name));
+    }
+
+    public Map<String, List<CSVRecord>> toMultiMap(Collection<CSVRecord> records, Integer index) {
+        return toMultiMap(records, new ValueResolver(index));
     }
 
     public CSVPrinter printer(CSVFormat csvFormat) throws IOException {
         return new CSVPrinter(getSettings().getWriter(), csvFormat);
     }
 
+    private List<String> toKeys(Collection<CSVRecord> csvRecords, Function<CSVRecord, String> value) {
+        return csvRecords.stream()
+                .map(value)
+                .distinct()
+                .collect(toList());
+    }
+
+    private Map<String, CSVRecord> toMap(Collection<CSVRecord> records, Function<CSVRecord, String> value) {
+        return records.stream()
+                .collect(Collectors.toMap(
+                        value,
+                        record -> record,
+                        (firstKey, currentKey) -> firstKey,
+                        LinkedHashMap::new
+                ));
+    }
+
+    private Map<String, List<CSVRecord>> toMultiMap(Collection<CSVRecord> records, Function<CSVRecord, String> value) {
+        final Map<String, List<CSVRecord>> result = new LinkedHashMap<>();
+        final List<String> keys = toKeys(records, value);
+        keys.forEach(key -> result.put(key, new ArrayList<>()));
+        records.forEach(record -> result.get(value.apply(record)).add(record));
+        return result;
+    }
+
     Settings getSettings() {
         return settings;
     }
+
+    private static final class ValueResolver implements Function<CSVRecord, String> {
+
+        private final Integer index;
+        private final String name;
+
+        public ValueResolver(Integer index) {
+            this.index = requireNonNull(index);
+            this.name = null;
+        }
+
+        public ValueResolver(String name) {
+            this.index = null;
+            this.name = requireNonNull(name);
+        }
+
+        @Override
+        public String apply(CSVRecord record) {
+            return index != null ? record.get(index) : record.get(name);
+        }
+    }
+
 }

@@ -18,7 +18,7 @@
 <#assign cvsFormat = CSVFormat.DEFAULT.withHeader()>
 <#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
 <#assign records = csvParser.records>
-<#assign csvMap = CSVTool.toMap(csvParser, records, "disposer")>
+<#assign csvMap = CSVTool.toMap(records, "disposer")>
 <#--------------------------------------------------------------------------->
 #!/bin/sh
 

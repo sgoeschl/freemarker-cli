@@ -22,7 +22,7 @@ package com.github.sgoeschl.freemarker.cli;
 public class ManualTest {
 
     private static final String SPACE = " ";
-    private static final String CMD = "-t templates/info.ftl README.md";
+    private static final String CMD = "-b ./src/test -t templates/tools/csv.ftl ./site/sample/csv/contract.csv";
 
     public static void main(String[] args) {
         Main.execute(CMD.split(SPACE));

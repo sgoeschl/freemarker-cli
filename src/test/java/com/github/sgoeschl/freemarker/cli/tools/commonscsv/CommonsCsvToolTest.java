@@ -5,12 +5,14 @@ import com.github.sgoeschl.freemarker.cli.model.Settings;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
+import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
@@ -20,8 +22,10 @@ import static org.apache.commons.csv.CSVFormat.EXCEL;
 
 public class CommonsCsvToolTest {
 
+    private static final String ANY_KEY = "C71";
     private static final String ANY_TEMPLATE = "info.ftl";
     private static final String CONTRACT_ID = "contract_id";
+    private static final int CONTRACT_ID_IDX = 0;
     private static final File BOM_CSV = new File("./site/sample/csv/excel-export-utf8.csv");
     private static final File TEST_CSV = new File("./site/sample/csv/contract.csv");
 
@@ -39,8 +43,9 @@ public class CommonsCsvToolTest {
         final CommonsCsvTool commonsCsvTool = commonsCsvTool();
         final CSVParser parser = commonsCsvTool.parse(document(), DEFAULT.withHeader());
 
-        final List<String> keys = commonsCsvTool.toKeys(parser, parser.getRecords(), CONTRACT_ID);
+        final List<String> keys = commonsCsvTool.toKeys(parser.getRecords(), CONTRACT_ID);
 
+        assertEquals(7, keys.size());
         assertEquals(7, keys.size());
         assertEquals("C71", keys.get(0));
         assertEquals("C72", keys.get(1));
@@ -49,6 +54,28 @@ public class CommonsCsvToolTest {
         assertEquals("C75", keys.get(4));
         assertEquals("C76", keys.get(5));
         assertEquals("C78", keys.get(6));
+    }
+
+    @Test
+    public void shallCreateMapFromCsvRecords() throws IOException {
+        final CommonsCsvTool commonsCsvTool = commonsCsvTool();
+        final CSVParser parser = commonsCsvTool.parse(document(), DEFAULT.withHeader());
+
+        final Map<String, CSVRecord> map = commonsCsvTool.toMap(parser.getRecords(), CONTRACT_ID);
+
+        assertEquals(7, map.size());
+        assertEquals(ANY_KEY, map.get(ANY_KEY).get(CONTRACT_ID_IDX));
+    }
+
+    @Test
+    public void shallCreateMultiMapFromCsvRecords() throws IOException {
+        final CommonsCsvTool commonsCsvTool = commonsCsvTool();
+        final CSVParser parser = commonsCsvTool.parse(document(), DEFAULT.withHeader());
+
+        final Map<String, List<CSVRecord>> map = commonsCsvTool.toMultiMap(parser.getRecords(), CONTRACT_ID);
+
+        assertEquals(7, map.size());
+        assertEquals(ANY_KEY, map.get(ANY_KEY).get(0).get(CONTRACT_ID_IDX));
     }
 
     @Test
