@@ -20,6 +20,4 @@ All notable changes to this project will be documented in this file. We try to a
 - Works as standalone application with OS wrapper scripts
 - Existing templates will break due to naming changes of injected helper classes
 
-## [4.26.0] - 2019-08-29
-
 [2.0.0-BETA-1]: https://github.com/sgoeschl/freemarker-cli/releases/tag/v2.0.0-BETA-1
