@@ -1020,9 +1020,9 @@ Within the script a FreeMarker data model is set up and passed to the template -
 | Helper                | Description                                                         |
 |-----------------------|---------------------------------------------------------------------|
 | CSVFormat             | Available CSV formats, e.g. "DEFAULT", "EXCEL"                      |
-| CSVParser             | CSV parser exposing a `parse` method                                |
-| documents             | List of documents passed on the command line                        |
+| CSVTool               | CSV parser exposing a `parse` method                                |
 | Documents             | Helper to find documents, e.g. by name or extension                 |
+| documents             | List of documents passed on the command line                        |
 | Enums                 | Helper to work with Java enumerations                               |
 | Environment           | Environment variables                                               |
 | ExcelTool             | Excel parser exposing a `parse` method                              |
@@ -1031,7 +1031,6 @@ Within the script a FreeMarker data model is set up and passed to the template -
 | JsoupTool             | Jsoup HTML parser                                                   |
 | ObjectConstructor     | Creata Java instances using reflection                              |
 | PropertiesTool        | Properties parser exposing a `parse` method                         |
-| ReportData            | Bean containing some convinience data, e.g. `user` and `host`       |
 | Statics               | Invoke static Java methods using reflection                         |
 | SystemProperties      | JVM System properties                                               |
 | XmlTool               | XML parser exposing a `parse` method                                |
