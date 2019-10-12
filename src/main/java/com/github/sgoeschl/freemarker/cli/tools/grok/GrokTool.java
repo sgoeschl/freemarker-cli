@@ -14,17 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli;
+package com.github.sgoeschl.freemarker.cli.tools.grok;
 
-/**
- * Invoke freemarker-cli and dump the output for ad-hoc manual testing.
- */
-public class ManualTest {
+import io.krakens.grok.api.Grok;
+import io.krakens.grok.api.GrokCompiler;
 
-    private static final String SPACE = " ";
-    private static final String CMD = "-b ./src/test -t templates/accesslog/combined-access.ftl ./site/sample/accesslog/combined-access.log";
+public class GrokTool {
 
-    public static void main(String[] args) {
-        Main.execute(CMD.split(SPACE));
+    private static final String DEFAULT_PATTERN = "/patterns/patterns";
+
+    private final GrokCompiler grokCompiler;
+
+    public GrokTool() {
+        this.grokCompiler = GrokCompiler.newInstance();
+    }
+
+    public GrokWrapper compile(String pattern) {
+        return compile(DEFAULT_PATTERN, pattern);
+    }
+
+    public GrokWrapper compile(String path, String pattern) {
+        grokCompiler.registerPatternFromClasspath(path);
+        final Grok grok = grokCompiler.compile(pattern);
+        return new GrokWrapper(grok);
     }
 }

@@ -14,17 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli;
+package com.github.sgoeschl.freemarker.cli.tools.grok;
 
-/**
- * Invoke freemarker-cli and dump the output for ad-hoc manual testing.
- */
-public class ManualTest {
+import java.util.HashMap;
+import java.util.Map;
 
-    private static final String SPACE = " ";
-    private static final String CMD = "-b ./src/test -t templates/accesslog/combined-access.ftl ./site/sample/accesslog/combined-access.log";
+public class GrokDataModel {
 
-    public static void main(String[] args) {
-        Main.execute(CMD.split(SPACE));
+    public Map<String, Object> create() {
+        final Map<String, Object> dataModel = new HashMap<>();
+        dataModel.put("GrokTool", new GrokTool());
+        return dataModel;
     }
 }

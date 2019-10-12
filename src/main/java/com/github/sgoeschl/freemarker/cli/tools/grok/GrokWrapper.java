@@ -14,17 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli;
+package com.github.sgoeschl.freemarker.cli.tools.grok;
 
-/**
- * Invoke freemarker-cli and dump the output for ad-hoc manual testing.
- */
-public class ManualTest {
+import com.github.sgoeschl.freemarker.cli.util.ObjectUtils;
+import io.krakens.grok.api.Grok;
+import io.krakens.grok.api.Match;
 
-    private static final String SPACE = " ";
-    private static final String CMD = "-b ./src/test -t templates/accesslog/combined-access.ftl ./site/sample/accesslog/combined-access.log";
+import java.util.Collections;
+import java.util.Map;
 
-    public static void main(String[] args) {
-        Main.execute(CMD.split(SPACE));
+import static java.util.Objects.requireNonNull;
+
+public class GrokWrapper {
+
+    private final Grok grok;
+
+    public GrokWrapper(Grok grok) {
+        this.grok = requireNonNull(grok);
+    }
+
+    public Map<String, Object> match(String line) {
+        if (ObjectUtils.isNullOrEmtpty(line)) {
+            return Collections.emptyMap();
+        }
+
+        final Match gm = grok.match(line);
+        final Map<String, Object> capture = gm.capture();
+        return capture;
     }
 }

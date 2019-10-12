@@ -21,6 +21,7 @@ import com.github.sgoeschl.freemarker.cli.tools.commonscsv.CommonsCsvDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.environment.EnvironmentDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.excel.ExcelDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.freemarker.FreeMarkerDataModel;
+import com.github.sgoeschl.freemarker.cli.tools.grok.GrokDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.jsonpath.JsonPathDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.jsoup.JsoupDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.propertiesparser.PropertiesParserDataModel;
@@ -49,6 +50,7 @@ public class Tools {
 
         dataModel.putAll(new CommonsCsvDataModel(settings).create());
         dataModel.putAll(new ExcelDataModel().create());
+        dataModel.putAll(new GrokDataModel().create());
         dataModel.putAll(new JsonPathDataModel().create());
         dataModel.putAll(new JsoupDataModel().create());
         dataModel.putAll(new PropertiesParserDataModel().create());
