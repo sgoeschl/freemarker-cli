@@ -4,7 +4,7 @@
 
 You somehow found this GitHub project and wonder if it solves a problem you might have?!
 
-* You need to transform some structured text document (CSV, HTML, JSON, XML, YAML, Java Property files) into CSV, HTML, Markdown or Confluence markup?
+* You need to transform some structured text document (CSV, HTML, JSON, XML, YAML, Java Property files, access logs) into CSV, HTML, Markdown or Confluence markup?
 * You need to convert an Excel document into CSV, HTML or Markdown?
 * You need to create a nice-looking PDF from some boring-looking CSV or JSON content ?
 
@@ -27,6 +27,7 @@ templates/csv/fo/transactions.ftl
 fop -fo target/out/transactions.fo target/out/transactions-fo.pdf
 templates/csv/html/transform.ftl
 wkhtmltopdf -O landscape target/out/transactions.html target/out/transactions-html.pdf
+templates/accesslog/combined-access.ftl
 templates/excel/html/transform.ftl
 templates/excel/md/transform.ftl
 templates/excel/csv/transform.ftl
@@ -41,34 +42,36 @@ templates/properties/csv/locker-test-users.ftl
 templates/yaml/txt/transform.ftl
 templates/xml/txt/recipients.ftl
 Created the following sample files in ./target/out
-total 1208
--rw-r--r--  1 sgoeschl  staff   22548 Oct 11 23:16 contract.html
--rw-r--r--  1 sgoeschl  staff    7933 Oct 11 23:16 contract.md
--rw-r--r--  1 sgoeschl  staff     784 Oct 11 23:16 curl.sh
--rw-r--r--  1 sgoeschl  staff  103487 Oct 11 23:16 customer-user-products.html
--rw-r--r--  1 sgoeschl  staff   34990 Oct 11 23:16 customer-user-products.md
--rw-r--r--  1 sgoeschl  staff  113654 Oct 11 23:16 customer-user-products.pdf
--rw-r--r--  1 sgoeschl  staff     232 Oct 11 23:16 customer.txt
--rw-r--r--  1 sgoeschl  staff    5917 Oct 11 23:16 demo.txt
--rw-r--r--  1 sgoeschl  staff    1310 Oct 11 23:16 dependencies.csv
--rw-r--r--  1 sgoeschl  staff    2029 Oct 11 23:16 github-users-curl.md
--rw-r--r--  1 sgoeschl  staff     239 Oct 11 23:16 locker-test-users.csv
--rw-r--r--  1 sgoeschl  staff    6288 Oct 11 23:16 locker-test-users.fo
--rw-r--r--@ 1 sgoeschl  staff    5488 Oct 11 23:16 locker-test-users.pdf
--rw-r--r--  1 sgoeschl  staff     921 Oct 11 23:16 recipients.txt
--rw-r--r--  1 sgoeschl  staff     341 Oct 11 23:16 swagger-spec.csv
--rw-r--r--  1 sgoeschl  staff     156 Oct 11 23:16 test-multiple-sheets.xlsx.csv
--rw-r--r--  1 sgoeschl  staff    1917 Oct 11 23:16 test-multiple-sheets.xlsx.html
--rw-r--r--  1 sgoeschl  staff     389 Oct 11 23:16 test-multiple-sheets.xlsx.md
--rw-r--r--  1 sgoeschl  staff     150 Oct 11 23:16 test-transform-xls.csv
--rw-r--r--  1 sgoeschl  staff    1556 Oct 11 23:16 test.xls.html
--rw-r--r--  1 sgoeschl  staff    1558 Oct 11 23:16 test.xslx.html
--rw-r--r--  1 sgoeschl  staff   11334 Oct 11 23:16 transactions-fo.pdf
--rw-r--r--  1 sgoeschl  staff   33235 Oct 11 23:16 transactions-html.pdf
--rw-r--r--  1 sgoeschl  staff  106441 Oct 11 23:16 transactions.fo
--rw-r--r--  1 sgoeschl  staff   18126 Oct 11 23:16 transactions.html
-
+total 1072
+-rw-r--r--  1 sgoeschl  staff     646 Oct 12 22:10 combined-access.log.txt
+-rw-r--r--  1 sgoeschl  staff   22548 Oct 12 22:10 contract.html
+-rw-r--r--  1 sgoeschl  staff    7933 Oct 12 22:10 contract.md
+-rw-r--r--  1 sgoeschl  staff     784 Oct 12 22:10 curl.sh
+-rw-r--r--  1 sgoeschl  staff  103487 Oct 12 22:11 customer-user-products.html
+-rw-r--r--  1 sgoeschl  staff   34990 Oct 12 22:11 customer-user-products.md
+-rw-r--r--  1 sgoeschl  staff  113615 Oct 12 22:11 customer-user-products.pdf
+-rw-r--r--  1 sgoeschl  staff     232 Oct 12 22:11 customer.txt
+-rw-r--r--  1 sgoeschl  staff    5928 Oct 12 22:10 demo.txt
+-rw-r--r--  1 sgoeschl  staff    1310 Oct 12 22:11 dependencies.csv
+-rw-r--r--  1 sgoeschl  staff    2029 Oct 12 22:11 github-users-curl.md
+-rw-r--r--  1 sgoeschl  staff     239 Oct 12 22:11 locker-test-users.csv
+-rw-r--r--  1 sgoeschl  staff    6288 Oct 12 22:10 locker-test-users.fo
+-rw-r--r--  1 sgoeschl  staff    5488 Oct 12 22:10 locker-test-users.pdf
+-rw-r--r--  1 sgoeschl  staff     921 Oct 12 22:11 recipients.txt
+-rw-r--r--  1 sgoeschl  staff     341 Oct 12 22:11 swagger-spec.csv
+-rw-r--r--  1 sgoeschl  staff     156 Oct 12 22:11 test-multiple-sheets.xlsx.csv
+-rw-r--r--  1 sgoeschl  staff    1917 Oct 12 22:11 test-multiple-sheets.xlsx.html
+-rw-r--r--  1 sgoeschl  staff     389 Oct 12 22:11 test-multiple-sheets.xlsx.md
+-rw-r--r--  1 sgoeschl  staff     150 Oct 12 22:11 test-transform-xls.csv
+-rw-r--r--  1 sgoeschl  staff    1556 Oct 12 22:10 test.xls.html
+-rw-r--r--  1 sgoeschl  staff    1558 Oct 12 22:10 test.xslx.html
+-rw-r--r--  1 sgoeschl  staff   11333 Oct 12 22:10 transactions-fo.pdf
+-rw-r--r--  1 sgoeschl  staff   33235 Oct 12 22:10 transactions-html.pdf
+-rw-r--r--  1 sgoeschl  staff  106441 Oct 12 22:10 transactions.fo
+-rw-r--r--  1 sgoeschl  staff   18126 Oct 12 22:10 transactions.html
 ```
+
+Please note that genrated PDF files are very likely not found since they require installation of `wkhtmltopdf` and `Apache FOP`.
 
 # 2. Once Upon A Time
 
@@ -779,7 +782,61 @@ time,user,status,duration,size
 2019-09-27T21:02:54,DDDDDDD,200,0.528268,206
 ```
 
-## 5.11 Using Advanced FreeMarker Features
+## 5.11 Unleashing The Power Of Grok
+
+Think of `Grok` as modular regular expressions with a pre-defined functionality to parse access logs or any other data where you can't comprehend the regular expression any longer, one very simple example is `QUOTEDSTRING`
+
+```
+QUOTEDSTRING (?>(?<!\\)(?>"(?>\\.|[^\\"]+)+"|""|(?>'(?>\\.|[^\\']+)+')|''|(?>`(?>\\.|[^\\`]+)+`)|``))
+```
+
+And with `Grok` the `QUOTEDSTRING` is just a building block for an even more complex regular expession such as `COMBINEDAPACHELOG`
+
+> bin/freemarker-cli -t templates/accesslog/combined-access.ftl site/sample/accesslog/combined-access.log 
+
+which gives you the following output
+
+```
+TIMESTAMP;VERB;REQUEST;HTTPVERSION
+19/Jun/2005:06:44:17 +0200;GET;/wximages/wxwidgets02-small.png;1.1
+19/Jun/2005:06:46:05 +0200;GET;/wximages/wxwidgets02-small.png;1.1
+19/Jun/2005:06:47:37 +0200;GET;/wximages/wxwidgets02-small.png;1.1
+19/Jun/2005:06:48:40 +0200;GET;/wiki.pl?WxWidgets_Bounties;1.1
+19/Jun/2005:06:50:49 +0200;GET;/wiki.pl?WxWidgets_Compared_To_Other_Toolkits;1.1
+19/Jun/2005:06:50:49 +0200;GET;/wxwiki.css;1.1
+19/Jun/2005:06:50:49 +0200;GET;/wximages/wxwidgets02-small.png;1.1
+19/Jun/2005:06:50:50 +0200;GET;/favicon.ico;1.1
+19/Jun/2005:06:52:36 +0200;GET;/wximages/wxwidgets02-small.png;1.1
+19/Jun/2005:06:53:14 +0200;GET;/;1.0
+```
+
+using the following FreeMarker template
+
+```
+<#ftl output_format="plainText" strip_whitespace=true>
+<#assign grok = GrokTool.compile("%{COMBINEDAPACHELOG}")>
+<#assign lines = documents[0].getLineIterator()>
+
+<#compress>
+    TIMESTAMP;VERB;REQUEST;HTTPVERSION
+    <#list lines as line>
+        <#assign parts = grok.match(line)>
+        <#assign timestamp = parts["timestamp"]>
+        <#assign verb = parts["verb"]>
+        <#assign request = parts["request"]>
+        <#assign httpversion = parts["httpversion"]>
+        ${timestamp};${verb};${request};${httpversion}
+    </#list>
+</#compress>
+```
+
+While this looks small and tidy there are some nifty features
+
+* `GrokTool.compile("%{COMBINEDAPACHELOG}")` builds the `Grok` instance to parse access logs in `Combined Format`
+* The source document is streamed line by line and not loaded into memory in one piece
+* This also works for using `stdin` so are able to parse GB of access log or other files
+
+## 5.12 Using Advanced FreeMarker Features
 
 There is a `demo.ftl` which shows some advanced FreeMarker functionality
 
@@ -969,6 +1026,7 @@ Within the script a FreeMarker data model is set up and passed to the template -
 | Enums                 | Helper to work with Java enumerations                               |
 | Environment           | Environment variables                                               |
 | ExcelTool             | Excel parser exposing a `parse` method                              |
+| GrokTool              | Use Grok for powerful regular expressions                           |
 | JsonPathTool          | JSON Parser                                                         |
 | JsoupTool             | Jsoup HTML parser                                                   |
 | ObjectConstructor     | Creata Java instances using reflection                              |

@@ -72,12 +72,17 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunYamlExamples() throws IOException {
-        assertValid(execute("-t ./templates/yaml/txt/transform.ftl ./site/sample/yaml/customer.yaml"));
+        assertValid(execute("-t templates/yaml/txt/transform.ftl ./site/sample/yaml/customer.yaml"));
     }
 
     @Test
     public void shouldRunXmlExamples() throws IOException {
-        assertValid(execute("-t ./templates/xml/txt/recipients.ftl site/sample/xml/recipients.xml"));
+        assertValid(execute("-t templates/xml/txt/recipients.ftl site/sample/xml/recipients.xml"));
+    }
+
+    @Test
+    public void shouldRunGrokExamples() throws IOException {
+        assertValid(execute("-t templates/accesslog/combined-access.ftl site/sample/accesslog/combined-access.log "));
     }
 
     private static void assertValid(String output) {

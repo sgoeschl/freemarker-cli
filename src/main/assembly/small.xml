@@ -31,17 +31,20 @@
             <unpack>true</unpack>
             <scope>runtime</scope>
             <excludes>
-                <exclude>org.jsoup:jsoup</exclude>
                 <exclude>com.github.virtuald:curvesapi</exclude>
                 <exclude>commons-codec:commons-codec</exclude>
-                <exclude>org.apache.commons:commons-compress</exclude>
+                <exclude>io.krakens:java-grok</exclude>
                 <exclude>org.apache.commons:commons-collections4</exclude>
+                <exclude>org.apache.commons:commons-compress</exclude>
+                <exclude>org.apache.commons:commons-csv</exclude>
+                <exclude>org.apache.commons:commons-lang3</exclude>
                 <exclude>org.apache.commons:commons-math3</exclude>
                 <exclude>org.apache.xmlbeans:xmlbeans</exclude>
                 <exclude>org.apache.poi:poi</exclude>
                 <exclude>org.apache.poi:poi-ooxml</exclude>
                 <exclude>org.apache.poi:poi-ooxml-schemas</exclude>
                 <exclude>org.apache.poi:poi-ooxml-schemas</exclude>
+                <exclude>org.jsoup:jsoup</exclude>
             </excludes>
         </dependencySet>
     </dependencySets>

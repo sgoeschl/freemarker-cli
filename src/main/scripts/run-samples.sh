@@ -52,13 +52,19 @@ fi
 #############################################################################
 
 echo "templates/csv/html/transform.ftl"
-
 $FREEMARKER_CMD -t templates/csv/html/transactions.ftl site/sample/csv/transactions.csv > target/out/transactions.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 if hash wkhtmltopdf 2>/dev/null; then
 	echo "wkhtmltopdf -O landscape target/out/transactions.html target/out/transactions-html.pdf"
     wkhtmltopdf -O landscape target/out/transactions.html target/out/transactions-html.pdf 2>/dev/null || { echo >&2 "Test failed.  Aborting."; exit 1; }
 fi
+
+#############################################################################
+# Grok
+#############################################################################
+
+echo "templates/accesslog/combined-access.ftl"
+$FREEMARKER_CMD -t templates/accesslog/combined-access.ftl site/sample/accesslog/combined-access.log > target/out/combined-access.log.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # Excel
