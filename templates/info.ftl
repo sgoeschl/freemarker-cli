@@ -32,13 +32,12 @@ Documents
 [${document?counter}] ${document.name}, ${document.location}, ${document.length} Bytes
 </#list>
 </#if>
-<#if SystemTool.getSettings().getProperties()?has_content>
+
 User Supplied Properties
 ---------------------------------------------------------------------------
 <#list SystemTool.getSettings().getProperties() as name,value>
 - ${name} ==> ${value}
 </#list>
-</#if>
 
 Template Directories
 ---------------------------------------------------------------------------

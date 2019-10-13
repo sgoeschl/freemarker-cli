@@ -98,7 +98,7 @@ public class FreeMarkerTask implements Callable<Integer> {
 
         // Add optional document from STDIN at the start of the list since
         // this allows easy sequence slicing in FreeMarker.
-        if (settings.isStdin()) {
+        if (settings.isReadFromStdin()) {
             documents.add(0, new Document("stdin", System.in));
         }
 

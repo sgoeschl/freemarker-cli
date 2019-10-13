@@ -24,6 +24,10 @@ import freemarker.template.utility.ObjectConstructor;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Expose a few internal helper classes from Freemarker for advanced
+ * Java integration.
+ */
 public class FreeMarkerDataModel {
 
     public Map<String, Object> create() {

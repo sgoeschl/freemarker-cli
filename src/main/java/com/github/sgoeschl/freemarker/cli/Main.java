@@ -29,6 +29,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -57,7 +58,8 @@ public class Main implements Callable<Integer> {
     @Option(names = { "--output-encoding" }, description = "Encoding of output file, e.g. UTF-8", defaultValue = "UTF-8")
     String outputEncoding;
 
-    @Option(names = { "-v", "--verbose" }, description = "Verbose mode")
+    // Curretnly useless since we don't have verbose output
+    // @Option(names = { "-v", "--verbose" }, description = "Verbose mode")
     private boolean verbose;
 
     @Option(names = { "-o", "--output" }, description = "Output file")
@@ -74,6 +76,9 @@ public class Main implements Callable<Integer> {
 
     @Option(names = { "-D" }, description = "Set a system property")
     private Map<String, String> properties;
+
+    @Option(names = { "-E", "--expose-env" }, description = "Expose environment variables")
+    private boolean isEnvironmentExposed;
 
     @Parameters(description = "Any number of input source files and/or directories")
     private List<String> sources;
@@ -124,8 +129,6 @@ public class Main implements Callable<Integer> {
 
         final List<File> templateDirectories = getTemplateDirectories(baseDir);
 
-        final Properties gitProperties = getGitProperties();
-
         final Settings settings = Settings.builder()
                 .setArgs(args)
                 .setTemplateDirectories(templateDirectories)
@@ -136,7 +139,8 @@ public class Main implements Callable<Integer> {
                 .setOutputFile(outputFile)
                 .setInclude(include)
                 .setLocale(locale)
-                .setStdin(readFromStdin)
+                .isReadFromStdin(readFromStdin)
+                .isEnvironmentExposed(isEnvironmentExposed)
                 .setSources(sources != null ? sources : new ArrayList<>())
                 .setProperties(properties != null ? properties : new HashMap<>())
                 .setWriter(writer(outputFile, sourceEncoding))
@@ -210,12 +214,13 @@ public class Main implements Callable<Integer> {
         }
 
         private static Properties getGitProperties() {
-            final Properties properties;
-            try {
-                properties = new Properties();
-                properties.load(Main.class.getClassLoader().getResourceAsStream("git.properties"));
-            } catch (IOException e) {
-                return new Properties();
+            final Properties properties = new Properties();
+            try (InputStream is = Main.class.getClassLoader().getResourceAsStream("git.properties")) {
+                if (is != null) {
+                    properties.load(is);
+                }
+            } catch (Exception e) {
+                return properties;
             }
             return properties;
         }

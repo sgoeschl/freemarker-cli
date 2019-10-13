@@ -44,7 +44,7 @@ public class Tools {
     public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();
 
-        dataModel.putAll(new EnvironmentDataModel().create());
+        dataModel.putAll(new EnvironmentDataModel(settings).create());
         dataModel.putAll(new FreeMarkerDataModel().create());
         dataModel.putAll(new SystemPropertiesDataModel().create());
 

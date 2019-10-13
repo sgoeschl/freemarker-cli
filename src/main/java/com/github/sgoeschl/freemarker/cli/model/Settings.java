@@ -62,8 +62,11 @@ public class Settings {
     /** The locale to use for rendering */
     private final Locale locale;
 
-    /** Read from "System.in" */
-    private final boolean stdin;
+    /** Read from "System.in"? */
+    private final boolean isReadFromStdin;
+
+    /** Expose environment variables ins data model? */
+    private final boolean isEnvironmentExposed;
 
     /** User-supplied list of source files or directories */
     private final List<String> sources;
@@ -84,7 +87,8 @@ public class Settings {
             File outputFile,
             String include,
             Locale locale,
-            boolean stdin,
+            boolean isReadFromStdin,
+            boolean isEnvironmentExposed,
             List<String> sources,
             Map<String, String> properties,
             Writer writer) {
@@ -97,7 +101,8 @@ public class Settings {
         this.outputFile = outputFile;
         this.include = include;
         this.locale = requireNonNull(locale);
-        this.stdin = stdin;
+        this.isReadFromStdin = isReadFromStdin;
+        this.isEnvironmentExposed = isEnvironmentExposed;
         this.sources = requireNonNull(sources);
         this.properties = requireNonNull(properties);
         this.writer = requireNonNull(writer);
@@ -147,8 +152,12 @@ public class Settings {
         return locale;
     }
 
-    public boolean isStdin() {
-        return stdin;
+    public boolean isReadFromStdin() {
+        return isReadFromStdin;
+    }
+
+    public boolean isEnvironmentExposed() {
+        return isEnvironmentExposed;
     }
 
     public List<String> getSources() {
@@ -170,8 +179,8 @@ public class Settings {
     @Override
     public String toString() {
         return "Settings{" +
-                "args='" + args + '\'' +
-                ", templateDirectories='" + templateDirectories + '\'' +
+                "args=" + args +
+                ", templateDirectories=" + templateDirectories +
                 ", template='" + template + '\'' +
                 ", sourceEncoding=" + sourceEncoding +
                 ", outputEncoding=" + outputEncoding +
@@ -179,9 +188,15 @@ public class Settings {
                 ", outputFile=" + outputFile +
                 ", include='" + include + '\'' +
                 ", locale=" + locale +
-                ", stdin='" + stdin + '\'' +
+                ", isReadFromStdin=" + isReadFromStdin +
+                ", isEnvironmentExposed=" + isEnvironmentExposed +
                 ", sources=" + sources +
                 ", properties=" + properties +
+                ", writer=" + writer +
+                ", templateEncoding=" + getTemplateEncoding() +
+                ", readFromStdin=" + isReadFromStdin() +
+                ", environmentExposed=" + isEnvironmentExposed() +
+                ", hasOutputFile=" + hasOutputFile() +
                 '}';
     }
 
@@ -195,7 +210,8 @@ public class Settings {
         private String outputFile;
         private String include;
         private String locale;
-        private boolean stdin;
+        private boolean isReadFromStdin;
+        private boolean isEnvironmentExposed;
         private List<String> sources;
         private Map<String, String> properties;
         private Writer writer;
@@ -259,8 +275,13 @@ public class Settings {
             return this;
         }
 
-        public SettingsBuilder setStdin(boolean stdin) {
-            this.stdin = stdin;
+        public SettingsBuilder isReadFromStdin(boolean stdin) {
+            this.isReadFromStdin = stdin;
+            return this;
+        }
+
+        public SettingsBuilder isEnvironmentExposed(boolean isEnvironmentExposed) {
+            this.isEnvironmentExposed = isEnvironmentExposed;
             return this;
         }
 
@@ -293,7 +314,8 @@ public class Settings {
                     outputFile != null ? new File(outputFile) : null,
                     include,
                     parseLocale(locale),
-                    stdin,
+                    isReadFromStdin,
+                    isEnvironmentExposed,
                     sources,
                     properties,
                     writer

@@ -16,14 +16,31 @@
  */
 package com.github.sgoeschl.freemarker.cli.tools.environment;
 
+import com.github.sgoeschl.freemarker.cli.model.Settings;
+
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Objects.requireNonNull;
+
 public class EnvironmentDataModel {
+
+    private Settings settings;
+
+    public EnvironmentDataModel(Settings settings) {
+        this.settings = requireNonNull(settings);
+    }
 
     public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("Environment", System.getenv());
+        final Map<String, String> env = System.getenv();
+
+        dataModel.put("Environment", env);
+
+        if (settings.isEnvironmentExposed()) {
+            dataModel.putAll(env);
+        }
+
         return dataModel;
     }
 }
