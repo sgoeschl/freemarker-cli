@@ -46,7 +46,7 @@ import static java.util.Objects.requireNonNull;
 @Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
 public class Main implements Callable<Integer> {
 
-    @Option(names = { "-b", "--basedir" }, description = "Base directory to resolve FreeMarker templates")
+    @Option(names = { "-b", "--basedir" }, description = "Additional template directory to resolve FreeMarker templates")
     private String baseDir;
 
     @Option(names = { "-t", "--template" }, description = "FreeMarker template used for rendering", required = true)
@@ -60,7 +60,7 @@ public class Main implements Callable<Integer> {
 
     // Curretnly useless since we don't have verbose output
     // @Option(names = { "-v", "--verbose" }, description = "Verbose mode")
-    private boolean verbose;
+    // private boolean verbose;
 
     @Option(names = { "-o", "--output" }, description = "Output file")
     private String outputFile;
@@ -85,9 +85,6 @@ public class Main implements Callable<Integer> {
 
     /** User-supplied command line parameters */
     private final String[] args;
-
-    /** The content from "stdin" */
-    private String stdin;
 
     /** User-supplied writer */
     private Writer userSuppliedWriter;
@@ -135,7 +132,6 @@ public class Main implements Callable<Integer> {
                 .setTemplateName(template)
                 .setSourceEncoding(sourceEncoding)
                 .setOutputEncoding(outputEncoding)
-                .setVerbose(verbose)
                 .setOutputFile(outputFile)
                 .setInclude(include)
                 .setLocale(locale)
@@ -181,18 +177,6 @@ public class Main implements Callable<Integer> {
 
     private static List<File> getTemplateDirectories(String baseDir) {
         return new TemplateDirectoryResolver(baseDir).resolve();
-    }
-
-    private static Properties getGitProperties() {
-        Properties properties = null;
-        try {
-            properties = new Properties();
-            properties.load(Main.class.getClassLoader().getResourceAsStream("git.properties"));
-        } catch (IOException e) {
-            System.err.println("Error detected");
-            e.printStackTrace();
-        }
-        return properties;
     }
 
     public static final class GitVersionProvider implements IVersionProvider {

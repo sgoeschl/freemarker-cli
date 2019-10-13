@@ -41,7 +41,7 @@ public class Settings {
     /** Optional template directories */
     private final List<File> templateDirectories;
 
-    /** Template to be rendered */
+    /** Name of the template to be loaded and rendered */
     private final String templateName;
 
     /** Encoding of source files */
