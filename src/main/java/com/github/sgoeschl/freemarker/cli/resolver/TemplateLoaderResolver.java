@@ -24,22 +24,28 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import static java.util.Objects.requireNonNull;
+
 public class TemplateLoaderResolver {
 
     private final List<File> templateDirectories;
 
     public TemplateLoaderResolver(List<File> templateDirectories) {
-        this.templateDirectories = templateDirectories;
+        this.templateDirectories = requireNonNull(templateDirectories);
     }
 
     public TemplateLoader resolve() {
+        return multiTemplateLoader(templateDirectories);
+    }
+
+    private static MultiTemplateLoader multiTemplateLoader(List<File> templateDirectories) {
         return new MultiTemplateLoader(
                 templateDirectories.stream()
-                        .map(this::fileTemplateLoader)
+                        .map(TemplateLoaderResolver::fileTemplateLoader)
                         .toArray(TemplateLoader[]::new));
     }
 
-    private FileTemplateLoader fileTemplateLoader(File directory) {
+    private static FileTemplateLoader fileTemplateLoader(File directory) {
         try {
             return new FileTemplateLoader(directory);
         } catch (IOException e) {

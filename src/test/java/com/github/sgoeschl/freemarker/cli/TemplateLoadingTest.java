@@ -16,27 +16,32 @@
  */
 package com.github.sgoeschl.freemarker.cli;
 
+import org.apache.commons.io.output.NullWriter;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
-public class UserSuppliedLocaleTest extends AbstractMainTest {
+public class TemplateLoadingTest extends AbstractMainTest {
+
+    private static final int SUCCESS = 0;
+    private static final String ANY_TEMPLATE_NAME = "templates/info.ftl";
+    private static final String currDir = System.getProperty("user.dir", ".");
 
     @Test
-    public void shouldUserGermanLocalForRenderingTemplate() throws IOException {
-        final String output = execute("-b ./src/test -l de -t templates/locale.ftl README.md");
+    public void shouldLoadRelativeTemplate() throws IOException {
+        final String[] args = new String[] { "-t", ANY_TEMPLATE_NAME };
 
-        assertTrue(output.contains("3,142"));
-        assertTrue(output.contains("99.999,99"));
+        assertEquals(SUCCESS, Main.execute(args, new NullWriter()));
     }
 
     @Test
-    public void shouldUserEnglishLocalForRenderingTemplate() throws IOException {
-        final String output = execute("-b ./src/test -l en -t templates/locale.ftl README.md");
+    public void shouldLoadAbsoluteTemplate() throws IOException {
+        final String absoluteFileName = new File(currDir, ANY_TEMPLATE_NAME).getAbsolutePath();
+        final String[] args = new String[] { "-t", absoluteFileName };
 
-        assertTrue(output.contains("3.142"));
-        assertTrue(output.contains("99,999.99"));
+        assertEquals(SUCCESS, Main.execute(args, new NullWriter()));
     }
 }

@@ -42,7 +42,7 @@ public class Settings {
     private final List<File> templateDirectories;
 
     /** Template to be rendered */
-    private final String template;
+    private final String templateName;
 
     /** Encoding of source files */
     private final Charset sourceEncoding;
@@ -94,7 +94,7 @@ public class Settings {
             Writer writer) {
         this.args = requireNonNull(args);
         this.templateDirectories = requireNonNull(templateDirectories);
-        this.template = requireNonNull(template);
+        this.templateName = requireNonNull(template);
         this.sourceEncoding = sourceEncoding;
         this.outputEncoding = outputEncoding;
         this.verbose = verbose;
@@ -120,8 +120,8 @@ public class Settings {
         return templateDirectories;
     }
 
-    public String getTemplate() {
-        return template;
+    public String getTemplateName() {
+        return templateName;
     }
 
     public Charset getSourceEncoding() {
@@ -181,7 +181,7 @@ public class Settings {
         return "Settings{" +
                 "args=" + args +
                 ", templateDirectories=" + templateDirectories +
-                ", template='" + template + '\'' +
+                ", templateName='" + templateName + '\'' +
                 ", sourceEncoding=" + sourceEncoding +
                 ", outputEncoding=" + outputEncoding +
                 ", verbose=" + verbose +
@@ -203,7 +203,7 @@ public class Settings {
     public static class SettingsBuilder {
         private List<String> args;
         private List<File> templateDirectories;
-        private String template;
+        private String templateName;
         private String sourceEncoding;
         private String outputEncoding;
         private boolean verbose;
@@ -240,8 +240,8 @@ public class Settings {
             return this;
         }
 
-        public SettingsBuilder setTemplate(String template) {
-            this.template = template;
+        public SettingsBuilder setTemplateName(String templateName) {
+            this.templateName = templateName;
             return this;
         }
 
@@ -307,7 +307,7 @@ public class Settings {
             return new Settings(
                     args,
                     templateDirectories,
-                    template,
+                    templateName,
                     sourceEncoding,
                     outputEncoding,
                     verbose,

@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file. We try to a
 - Support for streaming textual content over `System.in` to allow processing of arbitrary large source files
 - Display Git version information when using `-V` command line option
 
+### Fixed
+- Allow absolute template file names which are loaded directly instead of using TemplateLoaders
+
 ## [2.0.0-BETA-1] - 2019-10-12
 
 ### Added

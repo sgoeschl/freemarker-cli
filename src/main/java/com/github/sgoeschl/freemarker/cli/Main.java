@@ -132,7 +132,7 @@ public class Main implements Callable<Integer> {
         final Settings settings = Settings.builder()
                 .setArgs(args)
                 .setTemplateDirectories(templateDirectories)
-                .setTemplate(template)
+                .setTemplateName(template)
                 .setSourceEncoding(sourceEncoding)
                 .setOutputEncoding(outputEncoding)
                 .setVerbose(verbose)

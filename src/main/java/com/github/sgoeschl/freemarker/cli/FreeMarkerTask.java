@@ -28,7 +28,10 @@ import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,7 +56,7 @@ public class FreeMarkerTask implements Callable<Integer> {
             final Documents documents = documents();
             final Configuration configuration = configuration();
             final Map<String, Object> dataModel = dataModel(documents);
-            final Template template = configuration.getTemplate(settings.getTemplate());
+            final Template template = getTemplate(settings, configuration);
 
             try (Writer out = settings.getWriter()) {
                 template.process(dataModel, out);
@@ -63,7 +66,7 @@ public class FreeMarkerTask implements Callable<Integer> {
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to render FreeMarker Template: " + settings.getTemplate(), e);
+            throw new RuntimeException("Failed to render FreeMarker Template: " + settings.getTemplateName(), e);
         }
     }
 
@@ -77,6 +80,23 @@ public class FreeMarkerTask implements Callable<Integer> {
         configuration.setOutputEncoding(settings.getOutputEncoding().name());
         configuration.setLocale(settings.getLocale());
         return configuration;
+    }
+
+    /**
+     * Loading FreeMarker templates from absolute paths is not encouraged due to security
+     * concern (see https://freemarker.apache.org/docs/pgui_config_templateloading.html#autoid_42)
+     * which are mostly irrelevant when running on the command line. So we resolve the absolute file
+     * instead of relyong on existing template loaders.
+     */
+    private Template getTemplate(Settings settings, Configuration configuration) throws IOException {
+        final File templateFile = new File(settings.getTemplateName());
+        if (isAbsoluteTemplateFile(templateFile)) {
+            return new Template(settings.getTemplateName(),
+                    FileUtils.readFileToString(templateFile, settings.getTemplateEncoding()),
+                    configuration);
+        } else {
+            return configuration.getTemplate(settings.getTemplateName());
+        }
     }
 
     private DefaultObjectWrapper objectWrapper() {
@@ -111,5 +131,9 @@ public class FreeMarkerTask implements Callable<Integer> {
 
     private TemplateLoader templateLoader() {
         return new TemplateLoaderResolver(settings.getTemplateDirectories()).resolve();
+    }
+
+    private boolean isAbsoluteTemplateFile(File file) {
+        return file.isAbsolute() && file.exists() & !file.isDirectory();
     }
 }

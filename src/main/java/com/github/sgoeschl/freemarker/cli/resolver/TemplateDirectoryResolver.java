@@ -23,6 +23,15 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 
+/**
+ * Determine a list of directories to load a relative template file in the following order
+ * <ol>
+ *    <li>User-defined template directory</li>
+ *    <li>Current working directory</li>
+ *    <li>~/.freemarker-cli</li>
+ *    <li>Application installation directory</li>
+ * </ol>
+ */
 public class TemplateDirectoryResolver {
 
     private static final String UNDEFINED = "__undefined__";
@@ -39,11 +48,11 @@ public class TemplateDirectoryResolver {
     /** The user's "freemarker-cli" directory */
     private static final String USER_CONFIGURATION_DIR_NAME = ".freemarker-cli";
 
-    /** User-supplied base directory for template search */
-    private final String baseDir;
+    /** User-supplied template directory */
+    private final String userSuppliedTemplateDir;
 
-    public TemplateDirectoryResolver(String baseDir) {
-        this.baseDir = baseDir;
+    public TemplateDirectoryResolver(String userSuppliedTemplateDir) {
+        this.userSuppliedTemplateDir = userSuppliedTemplateDir;
     }
 
     public List<File> resolve() {
@@ -51,13 +60,13 @@ public class TemplateDirectoryResolver {
         final File userHomeDir = new File(System.getProperty(USER_HOME, UNDEFINED));
         final File currentWorkingDir = new File(System.getProperty(USER_DIR, UNDEFINED));
         final File userConfigDir = new File(userHomeDir, USER_CONFIGURATION_DIR_NAME);
-        final File userBaseDir = baseDir != null ? new File(baseDir) : null;
+        final File userTemplateDir = userSuppliedTemplateDir != null ? new File(userSuppliedTemplateDir) : null;
 
         final List<File> loaders = new ArrayList<>(asList(
                 applicationDir,
                 userConfigDir,
                 currentWorkingDir,
-                userBaseDir));
+                userTemplateDir));
 
         return loaders.stream()
                 .filter(TemplateDirectoryResolver::isTemplateDirectory)
