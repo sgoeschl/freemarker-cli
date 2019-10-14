@@ -139,7 +139,7 @@ public class Main implements Callable<Integer> {
                 .isEnvironmentExposed(isEnvironmentExposed)
                 .setSources(sources != null ? sources : new ArrayList<>())
                 .setProperties(properties != null ? properties : new HashMap<>())
-                .setWriter(writer(outputFile, sourceEncoding))
+                .setWriter(writer(outputFile, outputEncoding))
                 .build();
 
         try {

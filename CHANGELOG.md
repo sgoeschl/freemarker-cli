@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file. We try to a
 - Display Git version information when using `-V` command line option
 
 ### Fixed
+- Pass the correct output encoding to writer
 - Allow absolute template file names which are loaded directly instead of using TemplateLoaders
 
 ## [2.0.0-BETA-1] - 2019-10-12
