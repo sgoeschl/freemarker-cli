@@ -2,7 +2,9 @@
 
 All notable changes to this project will be documented in this file. We try to adhere to https://github.com/olivierlacan/keep-a-changelog.
 
-## 2.0.0-BETA-2-SNAPSHOT
+## 2.0.0-BETA-3-SNAPSHOT - Unreleased
+
+## 2.0.0-BETA-2 - 2019-10-15
 
 ### Added
 - Add "-E" command line option to expose all environment variable as top-level entry in the data model 
