@@ -30,10 +30,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static org.apache.poi.ss.usermodel.Row.MissingCellPolicy.CREATE_NULL_AS_BLANK;
+
 public class ExcelTool {
 
     public Workbook parse(Document document) {
-        try (InputStream is = document.getInputStream()) {
+        try (final InputStream is = document.getInputStream()) {
             return WorkbookFactory.create(is);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse Ecxel document: " + document, e);
@@ -49,21 +51,22 @@ public class ExcelTool {
     }
 
     public List<List<String>> parseSheet(Sheet sheet) {
-        final DataFormatter formatter = new DataFormatter();
+        final DataFormatter dataFormatter = new DataFormatter();
         final Iterator<Row> iterator = sheet.iterator();
         final List<List<String>> result = new ArrayList<>();
 
         while (iterator.hasNext()) {
-            final Row nextRow = iterator.next();
-            final List<String> currRowValues = new ArrayList<>();
-            final Iterator<Cell> cellIterator = nextRow.cellIterator();
-            result.add(currRowValues);
-            while (cellIterator.hasNext()) {
-                final Cell cell = cellIterator.next();
-                currRowValues.add(formatter.formatCellValue(cell));
+            final Row row = iterator.next();
+            final List<String> columnValues = new ArrayList<>();
+            for (int columnIndex = 0; columnIndex < row.getLastCellNum(); columnIndex++) {
+                final Cell cell = row.getCell(columnIndex, CREATE_NULL_AS_BLANK);
+                final String formatedCellValue = dataFormatter.formatCellValue(cell).trim();
+                columnValues.add(formatedCellValue);
             }
+            result.add(columnValues);
         }
 
         return result;
     }
+
 }
