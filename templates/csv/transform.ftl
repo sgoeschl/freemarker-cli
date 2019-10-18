@@ -16,12 +16,14 @@
   under the License.
 -->
 <#-- Parse incoming CSV with user-supplied configuration -->
-<#assign csvInDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.in.delimiter", "TAB"))>
-<#assign cvsInFormat = CSVFormat[SystemTool.getProperty("csv.in.format", "DEFAULT")].withDelimiter(csvInDelimiter)>
+<#assign initialCvsInFormat = CSVFormat[SystemTool.getProperty("csv.in.format", "DEFAULT")]>
+<#assign csvInDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.in.delimiter", initialCvsInFormat.getDelimiter()))>
+<#assign cvsInFormat = initialCvsInFormat.withDelimiter(csvInDelimiter)>
 <#assign csvParser = CSVTool.parse(documents[0], cvsInFormat)>
 <#-- Create outgoing CSV with user-supplied configuration -->
-<#assign csvOutDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.out.delimiter", "COMMA"))>
-<#assign cvsOutFormat = CSVFormat[SystemTool.getProperty("csv.out.format", "DEFAULT")].withDelimiter(csvOutDelimiter)>
+<#assign initialCvsOutFormat = CSVFormat[SystemTool.getProperty("csv.out.format", "DEFAULT")]>
+<#assign csvOutDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.out.delimiter", initialCvsOutFormat.getDelimiter()))>
+<#assign cvsOutFormat = initialCvsOutFormat.withDelimiter(csvOutDelimiter)>
 <#assign csvPrinter = CSVTool.printer(cvsOutFormat)>
 <#-- Print each line without materializing the CSV in memory -->
 <#compress>
