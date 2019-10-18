@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
@@ -45,6 +46,10 @@ public class CommonsCsvTool {
     }
 
     public CSVParser parse(Document document, CSVFormat format) {
+        if (document == null) {
+            throw new IllegalArgumentException("No document was provided");
+        }
+
         try {
             // TODO ensure that the input stream is closed?!
             final BOMInputStream bomInputStream = new BOMInputStream(document.getInputStream(), false);
@@ -54,12 +59,24 @@ public class CommonsCsvTool {
         }
     }
 
-    public List<String> toKeys(Collection<CSVRecord> csvRecords, String name) {
-        return toKeys(csvRecords, new ValueResolver(name));
+    /**
+     * Extract the list of unique values (keys) of the column "name".
+     *
+     * @param records records to process
+     * @param name    column name to process
+     */
+    public List<String> toKeys(Collection<CSVRecord> records, String name) {
+        return toKeys(records, new ValueResolver(name));
     }
 
-    public List<String> toKeys(Collection<CSVRecord> csvRecords, Integer index) {
-        return toKeys(csvRecords, new ValueResolver(index));
+    /**
+     * Extract the list of unique values (keys) of the column with the given index..
+     *
+     * @param records records to process
+     * @param index   column index to map
+     */
+    public List<String> toKeys(Collection<CSVRecord> records, Integer index) {
+        return toKeys(records, new ValueResolver(index));
     }
 
     /**
@@ -86,20 +103,68 @@ public class CommonsCsvTool {
         return toMap(records, new ValueResolver(index));
     }
 
+    /**
+     * Map the given value of the CVS record into a list of records.
+     *
+     * @param records records to process
+     * @param name    column name to map
+     */
     public Map<String, List<CSVRecord>> toMultiMap(Collection<CSVRecord> records, String name) {
         return toMultiMap(records, new ValueResolver(name));
     }
 
-    public Map<String, List<CSVRecord>> toMultiMap(Collection<CSVRecord> records, String name, boolean includeEmpty) {
-        return toMultiMap(records, new ValueResolver(name));
-    }
-
+    /**
+     * Map the given value of the CVS record into a list of records.
+     *
+     * @param records records to process
+     * @param index   column index to map
+     */
     public Map<String, List<CSVRecord>> toMultiMap(Collection<CSVRecord> records, Integer index) {
         return toMultiMap(records, new ValueResolver(index));
     }
 
+    /**
+     * Get a CSVPrinter using the FreeMarker's writer instance.
+     *
+     * @param csvFormat CSV format to use for writing records
+     */
     public CSVPrinter printer(CSVFormat csvFormat) throws IOException {
         return new CSVPrinter(getSettings().getWriter(), csvFormat);
+    }
+
+    /**
+     * Maps the sybmolic name of a delimiter to a single character since it
+     * is not possible to define commony used delimiters on the command line.
+     *
+     * @param name symbolic name of delimiter
+     */
+    public char toDelimiter(String name) {
+        if (isNullOrEmtpty(name)) {
+            throw new IllegalArgumentException("Now CSV delimiter provided");
+        }
+
+        switch (name.toUpperCase().trim()) {
+            case "COMMA":
+                return ',';
+            case "HASH":
+                return '#';
+            case "PIPE":
+                return '|';
+            case "RS":
+                return 30;
+            case "SEMICOLON":
+                return ';';
+            case "SPACE":
+                return ' ';
+            case "TAB":
+                return '\t';
+            default:
+                if (name.length() == 1) {
+                    return name.charAt(0);
+                } else {
+                    throw new IllegalArgumentException("Unsupported CSV delimiter: " + name);
+                }
+        }
     }
 
     private List<String> toKeys(Collection<CSVRecord> csvRecords, Function<CSVRecord, String> value) {

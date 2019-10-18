@@ -113,6 +113,13 @@ public class CommonsCsvToolTest {
         assertEquals("Text", parser.getHeaderNames().get(0));
     }
 
+    @Test
+    public void shallConvertToCsvDelimiter() {
+        assertEquals(' ', commonsCsvTool().toDelimiter("space"));
+        assertEquals(' ', commonsCsvTool().toDelimiter("SPACE"));
+        assertEquals('^', commonsCsvTool().toDelimiter("^"));
+    }
+
     private Document document() {
         return new Document(TEST_CSV);
     }

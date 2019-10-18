@@ -38,6 +38,8 @@ public class CommonsCsvDataModel {
         csvFormats.put("EXCEL", CSVFormat.EXCEL);
         csvFormats.put("INFORMIX_UNLOAD", CSVFormat.INFORMIX_UNLOAD);
         csvFormats.put("INFORMIX_UNLOAD_CSV", CSVFormat.INFORMIX_UNLOAD_CSV);
+        csvFormats.put("MONGODB_CSV", CSVFormat.MONGODB_CSV);
+        csvFormats.put("MONGODB_TSV", CSVFormat.MONGODB_TSV);
         csvFormats.put("MYSQL", CSVFormat.MYSQL);
         csvFormats.put("RFC4180", CSVFormat.RFC4180);
         csvFormats.put("ORACLE", CSVFormat.ORACLE);

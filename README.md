@@ -836,7 +836,49 @@ While this looks small and tidy there are some nifty features
 * The source document is streamed line by line and not loaded into memory in one piece
 * This also works for using `stdin` so are able to parse GB of access log or other files
 
-## 5.12 Using Advanced FreeMarker Features
+## 5.12 CSV Transformation
+
+Sometimes you have a CSV file which is not quite right - you need to change the format. Lets have a look how `freemarker-cli` can help
+
+> bin/freemarker-cli -Dcsv.in.delimiter=COMMA -Dcsv.out.delimiter=PIPE -t templates/csv/transform.ftl ./site/sample/csv/contract.csv 
+
+renders the following template
+
+```
+<#ftl output_format="plainText" strip_text="true">
+<#-- Parse incoming CSV with user-supplied configuration -->
+<#assign csvInDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.in.delimiter", "TAB"))>
+<#assign cvsInFormat = CSVFormat[SystemTool.getProperty("csv.in.format", "DEFAULT")].withDelimiter(csvInDelimiter)>
+<#assign csvParser = CSVTool.parse(documents[0], cvsInFormat)>
+<#-- Create outgoing CSV with user-supplied configuration -->
+<#assign csvOutDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.out.delimiter", "COMMA"))>
+<#assign cvsOutFormat = CSVFormat[SystemTool.getProperty("csv.out.format", "DEFAULT")].withDelimiter(csvOutDelimiter)>
+<#assign csvPrinter = CSVTool.printer(cvsOutFormat)>
+<#-- Print each line without materializing the CSV in memory -->
+<#compress>
+    <#list csvParser.iterator() as record>
+        ${csvPrinter.printRecord(record)}
+    </#list>
+</#compress>
+
+```
+
+and generates
+
+```text
+contract_id|seller_company_name|customer_company_name|customer_duns_number|contract_affiliate|FERC_tariff_reference|contract_service_agreement_id|contract_execution_date|contract_commencement_date|contract_termination_date|actual_termination_date|extension_provision_description|class_name|term_name|increment_name|increment_peaking_name|product_type_name|product_name|quantity|units_for_contract|rate|rate_minimum|rate_maximum|rate_description|units_for_rate|point_of_receipt_control_area|point_of_receipt_specific_location|point_of_delivery_control_area|point_of_delivery_specific_location|begin_date|end_date|time_zone
+C71|The Electric Company|The Power Company|456543333|N|FERC Electric Tariff Original Volume No. 10|2|2/15/2001|2/15/2001|||Evergreen|N/A|N/A|N/A|N/A|MB|ENERGY|0||" "|" "|" "|Market Based||||||||ES
+C72|The Electric Company|Utility A|38495837|n|FERC Electric Tariff Original Volume No. 10|15|7/25/2001|8/1/2001|||Evergreen|N/A|N/A|N/A|N/A|MB|ENERGY|0||" "|" "|" "|Market Based||||||||ES
+C73|The Electric Company|Utility B|493758794|N|FERC Electric Tariff Original Volume No. 10|7|6/8/2001|7/6/2001|||Evergreen|N/A|N/A|N/A|N/A|MB|ENERGY|0||" "|" "|" "|Market Based||||" "|" "|||ep
+C74|The Electric Company|Utility C|594739573|n|FERC Electric Tariff Original Volume No. 10|25|6/8/2001|7/6/2001|||Evergreen|N/A|N/A|N/A|N/A|MB|ENERGY|0||" "|" "|" "|Market Based||||" "|" "|||ep
+```
+
+Some useful hints
+
+* For available CSV formats please see [Apache Commons CSV User Guide](http://commons.apache.org/proper/commons-csv/user-guide.html)
+* Stripping the Excel BOM (Byte Order Mark) works out-of-box
+
+## 5.13 Using Advanced FreeMarker Features
 
 There is a `demo.ftl` which shows some advanced FreeMarker functionality
 

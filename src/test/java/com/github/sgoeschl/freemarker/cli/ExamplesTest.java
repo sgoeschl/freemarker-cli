@@ -40,6 +40,7 @@ public class ExamplesTest extends AbstractMainTest {
         assertValid(execute("-t templates/csv/fo/transform.ftl site/sample/csv/locker-test-users.csv"));
         assertValid(execute("-t templates/csv/fo/transactions.ftl site/sample/csv/transactions.csv"));
         assertValid(execute("-t templates/csv/html/transactions.ftl site/sample/csv/transactions.csv"));
+        assertValid(execute("-Dcsv.in.delimiter=COMMA -Dcsv.out.delimiter=PIPE -t templates/csv/transform.ftl ./site/sample/csv/contract.csv"));
     }
 
     @Test
