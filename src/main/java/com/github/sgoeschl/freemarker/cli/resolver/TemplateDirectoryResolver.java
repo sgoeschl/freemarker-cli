@@ -48,11 +48,11 @@ public class TemplateDirectoryResolver {
     /** The user's "freemarker-cli" directory */
     private static final String USER_CONFIGURATION_DIR_NAME = ".freemarker-cli";
 
-    /** User-supplied template directory */
-    private final String userSuppliedTemplateDir;
+    /** User-defined template directory */
+    private final String userDefinedTemplateDir;
 
-    public TemplateDirectoryResolver(String userSuppliedTemplateDir) {
-        this.userSuppliedTemplateDir = userSuppliedTemplateDir;
+    public TemplateDirectoryResolver(String userDefinedTemplateDir) {
+        this.userDefinedTemplateDir = userDefinedTemplateDir;
     }
 
     public List<File> resolve() {
@@ -60,15 +60,16 @@ public class TemplateDirectoryResolver {
         final File userHomeDir = new File(System.getProperty(USER_HOME, UNDEFINED));
         final File currentWorkingDir = new File(System.getProperty(USER_DIR, UNDEFINED));
         final File userConfigDir = new File(userHomeDir, USER_CONFIGURATION_DIR_NAME);
-        final File userTemplateDir = userSuppliedTemplateDir != null ? new File(userSuppliedTemplateDir) : null;
+        final File userTemplateDir = userDefinedTemplateDir != null ? new File(userDefinedTemplateDir) : null;
 
-        final List<File> loaders = new ArrayList<>(asList(
-                applicationDir,
-                userConfigDir,
+        final List<File> templateLoaderDirectories = new ArrayList<>(asList(
+                userTemplateDir,
                 currentWorkingDir,
-                userTemplateDir));
+                userConfigDir,
+                applicationDir
+        ));
 
-        return loaders.stream()
+        return templateLoaderDirectories.stream()
                 .filter(TemplateDirectoryResolver::isTemplateDirectory)
                 .distinct()
                 .collect(Collectors.toList());

@@ -155,6 +155,64 @@ Java(TM) SE Runtime Environment (build 1.8.0_192-b12)
 Java HotSpot(TM) 64-Bit Server VM (build 25.192-b12, mixed mode)
 ```
 
+with the following version of FreeMarker CLI
+
+```text
+> freemarker-clit -V
+freemarker-cli -V
+version=2.0.0-BETA-3-SNAPSHOT, time=2019-10-18T23:35:50+0200, commit=627423d59822891c73de4a4cbbfa3cdb0467b9a6
+```
+
+and Apache FreeMarker
+
+```text
+> freemarker-cli -t templates/info.ftl
+FreeMarker Information
+---------------------------------------------------------------------------
+FreeMarker version     : 2.3.29
+Template name          : templates/info.ftl
+Language               : en
+Locale                 : en_AT
+Timestamp              : Oct 19, 2019 10:31:16 AM
+Output encoding        : UTF-8
+Output format          : plainText
+
+User Supplied Properties
+---------------------------------------------------------------------------
+
+Template Directories
+---------------------------------------------------------------------------
+[1] /Users/sgoeschl/work/github/sgoeschl/freemarker-cli/target/appassembler
+[2] /Applications/Java/freemarker-cli-2.0.0
+
+SystemTool
+---------------------------------------------------------------------------
+Host name       : murderbot.local
+User name       : sgoeschl
+Command line    : -t, templates/info.ftl
+
+FreeMarker Document Model
+---------------------------------------------------------------------------
+- YamlTool
+- Statics
+- SystemTool
+- documents
+- JsoupTool
+- JsonPathTool
+- GrokTool
+- XmlTool
+- Enums
+- SystemProperties
+- ExcelTool
+- Documents
+- PropertiesTool
+- ObjectConstructor
+- Environment
+- CSVTool
+- CSVFormat
+
+```
+
 ## 5.1 Transforming GitHub JSON To Markdown
 
 A simple example with real JSON data

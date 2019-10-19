@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file. We try to a
 - Display Git version information when using `-V` command line option
 
 ### Fixed
+- Use expected order of FreeMarker MultiTemplateLoader to reolve a template
 - ExcelTool uses MissingCellPolicy.CREATE_NULL_AS_BLANK to handle missing cells
 - Pass the correct output encoding to writer
 - Allow absolute template file names which are loaded directly instead of using TemplateLoaders
