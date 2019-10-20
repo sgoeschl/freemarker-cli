@@ -17,7 +17,7 @@
 package com.github.sgoeschl.freemarker.cli.model;
 
 import com.github.sgoeschl.freemarker.cli.activation.StringDataSource;
-import com.github.sgoeschl.freemarker.cli.resolver.CloseableReaper;
+import com.github.sgoeschl.freemarker.cli.impl.CloseableReaper;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 

@@ -18,7 +18,7 @@ package com.github.sgoeschl.freemarker.cli;
 
 import com.github.sgoeschl.freemarker.cli.Main.GitVersionProvider;
 import com.github.sgoeschl.freemarker.cli.model.Settings;
-import com.github.sgoeschl.freemarker.cli.resolver.TemplateDirectoryResolver;
+import com.github.sgoeschl.freemarker.cli.impl.TemplateDirectoryResolver;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.IVersionProvider;

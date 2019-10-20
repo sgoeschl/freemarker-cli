@@ -17,7 +17,7 @@
 package com.github.sgoeschl.freemarker.cli.tools.excel;
 
 import com.github.sgoeschl.freemarker.cli.model.Document;
-import com.github.sgoeschl.freemarker.cli.resolver.DocumentFactory;
+import com.github.sgoeschl.freemarker.cli.impl.DocumentFactory;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Test;

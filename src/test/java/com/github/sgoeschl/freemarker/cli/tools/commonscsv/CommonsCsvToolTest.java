@@ -18,7 +18,7 @@ package com.github.sgoeschl.freemarker.cli.tools.commonscsv;
 
 import com.github.sgoeschl.freemarker.cli.model.Document;
 import com.github.sgoeschl.freemarker.cli.model.Settings;
-import com.github.sgoeschl.freemarker.cli.resolver.DocumentFactory;
+import com.github.sgoeschl.freemarker.cli.impl.DocumentFactory;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;

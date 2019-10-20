@@ -16,7 +16,7 @@
  */
 package com.github.sgoeschl.freemarker.cli.model;
 
-import com.github.sgoeschl.freemarker.cli.resolver.DocumentFactory;
+import com.github.sgoeschl.freemarker.cli.impl.DocumentFactory;
 import org.junit.Test;
 
 import java.io.File;
