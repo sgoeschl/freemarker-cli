@@ -33,6 +33,7 @@ import java.util.List;
 
 import static java.nio.charset.Charset.forName;
 import static java.util.Objects.requireNonNull;
+import static org.apache.commons.io.IOUtils.lineIterator;
 
 /**
  * Source document which encapsulates a data source. When
@@ -92,9 +93,7 @@ public class Document implements Closeable {
     }
 
     public InputStream getInputStream() throws IOException {
-        final InputStream inputStream = dataSource.getInputStream();
-        addClosable(inputStream);
-        return inputStream;
+        return addClosable(dataSource.getInputStream());
     }
 
     public String getText() throws IOException {
@@ -114,9 +113,7 @@ public class Document implements Closeable {
     }
 
     public LineIterator getLineIterator(String charsetName) throws IOException {
-        final LineIterator iterator = IOUtils.lineIterator(getInputStream(), forName(charsetName));
-        addClosable(iterator);
-        return iterator;
+        return addClosable(lineIterator(getInputStream(), forName(charsetName)));
     }
 
     @Override
@@ -129,11 +126,11 @@ public class Document implements Closeable {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         closables.forEach(ClosableUtils::closeQuietly);
     }
 
-    private Closeable addClosable(Closeable closeable) {
+    private <T extends Closeable> T addClosable(T closeable) {
         if (closeable != null) {
             closables.add(closeable);
         }

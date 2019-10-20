@@ -28,7 +28,7 @@ public class TemplateLoadingTest extends AbstractMainTest {
 
     private static final int SUCCESS = 0;
     private static final String ANY_TEMPLATE_NAME = "templates/info.ftl";
-    private static final String currDir = System.getProperty("user.dir", ".");
+    private static final String CURR_DIR = System.getProperty("user.dir", ".");
 
     @Test
     public void shouldLoadRelativeTemplate() throws IOException {
@@ -39,7 +39,7 @@ public class TemplateLoadingTest extends AbstractMainTest {
 
     @Test
     public void shouldLoadAbsoluteTemplate() throws IOException {
-        final String absoluteFileName = new File(currDir, ANY_TEMPLATE_NAME).getAbsolutePath();
+        final String absoluteFileName = new File(CURR_DIR, ANY_TEMPLATE_NAME).getAbsolutePath();
         final String[] args = new String[] { "-t", absoluteFileName };
 
         assertEquals(SUCCESS, Main.execute(args, new NullWriter()));

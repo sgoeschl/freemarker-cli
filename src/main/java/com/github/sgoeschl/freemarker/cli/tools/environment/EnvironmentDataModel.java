@@ -25,7 +25,7 @@ import static java.util.Objects.requireNonNull;
 
 public class EnvironmentDataModel {
 
-    private Settings settings;
+    private final Settings settings;
 
     public EnvironmentDataModel(Settings settings) {
         this.settings = requireNonNull(settings);
