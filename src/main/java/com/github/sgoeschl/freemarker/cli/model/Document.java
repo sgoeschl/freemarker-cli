@@ -17,7 +17,7 @@
 package com.github.sgoeschl.freemarker.cli.model;
 
 import com.github.sgoeschl.freemarker.cli.activation.StringDataSource;
-import com.github.sgoeschl.freemarker.cli.util.ClosableUtils;
+import com.github.sgoeschl.freemarker.cli.resolver.CloseableReaper;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 
@@ -28,8 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 
 import static java.nio.charset.Charset.forName;
 import static java.util.Objects.requireNonNull;
@@ -57,14 +55,14 @@ public class Document implements Closeable {
     private final String location;
 
     /** Collect all closables handed out to the caller to be closed later */
-    private final List<Closeable> closables;
+    private final CloseableReaper closables;
 
     public Document(String name, DataSource dataSource, String location, Charset charset) {
         this.name = requireNonNull(name);
         this.dataSource = requireNonNull(dataSource);
         this.location = requireNonNull(location);
         this.charset = requireNonNull(charset);
-        this.closables = new ArrayList<>();
+        this.closables = new CloseableReaper();
     }
 
     public String getName() {
@@ -93,7 +91,7 @@ public class Document implements Closeable {
     }
 
     public InputStream getInputStream() throws IOException {
-        return addClosable(dataSource.getInputStream());
+        return closables.add(dataSource.getInputStream());
     }
 
     public String getText() throws IOException {
@@ -113,7 +111,12 @@ public class Document implements Closeable {
     }
 
     public LineIterator getLineIterator(String charsetName) throws IOException {
-        return addClosable(lineIterator(getInputStream(), forName(charsetName)));
+        return closables.add(lineIterator(getInputStream(), forName(charsetName)));
+    }
+
+    @Override
+    public void close() throws IOException {
+        closables.close();
     }
 
     @Override
@@ -123,17 +126,5 @@ public class Document implements Closeable {
                 ", location=" + location +
                 ", charset='" + charset + '\'' +
                 '}';
-    }
-
-    @Override
-    public void close() {
-        closables.forEach(ClosableUtils::closeQuietly);
-    }
-
-    private <T extends Closeable> T addClosable(T closeable) {
-        if (closeable != null) {
-            closables.add(closeable);
-        }
-        return closeable;
     }
 }

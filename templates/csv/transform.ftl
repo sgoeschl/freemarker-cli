@@ -30,4 +30,5 @@
     <#list csvParser.iterator() as record>
         ${csvPrinter.printRecord(record)}
     </#list>
+    ${csvParser.close()}
 </#compress>
