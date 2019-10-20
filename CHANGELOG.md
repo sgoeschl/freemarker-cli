@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file. We try to a
 ## 2.0.0-BETA-2 - 2019-10-15
 
 ### Added
+- Keeping track of internally created "Closables" and closing them after rendering
 - Define CSV delimiters using symbolic symbolic names, e.g. "COMMA", "TAB", etc.
 - Add "-E" command line option to expose all environment variable as top-level entry in the data model 
 - Support for [Grok](https://github.com/thekrakken/java-grok) as better alternative for regular expressions

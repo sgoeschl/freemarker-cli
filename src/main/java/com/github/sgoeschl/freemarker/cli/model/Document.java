@@ -17,15 +17,19 @@
 package com.github.sgoeschl.freemarker.cli.model;
 
 import com.github.sgoeschl.freemarker.cli.activation.StringDataSource;
+import com.github.sgoeschl.freemarker.cli.util.ClosableUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.nio.charset.Charset.forName;
 import static java.util.Objects.requireNonNull;
@@ -35,7 +39,7 @@ import static java.util.Objects.requireNonNull;
  * accessing content it is loaded on demand on not kept in memory to
  * allow processing of large volumes of data.
  */
-public class Document {
+public class Document implements Closeable {
 
     private static final int UKNOWN_LENGTH = -1;
 
@@ -49,13 +53,17 @@ public class Document {
     private final DataSource dataSource;
 
     /** The location of the content */
-    private String location;
+    private final String location;
+
+    /** Collect all closables handed out to the caller to be closed later */
+    private final List<Closeable> closables;
 
     public Document(String name, DataSource dataSource, String location, Charset charset) {
         this.name = requireNonNull(name);
         this.dataSource = requireNonNull(dataSource);
         this.location = requireNonNull(location);
         this.charset = requireNonNull(charset);
+        this.closables = new ArrayList<>();
     }
 
     public String getName() {
@@ -84,7 +92,9 @@ public class Document {
     }
 
     public InputStream getInputStream() throws IOException {
-        return dataSource.getInputStream();
+        final InputStream inputStream = dataSource.getInputStream();
+        addClosable(inputStream);
+        return inputStream;
     }
 
     public String getText() throws IOException {
@@ -104,7 +114,9 @@ public class Document {
     }
 
     public LineIterator getLineIterator(String charsetName) throws IOException {
-        return IOUtils.lineIterator(getInputStream(), forName(charsetName));
+        final LineIterator iterator = IOUtils.lineIterator(getInputStream(), forName(charsetName));
+        addClosable(iterator);
+        return iterator;
     }
 
     @Override
@@ -114,5 +126,17 @@ public class Document {
                 ", location=" + location +
                 ", charset='" + charset + '\'' +
                 '}';
+    }
+
+    @Override
+    public void close() throws IOException {
+        closables.forEach(ClosableUtils::closeQuietly);
+    }
+
+    private Closeable addClosable(Closeable closeable) {
+        if (closeable != null) {
+            closables.add(closeable);
+        }
+        return closeable;
     }
 }

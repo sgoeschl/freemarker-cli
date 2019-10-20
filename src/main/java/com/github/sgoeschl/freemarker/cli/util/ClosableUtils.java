@@ -14,16 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.tools.snakeyaml;
+package com.github.sgoeschl.freemarker.cli.util;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.Closeable;
+import java.io.IOException;
 
-public class SnakeYamlDataModel {
+public class ClosableUtils {
 
-    public Map<String, Object> create() {
-        final Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("YamlTool", new SnakeYamlTool());
-        return dataModel;
+    public static void closeQuietly(final Closeable closeable) {
+        try {
+            if (closeable != null) {
+                closeable.close();
+            }
+        } catch (final IOException ioe) {
+            // ignore
+        }
     }
 }

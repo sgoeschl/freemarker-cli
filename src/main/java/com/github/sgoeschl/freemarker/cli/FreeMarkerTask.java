@@ -56,8 +56,7 @@ public class FreeMarkerTask implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        try {
-            final Documents documents = documents();
+        try (final Documents documents = documents()) {
             final Configuration configuration = configuration();
             final Map<String, Object> dataModel = dataModel(documents);
             final Template template = getTemplate(settings, configuration);

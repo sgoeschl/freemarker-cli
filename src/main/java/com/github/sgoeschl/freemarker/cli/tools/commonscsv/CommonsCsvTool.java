@@ -51,7 +51,7 @@ public class CommonsCsvTool {
         }
 
         try {
-            // TODO ensure that the input stream is closed?!
+            // We can't close the input stream since it will consumed later
             final BOMInputStream bomInputStream = new BOMInputStream(document.getInputStream(), false);
             return CSVParser.parse(bomInputStream, document.getCharset(), format);
         } catch (IOException e) {
