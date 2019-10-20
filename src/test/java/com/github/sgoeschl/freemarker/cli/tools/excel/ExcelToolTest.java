@@ -17,6 +17,7 @@
 package com.github.sgoeschl.freemarker.cli.tools.excel;
 
 import com.github.sgoeschl.freemarker.cli.model.Document;
+import com.github.sgoeschl.freemarker.cli.resolver.DocumentFactory;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Test;
@@ -24,6 +25,7 @@ import org.junit.Test;
 import java.io.File;
 import java.util.List;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static junit.framework.TestCase.assertEquals;
 
 public class ExcelToolTest {
@@ -91,6 +93,6 @@ public class ExcelToolTest {
     }
 
     private Document document(File file) {
-        return new Document(file);
+        return DocumentFactory.create(file, UTF_8);
     }
 }

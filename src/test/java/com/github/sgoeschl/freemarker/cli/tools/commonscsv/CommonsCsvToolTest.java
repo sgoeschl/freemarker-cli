@@ -18,6 +18,7 @@ package com.github.sgoeschl.freemarker.cli.tools.commonscsv;
 
 import com.github.sgoeschl.freemarker.cli.model.Document;
 import com.github.sgoeschl.freemarker.cli.model.Settings;
+import com.github.sgoeschl.freemarker.cli.resolver.DocumentFactory;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
@@ -30,6 +31,7 @@ import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
@@ -121,11 +123,11 @@ public class CommonsCsvToolTest {
     }
 
     private Document document() {
-        return new Document(TEST_CSV);
+        return document(TEST_CSV);
     }
 
     private Document document(File file) {
-        return new Document(file);
+        return DocumentFactory.create(file, UTF_8);
     }
 
     private CommonsCsvTool commonsCsvTool() {

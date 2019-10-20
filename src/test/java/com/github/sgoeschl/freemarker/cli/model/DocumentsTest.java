@@ -16,10 +16,14 @@
  */
 package com.github.sgoeschl.freemarker.cli.model;
 
+import com.github.sgoeschl.freemarker.cli.resolver.DocumentFactory;
 import org.junit.Test;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -32,6 +36,7 @@ public class DocumentsTest {
     private static final String ANY_FILE_NAME = "pom.xml";
     private static final String ANY_FILE_EXTENSION = "xml";
     private static final File ANY_FILE = new File(ANY_FILE_NAME);
+    private static final String ANY_URL = "https://server.invalid";
 
     @Test
     public void shouldFindByWildcard() {
@@ -46,14 +51,13 @@ public class DocumentsTest {
         assertEquals(1, documents.find("*.*").size());
         assertEquals(1, documents.find("*." + ANY_FILE_EXTENSION).size());
         assertEquals(1, documents.find("*.???").size());
-        assertEquals(1, documents.find("*o*").size());
+        assertEquals(1, documents.find("*om*").size());
         assertEquals(1, documents.find("*o*.xml").size());
 
         assertEquals(1, documents.find(ANY_FILE_NAME).size());
         assertEquals(1, documents.find(ANY_FILE_NAME.charAt(0) + "*").size());
-        assertEquals(1, documents.find(STDIN).size());
 
-        assertEquals(2, documents.find("*").size());
+        assertEquals(3, documents.find("*").size());
     }
 
     @Test
@@ -63,7 +67,7 @@ public class DocumentsTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenGetDoesNotFindDocument() {
-        documents().get(UNKNOWN);
+        documents().get("file-does-not-exist");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -73,23 +77,32 @@ public class DocumentsTest {
 
     @Test
     public void shouldGetAllDocuments() {
-        assertEquals(2, documents().getAll().size());
+        assertEquals(3, documents().getAll().size());
     }
 
     @Test
     public void shouldGetNames() {
-        assertEquals(asList("stdin", "pom.xml"), documents().getNames());
+        assertEquals(asList("unknown", "pom.xml", "url"), documents().getNames());
     }
 
     private static Documents documents() {
-        return new Documents(asList(textDocument(), fileDocument()));
+        return new Documents(asList(textDocument(), fileDocument(), urlDocument()));
     }
 
     private static Document textDocument() {
-        return new Document("stdin", ANY_TEXT);
+        return DocumentFactory.create(UNKNOWN, ANY_TEXT);
     }
 
     private static Document fileDocument() {
-        return new Document(ANY_FILE);
+        return DocumentFactory.create(ANY_FILE, UTF_8);
     }
+
+    private static Document urlDocument() {
+        try {
+            return DocumentFactory.create(new URL(ANY_URL));
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

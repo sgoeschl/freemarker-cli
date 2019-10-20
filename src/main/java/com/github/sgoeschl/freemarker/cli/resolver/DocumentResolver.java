@@ -18,7 +18,6 @@ package com.github.sgoeschl.freemarker.cli.resolver;
 
 import com.github.sgoeschl.freemarker.cli.model.Document;
 
-import javax.activation.URLDataSource;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -60,16 +59,16 @@ public class DocumentResolver {
     }
 
     private Document resolveUrl(String url) {
-        return new Document(new URLDataSource(toUrl(url)));
+        return DocumentFactory.create(toUrl(url));
     }
 
     private Document resolveFile(String name, Charset charset) {
-        return new Document(new File(name), charset);
+        return DocumentFactory.create(new File(name), charset);
     }
 
     private List<Document> resolveDirectory(String directory, String include, Charset charset) {
         return fileResolver(directory, include).resolve().stream()
-                .map(file -> new Document(file, charset))
+                .map(file -> DocumentFactory.create(file, charset))
                 .collect(toList());
     }
 

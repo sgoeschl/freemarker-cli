@@ -26,9 +26,6 @@ import static org.junit.Assert.assertEquals;
 public class DocumentsResolverTest {
 
     private static final String ANY_DIRECTORY = "./site/sample";
-    private static final String ANY_FILE_NAME = "test.xls";
-    private static final String ANY_INCLUDE = "*.*";
-    private static final String UNKNOWN_FILE_NAME = "unknown.file";
 
     @Test
     public void shouldResolveFilesOfDirectory() {
@@ -40,7 +37,7 @@ public class DocumentsResolverTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void shoulThrowExceptionForNonexistingSourceDirectorly() {
+    public void shoulThrowExceptionForNonexistingSourceDirectory() {
         assertEquals(0, resolver("/does-not-exist", null).resolve().size());
     }
 

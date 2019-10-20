@@ -19,12 +19,17 @@ package com.github.sgoeschl.freemarker.cli.tools.snakeyaml;
 import com.github.sgoeschl.freemarker.cli.model.Document;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class SnakeYamlParserBean {
 
     public Map<String, Object> parse(Document document) {
-        final Yaml yaml = new Yaml();
-        return yaml.load(document.getInputStream());
+        try {
+            final Yaml yaml = new Yaml();
+            return yaml.load(document.getInputStream());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load YAML document: " + document, e);
+        }
     }
 }

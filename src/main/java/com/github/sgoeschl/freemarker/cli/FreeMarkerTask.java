@@ -19,6 +19,7 @@ package com.github.sgoeschl.freemarker.cli;
 import com.github.sgoeschl.freemarker.cli.model.Document;
 import com.github.sgoeschl.freemarker.cli.model.Documents;
 import com.github.sgoeschl.freemarker.cli.model.Settings;
+import com.github.sgoeschl.freemarker.cli.resolver.DocumentFactory;
 import com.github.sgoeschl.freemarker.cli.resolver.DocumentResolver;
 import com.github.sgoeschl.freemarker.cli.resolver.TemplateLoaderResolver;
 import com.github.sgoeschl.freemarker.cli.tools.Tools;
@@ -40,9 +41,12 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import static freemarker.template.Configuration.VERSION_2_3_29;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 
 public class FreeMarkerTask implements Callable<Integer> {
+
+    private static final String STDIN = "stdin";
 
     private final Settings settings;
 
@@ -119,7 +123,7 @@ public class FreeMarkerTask implements Callable<Integer> {
         // Add optional document from STDIN at the start of the list since
         // this allows easy sequence slicing in FreeMarker.
         if (settings.isReadFromStdin()) {
-            documents.add(0, new Document("stdin", System.in));
+            documents.add(0, DocumentFactory.create(STDIN, System.in, STDIN, UTF_8));
         }
 
         return new Documents(documents);

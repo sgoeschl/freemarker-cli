@@ -20,23 +20,25 @@ import javax.activation.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 
 public class StringDataSource implements DataSource {
 
     private final String name;
     private final String content;
+    private final Charset charset;
 
-    public StringDataSource(String name, String content) {
+    public StringDataSource(String name, String content, Charset charset) {
         this.name = requireNonNull(name);
         this.content = requireNonNull(content);
+        this.charset = requireNonNull(charset);
     }
 
     @Override
     public InputStream getInputStream() {
-        return new ByteArrayInputStream(content.getBytes(UTF_8));
+        return new ByteArrayInputStream(content.getBytes(charset));
     }
 
     @Override

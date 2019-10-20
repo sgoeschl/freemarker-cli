@@ -16,21 +16,18 @@
  */
 package com.github.sgoeschl.freemarker.cli.model;
 
-import com.github.sgoeschl.freemarker.cli.activation.InputStreamDataSource;
 import com.github.sgoeschl.freemarker.cli.activation.StringDataSource;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
-import javax.activation.URLDataSource;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 
-import static java.nio.charset.Charset.defaultCharset;
+import static java.nio.charset.Charset.forName;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -40,104 +37,81 @@ import static java.util.Objects.requireNonNull;
  */
 public class Document {
 
-    /** Name of the document */
+    private static final int UKNOWN_LENGTH = -1;
+
+    /** Human-radable name of the document */
     private final String name;
 
-    /** Optional charset for text-based content */
+    /** Charset for directly accessing text-based content */
     private final Charset charset;
 
-    /** The underlying data source */
+    /** The data source */
     private final DataSource dataSource;
 
-    public Document(String name, String content) {
+    /** The location of the content */
+    private String location;
+
+    public Document(String name, DataSource dataSource, String location, Charset charset) {
         this.name = requireNonNull(name);
-        this.dataSource = new StringDataSource(name, content);
-        this.charset = null;
-    }
-
-    public Document(File file) {
-        this(file, defaultCharset());
-    }
-
-    public Document(File file, Charset charset) {
-        this.name = file.getName();
-        this.dataSource = new FileDataSource(file);
-        this.charset = charset;
-    }
-
-    public Document(DataSource dataSource) {
-        this.name = dataSource.getName();
-        this.dataSource = dataSource;
-        this.charset = null;
-    }
-
-    public Document(String name, InputStream is) {
-        this.name = requireNonNull(name);
-        this.dataSource = new InputStreamDataSource(name, is);
-        this.charset = null;
+        this.dataSource = requireNonNull(dataSource);
+        this.location = requireNonNull(location);
+        this.charset = requireNonNull(charset);
     }
 
     public String getName() {
         return name;
     }
 
-    public String getLocation() {
-        if (dataSource instanceof FileDataSource) {
-            return ((FileDataSource) dataSource).getFile().getAbsolutePath();
-        } else if (dataSource instanceof URLDataSource) {
-            return ((URLDataSource) dataSource).getURL().toExternalForm();
-        } else {
-            return dataSource.getName();
-        }
-    }
-
     public Charset getCharset() {
         return charset;
     }
 
+    public String getLocation() {
+        return location;
+    }
+
+    /**
+     * Try to get the length lazely, efficient and without consuming the input stream.
+     */
     public long getLength() {
         if (dataSource instanceof FileDataSource) {
             return ((FileDataSource) dataSource).getFile().length();
         } else if (dataSource instanceof StringDataSource) {
             return ((StringDataSource) dataSource).getContent().length();
         } else {
-            // Don't determine the length of an arbitray input stream
-            return -1;
+            return UKNOWN_LENGTH;
         }
     }
 
-    public InputStream getInputStream() {
-        try {
-            return dataSource.getInputStream();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to get input stream: " + toString(), e);
-        }
+    public InputStream getInputStream() throws IOException {
+        return dataSource.getInputStream();
     }
 
-    public String getText() {
-        try {
-            final StringWriter writer = new StringWriter();
-            IOUtils.copy(getInputStream(), writer, charset);
+    public String getText() throws IOException {
+        return getText(getCharset().name());
+    }
+
+    public String getText(String charsetName) throws IOException {
+        final StringWriter writer = new StringWriter();
+        try (InputStream is = getInputStream()) {
+            IOUtils.copy(is, writer, forName(charsetName));
             return writer.toString();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load the text: " + getName());
         }
     }
 
-    public LineIterator getLineIterator() {
-        try {
-            return IOUtils.lineIterator(getInputStream(), charset != null ? charset : defaultCharset());
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to create line iterator: " + getName(), e);
-        }
+    public LineIterator getLineIterator() throws IOException {
+        return getLineIterator(getCharset().name());
+    }
+
+    public LineIterator getLineIterator(String charsetName) throws IOException {
+        return IOUtils.lineIterator(getInputStream(), forName(charsetName));
     }
 
     @Override
     public String toString() {
         return "Document{" +
                 "name='" + name + '\'' +
-                ", location=" + getLocation() +
-                ", length='" + getLength() + '\'' +
+                ", location=" + location +
                 ", charset='" + charset + '\'' +
                 '}';
     }
