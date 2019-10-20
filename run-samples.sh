@@ -3,13 +3,15 @@
 # Check that java is on the path
 
 hash java 2>/dev/null || { echo >&2 "I require JDK but it's not installed.  Aborting."; exit 1; }
+hash mvn 2>/dev/null || { echo >&2 "I require Maven but it's not installed.  Aborting."; exit 1; }
 
 # Run all the samples being documented
 
 mkdir target 2>/dev/null
 mkdir target/out 2>/dev/null
 
-FREEMARKER_CMD=./bin/freemarker-cli
+# FREEMARKER_CMD="target/appassembler/bin/freemarker-cli"
+FREEMARKER_CMD="java -jar target/freemarker-cli-2.0.0-BETA-4-SNAPSHOT-jar-with-dependencies.jar"
 
 #############################################################################
 # Info
