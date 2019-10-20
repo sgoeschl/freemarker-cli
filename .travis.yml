@@ -6,4 +6,4 @@ jdk:
   - openjdk11
 script:
   - mvn clean install
-  - run-samples.sh
+  - sh ./run-samples.sh
