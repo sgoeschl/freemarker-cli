@@ -10,8 +10,8 @@ hash mvn 2>/dev/null || { echo >&2 "I require Maven but it's not installed.  Abo
 mkdir target 2>/dev/null
 mkdir target/out 2>/dev/null
 
-# FREEMARKER_CMD="target/appassembler/bin/freemarker-cli"
-FREEMARKER_CMD="java -jar target/freemarker-cli-2.0.0-BETA-4-SNAPSHOT-jar-with-dependencies.jar"
+FREEMARKER_CMD="target/appassembler/bin/freemarker-cli"
+# FREEMARKER_CMD="java -jar target/freemarker-cli-2.0.0-BETA-4-SNAPSHOT-jar-with-dependencies.jar"
 
 #############################################################################
 # Info
