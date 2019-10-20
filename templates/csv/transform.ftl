@@ -30,5 +30,10 @@
     <#list csvParser.iterator() as record>
         ${csvPrinter.printRecord(record)}
     </#list>
+    <#--
+        Technically we should close those both instances - can be
+        skipped as long as we run as command-line application
+    -->
     ${csvParser.close()}
+    ${csvPrinter.close()}
 </#compress>

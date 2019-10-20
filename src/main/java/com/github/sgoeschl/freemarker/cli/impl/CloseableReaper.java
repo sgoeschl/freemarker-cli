@@ -20,6 +20,7 @@ import com.github.sgoeschl.freemarker.cli.util.ClosableUtils;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +30,12 @@ import java.util.List;
  */
 public class CloseableReaper implements Closeable {
 
-    private final List<Closeable> closeables = new ArrayList<>();
+    private final List<WeakReference<Closeable>> closeables = new ArrayList<>();
 
     public <T extends Closeable> T add(T closeable) {
         synchronized (this) {
             if (closeable != null) {
-                closeables.add(closeable);
+                closeables.add(new WeakReference<>(closeable));
             }
             return closeable;
         }

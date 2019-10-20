@@ -16,6 +16,8 @@
  */
 package com.github.sgoeschl.freemarker.cli.model;
 
+import com.github.sgoeschl.freemarker.cli.impl.NonClosableFreeMarkerWriterWrapper;
+
 import java.io.File;
 import java.io.Writer;
 import java.nio.charset.Charset;
@@ -105,7 +107,7 @@ public class Settings {
         this.isEnvironmentExposed = isEnvironmentExposed;
         this.sources = requireNonNull(sources);
         this.properties = requireNonNull(properties);
-        this.writer = requireNonNull(writer);
+        this.writer = new NonClosableFreeMarkerWriterWrapper(requireNonNull(writer));
     }
 
     public static SettingsBuilder builder() {
