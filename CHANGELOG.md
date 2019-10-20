@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. We try to adhere to https://github.com/olivierlacan/keep-a-changelog.
 
+## 2.0.0-BETA-4-SNAPSHOT 
+
 ## 2.0.0-BETA-3-SNAPSHOT - 2019-10-20
 
 ### Added

@@ -28,6 +28,11 @@ public class ExamplesTest extends AbstractMainTest {
     private static final int MIN_OUTPUT_SIZE = 128;
 
     @Test
+    public void shouldRunInfo() throws IOException {
+        assertValid(execute("-t templates/info.ftl README.md"));
+    }
+
+    @Test
     public void shouldRunDemoExamples() throws IOException {
         assertValid(execute("-t templates/demo.ftl README.md"));
     }
@@ -40,7 +45,7 @@ public class ExamplesTest extends AbstractMainTest {
         assertValid(execute("-t templates/csv/fo/transform.ftl site/sample/csv/locker-test-users.csv"));
         assertValid(execute("-t templates/csv/fo/transactions.ftl site/sample/csv/transactions.csv"));
         assertValid(execute("-t templates/csv/html/transactions.ftl site/sample/csv/transactions.csv"));
-        assertValid(execute("-Dcsv.in.delimiter=COMMA -Dcsv.out.delimiter=PIPE -t templates/csv/transform.ftl ./site/sample/csv/contract.csv"));
+        assertValid(execute("-t templates/csv/transform.ftl site/sample/csv/contract.csv"));
     }
 
     @Test
@@ -73,7 +78,7 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunYamlExamples() throws IOException {
-        assertValid(execute("-t templates/yaml/txt/transform.ftl ./site/sample/yaml/customer.yaml"));
+        assertValid(execute("-t templates/yaml/txt/transform.ftl site/sample/yaml/customer.yaml"));
     }
 
     @Test
