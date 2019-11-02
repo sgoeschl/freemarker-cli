@@ -18,6 +18,7 @@ package com.github.sgoeschl.freemarker.cli.tools;
 
 import com.github.sgoeschl.freemarker.cli.model.Settings;
 import com.github.sgoeschl.freemarker.cli.tools.commonscsv.CommonsCsvDataModel;
+import com.github.sgoeschl.freemarker.cli.tools.commonsexec.CommonsExecDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.environment.EnvironmentDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.excel.ExcelDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.freemarker.FreeMarkerDataModel;
@@ -49,6 +50,7 @@ public class Tools {
         dataModel.putAll(new SystemPropertiesDataModel().create());
 
         dataModel.putAll(new CommonsCsvDataModel(settings).create());
+        dataModel.putAll(new CommonsExecDataModel().create());
         dataModel.putAll(new ExcelDataModel().create());
         dataModel.putAll(new GrokDataModel().create());
         dataModel.putAll(new JsonPathDataModel().create());

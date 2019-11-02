@@ -137,6 +137,11 @@ Currency     :  ${largeNumber} EUR
 Date         :  ${.now?date}
 Time         :  ${.now?time}
 
+15) Execute a program
+---------------------------------------------------------------------------
+> date
+${CommonsExecTool.execute("date")}
+
 <#--------------------------------------------------------------------------->
 <#function uuidFromValueAndSalt value salt>
     <#assign uuidSource = value + salt>

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. We try to a
 
 ## 2.0.0-BETA-4-SNAPSHOT 
 
+### Added
+- Support executing arbitrary command based on Apache Commons Exec
+- The `JsonPathTool` supports parsing a string
+
 ## 2.0.0-BETA-3-SNAPSHOT - 2019-10-20
 
 ### Added

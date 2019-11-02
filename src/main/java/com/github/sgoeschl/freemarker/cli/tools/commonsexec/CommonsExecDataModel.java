@@ -14,25 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.tools.jsonpath;
+package com.github.sgoeschl.freemarker.cli.tools.commonsexec;
 
-import com.github.sgoeschl.freemarker.cli.model.Document;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.io.IOException;
-import java.io.InputStream;
+public class CommonsExecDataModel {
 
-public class JsonPathTool {
-
-    public DocumentContext parse(Document document) throws IOException {
-        try (InputStream is = document.getInputStream()) {
-            return JsonPath.parse(is);
-        }
+    public Map<String, Object> create() {
+        final Map<String, Object> dataModel = new HashMap<>();
+        dataModel.put("CommonsExecTool", new CommonsExecTool());
+        return dataModel;
     }
-
-    public DocumentContext parse(String json) throws IOException {
-        return JsonPath.parse(json);
-    }
-
 }

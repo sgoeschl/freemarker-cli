@@ -920,8 +920,6 @@ renders the following template
         ${csvPrinter.printRecord(record)}
     </#list>
 </#compress>
-
-
 ```
 
 and generates
@@ -939,7 +937,11 @@ Some useful hints
 * For available CSV formats please see [Apache Commons CSV User Guide](http://commons.apache.org/proper/commons-csv/user-guide.html)
 * Stripping the Excel BOM (Byte Order Mark) works out-of-box
 
-## 5.13 Using Advanced FreeMarker Features
+## 5.13 Executing Arbitray Commands
+
+Using Apache Commons Exec allows to execute arbitrary commands - nice but dangerous. It was recently useful to to invoke AWS CLI to gather JSON output and generate a Confluence oage about the overall setup of the account. 
+
+## 5.14 Using Advanced FreeMarker Features
 
 There is a `demo.ftl` which shows some advanced FreeMarker functionality
 
@@ -956,142 +958,112 @@ Running
 gives you
 
 ```text
+<#ftl output_format="plainText" >
+
 1) FreeMarker Special Variables
 ---------------------------------------------------------------------------
 
-FreeMarker version     : 2.3.29
-Template name          : templates/demo.ftl
-Language               : en
-Locale                 : en_AT
-Timestamp              : Oct 11, 2019 11:08:50 PM
-Output encoding        : UTF-8
-Output format          : plainText
+FreeMarker version     : ${.version}
+Template name          : ${.current_template_name}
+Language               : ${.lang}
+Locale                 : ${.locale}
+Timestamp              : ${.now}
+Output encoding        : ${.output_encoding!"not set"}
+Output format          : ${.output_format}
 
 2) Invoke a constructor of a Java class
 ---------------------------------------------------------------------------
-new java.utilDate(1000 * 3600 * 24): Jan 2, 1970 1:00:00 AM
+<#assign date = ObjectConstructor("java.util.Date", 1000 * 3600 * 24)>
+new java.utilDate(1000 * 3600 * 24): ${date?datetime}
 
 3) Invoke a static method of an non-constructor class
 ---------------------------------------------------------------------------
-System.currentTimeMillis: 1,570,828,130,794
+System.currentTimeMillis: ${Statics["java.lang.System"].currentTimeMillis()}
 
 4) Access an Enumeration
 ---------------------------------------------------------------------------
-java.math.RoundingMode#UP: UP
+java.math.RoundingMode#UP: ${Enums["java.math.RoundingMode"].UP}
 
 5) Loop Over The Values Of An Enumeration
 ---------------------------------------------------------------------------
-* java.math.RoundingMode.UP
-* java.math.RoundingMode.DOWN
-* java.math.RoundingMode.CEILING
-* java.math.RoundingMode.FLOOR
-* java.math.RoundingMode.HALF_UP
-* java.math.RoundingMode.HALF_DOWN
-* java.math.RoundingMode.HALF_EVEN
-* java.math.RoundingMode.UNNECESSARY
+<#list Enums["java.math.RoundingMode"]?values as roundingMode>
+* java.math.RoundingMode.${roundingMode}
+</#list>
 
 6) Display list of input files
 ---------------------------------------------------------------------------
 List all files:
+<#list documents as document>
+- Document: name=${document.name} location=${document.location} length=${document.length} encoding=${document.encoding!""}
+</#list>
 
 7) SystemTool
 ---------------------------------------------------------------------------
-Host name       : murderbot.local
-Command line    : -t, templates/demo.ftl
-User name       : sgoeschl
-Timestamp       : 1570828130811
-Environment     : N.A.
+Host name       : ${SystemTool.getHostName()}
+Command line    : ${SystemTool.getSettings().getArgs()?join(", ")}
+User name       : ${SystemTool.getProperty("user.name", "N.A.")}
+Timestamp       : ${SystemTool.currentTimeMillis()?c}
+Environment     : ${SystemTool.getEnvironment("foo", SystemTool.getProperty("foo", "N.A."))}
 
 8) Access System Properties
 ---------------------------------------------------------------------------
-app.dir      : 
-app.home     : /Users/sgoeschl/work/github/sgoeschl/freemarker-cli/target/appassembler
-app.pid      : 10497
-basedir      : /Users/sgoeschl/work/github/sgoeschl/freemarker-cli/target/appassembler
-java.version : 1.8.0_192
-user.name    : sgoeschl
-user.dir     : /Users/sgoeschl/work/github/sgoeschl/freemarker-cli/target/appassembler
-user.home    : /Users/sgoeschl
+app.dir      : ${SystemProperties["app.dir"]!""}
+app.home     : ${SystemProperties["app.home"]!""}
+app.pid      : ${SystemProperties["app.pid"]!""}
+basedir      : ${SystemProperties["basedir"]!""}
+java.version : ${SystemProperties["java.version"]!""}
+user.name    : ${SystemProperties["user.name"]!""}
+user.dir     : ${SystemProperties["user.dir"]!""}
+user.home    : ${SystemProperties["user.home"]!""}
 
 9) Environment Variables
 ---------------------------------------------------------------------------
-* PATH ==> /Users/sgoeschl/bin:/Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home/bin:/usr/local/Cellar/ruby/2.5.3//bin:/usr/local/Cellar/git/2.19.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/Java/apache-fop-2.3:/Applications/Java/freemarker-cli-2.0.0/bin:/Applications/Java/gatling-3.1.2/bin
-* GIT_HOME ==> /usr/local/Cellar/git/2.19.1
-* JAVA_MAIN_CLASS_10497 ==> com.github.sgoeschl.freemarker.cli.Main
-* JAVA_8_HOME ==> /Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home
-* JAVA_HOME ==> /Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home
-* FOP_HOME ==> /Applications/Java/apache-fop-2.3
-* TERM ==> xterm-256color
-* LANG ==> en_US
-* MAVEN_OPTS ==> -Xmx2048m
-* DISPLAY ==> :0.0
-* JAVA_11_HOME ==> /Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home
-* BEEONE_NEXUS_CREDENTIALS ==> H50N0OB:fRidnevo0719!
-* LOGNAME ==> sgoeschl
-* XPC_SERVICE_NAME ==> 0
-* PWD ==> /Users/sgoeschl/work/github/sgoeschl/freemarker-cli/target/appassembler
-* TERM_PROGRAM_VERSION ==> 421.2
-* RUBY_HOME ==> /usr/local/Cellar/ruby/2.5.3/
-* SHELL ==> /bin/bash
-* PROFILE_TYPE ==> development
-* TERM_PROGRAM ==> Apple_Terminal
-* LSCOLORS ==> ExFxCxDxBxegedabagacad
-* PROFILE_ENV ==> default
-* SECURITYSESSIONID ==> 186af
-* USER ==> sgoeschl
-* CLICOLOR ==> 1
-* GATLING_HOME ==> /Applications/Java/gatling-3.1.2
-* TMPDIR ==> /var/folders/cd/jbgc9cg14ld7dlsqk44tpmrw0000gn/T/
-* SSH_AUTH_SOCK ==> /private/tmp/com.apple.launchd.iAFTu9i7PN/Listeners
-* EDITOR ==> vi
-* XPC_FLAGS ==> 0x0
-* FREEMARKER_CLI_HOME ==> /Applications/Java/freemarker-cli-2.0.0
-* TERM_SESSION_ID ==> 9D1F5DAC-5E97-449C-8A67-D839477D8611
-* LC_ALL ==> en_US.utf-8
-* __CF_USER_TEXT_ENCODING ==> 0x1F5:0x0:0x0
-* Apple_PubSub_Socket_Render ==> /private/tmp/com.apple.launchd.ZtXUheG4n9/Render
-* LC_CTYPE ==> UTF-8
-* HOME ==> /Users/sgoeschl
-* SHLVL ==> 1
+<#list Environment as name,value>
+* ${name} ==> ${value}
+</#list>
 
 10) Accessing Documents
 ---------------------------------------------------------------------------
 Get the number of documents:
-    - 0
+    - ${Documents.size()}
+<#if !Documents.isEmpty()>
+Get the first document
+    - ${Documents.get(0)!"NA"}
+</#if>
 List all files containing "README" in the name
+<#list Documents.find("*README*") as document>
+    - ${document.name}
+</#list>
 List all files having "md" extension
+<#list Documents.find("*.md") as document>
+    - ${document.name}
+</#list>
 Get all documents
+<#list Documents.getAll() as document>
+    - ${document.name} => ${document.location}
+</#list>
 
 11) Document Data Model
 ---------------------------------------------------------------------------
 
 Top-level entries in the current data model
 
-- YamlTool
-- Statics
-- SystemTool
-- documents
-- JsoupTool
-- JsonPathTool
-- XmlTool
-- Enums
-- SystemProperties
-- ExcelTool
-- Documents
-- PropertiesTool
-- ObjectConstructor
-- Environment
-- CSVTool
-- CSVFormat
+<#list .data_model?keys as key>
+- ${key}
+</#list>
 
 12) Create a UUID
 ---------------------------------------------------------------------------
 
 See https://stackoverflow.com/questions/43501297/i-have-a-simplescalar-i-need-its-strings-getbytes-return-value-what-can-i-d
 
-Random UUID           : 9524a0c8-0414-4956-829a-d05e4f8eda2e
-Name UUID from bytes  : 298415f9-e888-3d98-90e7-6c0d63ad14dc
-Name UUID as function : 298415f9-e888-3d98-90e7-6c0d63ad14dc
+<#assign uuidSource = "value and salt">
+<#assign buffer = Statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
+<#assign bytes = buffer.array()[0..<buffer.limit()]>
+<#assign uuid = Statics["java.util.UUID"].nameUUIDFromBytes(bytes)>
+Random UUID           : ${Statics["java.util.UUID"].randomUUID()}
+Name UUID from bytes  : ${uuid}
+Name UUID as function : ${uuidFromValueAndSalt("value and ", "salt")}
 
 13) Printing Special Characters
 ---------------------------------------------------------------------------
@@ -1100,12 +1072,28 @@ German Special Characters: äöüßÄÖÜ
 
 14) Locale-specific output
 ---------------------------------------------------------------------------
+<#setting number_format=",##0.00">
+<#assign smallNumber = 1.234>
+<#assign largeNumber = 12345678.9>
 
-Small Number :  1.23
-Large Number :  12,345,678.90
-Currency     :  12,345,678.90 EUR
-Date         :  Oct 11, 2019
-Time         :  11:08:50 PM
+Small Number :  ${smallNumber}
+Large Number :  ${largeNumber}
+Currency     :  ${largeNumber} EUR
+Date         :  ${.now?date}
+Time         :  ${.now?time}
+
+15) Execute a program
+---------------------------------------------------------------------------
+> date
+${CommonsExecTool.execute("date")}
+
+<#--------------------------------------------------------------------------->
+<#function uuidFromValueAndSalt value salt>
+    <#assign uuidSource = value + salt>
+    <#assign buffer = Statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
+    <#assign bytes = buffer.array()[0..<buffer.limit()]>
+    <#return Statics["java.util.UUID"].nameUUIDFromBytes(bytes)>
+</#function>
 ```
 
 # 6. Design Considerations
@@ -1122,6 +1110,7 @@ Within the script a FreeMarker data model is set up and passed to the template -
 
 | Helper                | Description                                                         |
 |-----------------------|---------------------------------------------------------------------|
+| CommonsExecTool       | Executing commons using Apache Commons Exec                         |
 | CSVFormat             | Available CSV formats, e.g. "DEFAULT", "EXCEL"                      |
 | CSVTool               | CSV parser exposing a `parse` method                                |
 | Documents             | Helper to find documents, e.g. by name or extension                 |
