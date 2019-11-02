@@ -939,7 +939,9 @@ Some useful hints
 
 ## 5.13 Executing Arbitray Commands
 
-Using Apache Commons Exec allows to execute arbitrary commands - nice but dangerous. It was recently useful to to invoke AWS CLI to gather JSON output and generate a Confluence oage about the overall setup of the account. A few snippets
+Using Apache Commons Exec allows to execute arbitrary commands - nice but dangerous. It was recently quite useful to to invoke AWS CLI to generate a Confluence paga about the overall setup of our AWS accounts. 
+
+A few snippets to illustrate the points
 
 ```
 <#ftl output_format="plainText" strip_whitespace="true">
