@@ -939,7 +939,57 @@ Some useful hints
 
 ## 5.13 Executing Arbitray Commands
 
-Using Apache Commons Exec allows to execute arbitrary commands - nice but dangerous. It was recently useful to to invoke AWS CLI to gather JSON output and generate a Confluence oage about the overall setup of the account. 
+Using Apache Commons Exec allows to execute arbitrary commands - nice but dangerous. It was recently useful to to invoke AWS CLI to gather JSON output and generate a Confluence oage about the overall setup of the account. A few snippets
+
+```
+<#ftl output_format="plainText" strip_whitespace="true">
+<#assign profile = SystemTool.getProperty("profile", "george-hu-perf")>
+<#assign ec2Instances = ec2Instances()/>
+
+h3. AWS EC2 Instance
+<@printEc2Instances ec2Instances/>
+
+<#function ec2Instances>
+    <#local json = awsCliToJson("aws ec2 describe-instances --profile ${profile}")>
+    <#local instances = json.read("$.Reservations[*].Instances[*]")>
+    <#return instances?sort_by(['InstanceType'])>
+</#function>
+
+<#function awsCliToJson line>
+    <#local output = CommonsExecTool.execute(line)>
+    <#return JsonPathTool.parse(output)>
+</#function>
+
+<#function getAwsEc2InstanceTag tags name>
+    <#return tags?filter(x -> x["Key"] == name)?first["Value"]!"">
+</#function>
+
+<#macro printEc2Instances ec2Instances>
+    <#compress>
+        || NAME || INSTANCE_TYPE || VCPUS || STATE || PRIVATE_IP_ADDRESS ||
+        <#list ec2Instances as ec2Instance>
+            <#assign instanceType = ec2Instance["InstanceType"]>
+            <#assign arn = ec2Instance["IamInstanceProfile"]["Arn"]>
+            <#assign privateIpAddress = ec2Instance["PrivateIpAddress"]>
+            <#assign state = ec2Instance["State"]["Name"]>
+            <#assign launchTime = ec2Instance["LaunchTime"]>
+
+            <#assign coreCount = ec2Instance["CpuOptions"]["CoreCount"]?number>
+            <#assign threadsPerCore = ec2Instance["CpuOptions"]["ThreadsPerCore"]?number>
+            <#assign nrOfVirtualCpus = coreCount * threadsPerCore>
+
+            <#assign tags = ec2Instance["Tags"]/>
+            <#assign awsCloudFormationStackId = getAwsEc2InstanceTag(tags, "aws:cloudformation:stack-id")>
+            <#assign awsCloudFormationStackName = getAwsEc2InstanceTag(tags, "aws:cloudformation:stack-name")>
+            <#assign name = getAwsEc2InstanceTag(tags, "Name")>
+            <#assign country = getAwsEc2InstanceTag(tags, "Country")>
+            <#assign environment = getAwsEc2InstanceTag(tags, "Environment")>
+
+            | ${name} | ${instanceType} | ${nrOfVirtualCpus} | ${state} | ${privateIpAddress} |
+        </#list>
+    </#compress>
+</#macro>
+```
 
 ## 5.14 Using Advanced FreeMarker Features
 
