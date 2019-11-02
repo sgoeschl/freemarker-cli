@@ -943,7 +943,7 @@ Using Apache Commons Exec allows to execute arbitrary commands - nice but danger
 
 ```
 <#ftl output_format="plainText" strip_whitespace="true">
-<#assign profile = SystemTool.getProperty("profile", "george-hu-perf")>
+<#assign profile = SystemTool.getProperty("profile", "default")>
 <#assign ec2Instances = ec2Instances()/>
 
 h3. AWS EC2 Instance
