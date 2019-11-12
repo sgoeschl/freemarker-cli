@@ -18,7 +18,6 @@ package com.github.sgoeschl.freemarker.cli.tools.grok;
 
 import com.github.sgoeschl.freemarker.cli.util.ObjectUtils;
 import io.krakens.grok.api.Grok;
-import io.krakens.grok.api.Match;
 
 import java.util.Collections;
 import java.util.Map;
@@ -38,8 +37,6 @@ public class GrokWrapper {
             return Collections.emptyMap();
         }
 
-        final Match gm = grok.match(line);
-        final Map<String, Object> capture = gm.capture();
-        return capture;
+        return grok.match(line).capture();
     }
 }

@@ -13,66 +13,6 @@ The goal of `freemarker-cli` is to automate repeated transformation tasks
 * Which are too boring to be done manually 
 * Which happen not often enough to write a dedicated script or program
 
-Assuming that you are still interested - run `./run-samples.sh` and have a look at the generated output
-
-```text
-./run-samples.sh 
-templates/demo.ftl
-templates/csv/html/transform.ftl
-templates/csv/md/transform.ftl
-templates/csv/shell/curl.ftl
-templates/csv/fo/transform.ftl
-fop -fo target/out/locker-test-users.fo target/out/locker-test-users.pdf
-templates/csv/fo/transactions.ftl
-fop -fo target/out/transactions.fo target/out/transactions-fo.pdf
-templates/csv/html/transform.ftl
-wkhtmltopdf -O landscape target/out/transactions.html target/out/transactions-html.pdf
-templates/accesslog/combined-access.ftl
-templates/excel/html/transform.ftl
-templates/excel/md/transform.ftl
-templates/excel/csv/transform.ftl
-templates/excel/csv/custom.ftl
-templates/html/csv/dependencies.ftl
-templates/json/csv/swagger-endpoints.ftl
-templates/json/html/customer-user-products.ftl
-wkhtmltopdf -O landscape target/out/customer-user-products.html target/out/customer-user-products.pdf
-templates/json/md/customer-user-products.ftl
-templates/json/md/github-users.ftl
-templates/properties/csv/locker-test-users.ftl
-templates/yaml/txt/transform.ftl
-templates/xml/txt/recipients.ftl
-Created the following sample files in ./target/out
-total 1072
--rw-r--r--  1 sgoeschl  staff     646 Oct 12 22:10 combined-access.log.txt
--rw-r--r--  1 sgoeschl  staff   22548 Oct 12 22:10 contract.html
--rw-r--r--  1 sgoeschl  staff    7933 Oct 12 22:10 contract.md
--rw-r--r--  1 sgoeschl  staff     784 Oct 12 22:10 curl.sh
--rw-r--r--  1 sgoeschl  staff  103487 Oct 12 22:11 customer-user-products.html
--rw-r--r--  1 sgoeschl  staff   34990 Oct 12 22:11 customer-user-products.md
--rw-r--r--  1 sgoeschl  staff  113615 Oct 12 22:11 customer-user-products.pdf
--rw-r--r--  1 sgoeschl  staff     232 Oct 12 22:11 customer.txt
--rw-r--r--  1 sgoeschl  staff    5928 Oct 12 22:10 demo.txt
--rw-r--r--  1 sgoeschl  staff    1310 Oct 12 22:11 dependencies.csv
--rw-r--r--  1 sgoeschl  staff    2029 Oct 12 22:11 github-users-curl.md
--rw-r--r--  1 sgoeschl  staff     239 Oct 12 22:11 locker-test-users.csv
--rw-r--r--  1 sgoeschl  staff    6288 Oct 12 22:10 locker-test-users.fo
--rw-r--r--  1 sgoeschl  staff    5488 Oct 12 22:10 locker-test-users.pdf
--rw-r--r--  1 sgoeschl  staff     921 Oct 12 22:11 recipients.txt
--rw-r--r--  1 sgoeschl  staff     341 Oct 12 22:11 swagger-spec.csv
--rw-r--r--  1 sgoeschl  staff     156 Oct 12 22:11 test-multiple-sheets.xlsx.csv
--rw-r--r--  1 sgoeschl  staff    1917 Oct 12 22:11 test-multiple-sheets.xlsx.html
--rw-r--r--  1 sgoeschl  staff     389 Oct 12 22:11 test-multiple-sheets.xlsx.md
--rw-r--r--  1 sgoeschl  staff     150 Oct 12 22:11 test-transform-xls.csv
--rw-r--r--  1 sgoeschl  staff    1556 Oct 12 22:10 test.xls.html
--rw-r--r--  1 sgoeschl  staff    1558 Oct 12 22:10 test.xslx.html
--rw-r--r--  1 sgoeschl  staff   11333 Oct 12 22:10 transactions-fo.pdf
--rw-r--r--  1 sgoeschl  staff   33235 Oct 12 22:10 transactions-html.pdf
--rw-r--r--  1 sgoeschl  staff  106441 Oct 12 22:10 transactions.fo
--rw-r--r--  1 sgoeschl  staff   18126 Oct 12 22:10 transactions.html
-```
-
-Please note that generated PDF files are very likely not found since they require `wkhtmltopdf` and `Apache FOP` installation.
-
 # 2. Once Upon A Time
 
 In December 2015 I needed a little bit of test data management for a customer project - to make a long story short (after writing a few more Groovy scripts) it boiled down to transforming one or more JSON files to something human readable.
@@ -99,7 +39,7 @@ Using Velocity actually created some minor issues so I migrated to [Apache FreeM
 
 While I love Apache Velocity (Apache Turbine anyone?) I decided to give FreeMarker a chance and migrated my [velocity-cli](https://github.com/sgoeschl/velocity-cli) to FreeMarker.
 
-Some years later the not-so-small Groovy script was still growing so I decided 
+Some years later the not-so-small-any-longer-and-not-having-tests Groovy script was still growing so I decided 
 
 * To ditch Groovy and migrate to plain JDK 8
 * Write unit tests since I had no more excuses
@@ -107,18 +47,147 @@ Some years later the not-so-small Groovy script was still growing so I decided
 
 # 3. Design Goals
 
-* Support multiple files/directories for a single transformation
+* Support multiple source files/directories for a single transformation
 * Support transformation of Property files using plain-vanilla JDK
 * Support transformation of CSV files using [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/)
 * Support transformation of JSON using [Jayway's JSONPath](https://github.com/jayway/JsonPath)
 * Support transformation of Excel using [Apache POI](https://poi.apache.org)
 * Support transformation of YAML using [SnakeYAML](https://bitbucket.org/asomov/snakeyaml/wiki/Home)
-* XML is supported by FreeMarker out-of-the-box - see http://freemarker.org/docs/xgui.html
+* Support transformation of HTML using [JSoup](https://jsoup.org)
+* Support transformation of structured logfiles using [Grok](https://github.com/thekrakken/java-grok)
+* XML is supported by FreeMarker [out-of-the-box](http://freemarker.org/docs/xgui.html)
 * Support for reading document content from STDIN to integrate with command line tools
+* Support execution of arbitrary commands using [Apache Commons Exec](https://commons.apache.org/proper/commons-exec/)
 * Add some commonly useful information such as `System Properties`, `Enviroment Variables`
 * Create a proper command-line tool which has Unix look & feel
 
-# 4. Usage
+# 4. Installation
+
+Download the latest release from [GitHub](https://github.com/sgoeschl/freemarker-cli/releases), e.g. [freemarker-cli-2.0.0-BETA-4-app.tar.gz](https://github.com/sgoeschl/freemarker-cli/releases/download/v2.0.0-BETA-4/freemarker-cli-2.0.0-BETA-4-app.tar.gz) and unpack it into of a directory of your choice, e.g `/Application/Java/freemarker-cli`
+
+It is recommended 
+
+* To add `bin/freemarker-cli` or `bin/freemarker-cli.bat` to your executable path
+* To create a `~/.freemarker-cli` directory to store your custom FTL templates
+
+You can test the installation by executing
+
+```text
+> freemarker-cli -t templates/info.ftl
+
+FreeMarker Information
+---------------------------------------------------------------------------
+FreeMarker version     : 2.3.29
+Template name          : templates/info.ftl
+Language               : en
+Locale                 : en_AT
+Timestamp              : Nov 12, 2019 7:32:23 PM
+Output encoding        : UTF-8
+Output format          : plainText
+
+Documents
+---------------------------------------------------------------------------
+
+User Supplied Properties
+---------------------------------------------------------------------------
+
+Template Directories
+---------------------------------------------------------------------------
+[1] /Users/sgoeschl
+[2] /Users/sgoeschl/.freemarker-cli
+[3] /Applications/Java/freemarker-cli-2.0.0
+
+SystemTool
+---------------------------------------------------------------------------
+Host name       : murderbot.local
+User name       : sgoeschl
+Command line    : -t, templates/info.ftl
+
+FreeMarker Document Model
+---------------------------------------------------------------------------
+- YamlTool
+- Statics
+- SystemTool
+- documents
+- JsoupTool
+- JsonPathTool
+- GrokTool
+- XmlTool
+- Enums
+- SystemProperties
+- ExcelTool
+- Documents
+- PropertiesTool
+- ObjectConstructor
+- Environment
+- CSVTool
+- CSVFormat
+- CommonsExecTool
+```
+
+There a many examples (see below) available you can execute - run `./run-samples.sh` and have a look at the generated output
+
+```text
+freemarker-cli-2.0.0> ./run-samples.sh 
+templates/info.ftl
+templates/demo.ftl
+templates/csv/html/transform.ftl
+templates/csv/md/transform.ftl
+templates/csv/shell/curl.ftl
+templates/csv/fo/transform.ftl
+fop -fo target/out/locker-test-users.fo target/out/locker-test-users.pdf
+templates/csv/fo/transactions.ftl
+fop -fo target/out/transactions.fo target/out/transactions-fo.pdf
+templates/csv/html/transform.ftl
+wkhtmltopdf -O landscape target/out/transactions.html target/out/transactions-html.pdf
+templates/accesslog/combined-access.ftl
+templates/excel/html/transform.ftl
+templates/excel/md/transform.ftl
+templates/excel/csv/transform.ftl
+templates/excel/csv/custom.ftl
+templates/html/csv/dependencies.ftl
+templates/json/csv/swagger-endpoints.ftl
+templates/json/html/customer-user-products.ftl
+wkhtmltopdf -O landscape target/out/customer-user-products.html target/out/customer-user-products.pdf
+templates/json/md/customer-user-products.ftl
+templates/json/md/github-users.ftl
+templates/properties/csv/locker-test-users.ftl
+templates/yaml/txt/transform.ftl
+templates/xml/txt/recipients.ftl
+Created the following sample files in ./target/out
+total 1080
+-rw-r--r--  1 sgoeschl  admin     646 Nov 12 19:38 combined-access.log.txt
+-rw-r--r--  1 sgoeschl  admin   22548 Nov 12 19:38 contract.html
+-rw-r--r--  1 sgoeschl  admin    7933 Nov 12 19:38 contract.md
+-rw-r--r--  1 sgoeschl  admin     784 Nov 12 19:38 curl.sh
+-rw-r--r--  1 sgoeschl  admin  103487 Nov 12 19:38 customer-user-products.html
+-rw-r--r--  1 sgoeschl  admin   34990 Nov 12 19:39 customer-user-products.md
+-rw-r--r--  1 sgoeschl  admin  114565 Nov 12 19:38 customer-user-products.pdf
+-rw-r--r--  1 sgoeschl  admin     232 Nov 12 19:39 customer.txt
+-rw-r--r--  1 sgoeschl  admin    5840 Nov 12 19:38 demo.txt
+-rw-r--r--  1 sgoeschl  admin    1310 Nov 12 19:38 dependencies.csv
+-rw-r--r--  1 sgoeschl  admin    2029 Nov 12 19:39 github-users-curl.md
+-rw-r--r--  1 sgoeschl  admin    1335 Nov 12 19:38 info.txt
+-rw-r--r--  1 sgoeschl  admin     239 Nov 12 19:39 locker-test-users.csv
+-rw-r--r--  1 sgoeschl  admin    6288 Nov 12 19:38 locker-test-users.fo
+-rw-r--r--  1 sgoeschl  admin    5488 Nov 12 19:38 locker-test-users.pdf
+-rw-r--r--  1 sgoeschl  admin     921 Nov 12 19:39 recipients.txt
+-rw-r--r--  1 sgoeschl  admin     341 Nov 12 19:38 swagger-spec.csv
+-rw-r--r--  1 sgoeschl  admin     156 Nov 12 19:38 test-multiple-sheets.xlsx.csv
+-rw-r--r--  1 sgoeschl  admin    1917 Nov 12 19:38 test-multiple-sheets.xlsx.html
+-rw-r--r--  1 sgoeschl  admin     389 Nov 12 19:38 test-multiple-sheets.xlsx.md
+-rw-r--r--  1 sgoeschl  admin     150 Nov 12 19:38 test-transform-xls.csv
+-rw-r--r--  1 sgoeschl  admin    1556 Nov 12 19:38 test.xls.html
+-rw-r--r--  1 sgoeschl  admin    1558 Nov 12 19:38 test.xslx.html
+-rw-r--r--  1 sgoeschl  admin   11334 Nov 12 19:38 transactions-fo.pdf
+-rw-r--r--  1 sgoeschl  admin   33235 Nov 12 19:38 transactions-html.pdf
+-rw-r--r--  1 sgoeschl  admin  106440 Nov 12 19:38 transactions.fo
+-rw-r--r--  1 sgoeschl  admin   18126 Nov 12 19:38 transactions.html
+```
+
+Please note that generated PDF files are very likely not found since they require `wkhtmltopdf` and `Apache FOP` installation.
+
+# 5. Usage
 
 ```text
 > ./bin/freemarker-cli -h
@@ -146,7 +215,7 @@ Apache FreeMarker CLI
 
 ```
 
-# 5. Examples
+# 6. Examples
 
 The examples were tested with JDK 1.8 on Mac OS X
 
@@ -156,66 +225,9 @@ java version "1.8.0_192"
 Java(TM) SE Runtime Environment (build 1.8.0_192-b12)
 Java HotSpot(TM) 64-Bit Server VM (build 25.192-b12, mixed mode)
 ```
+It is assumed that you run the examples from the `freemarker-cli` installation directory.
 
-with the following version of FreeMarker CLI
-
-```text
-> freemarker-clit -V
-freemarker-cli -V
-version=2.0.0-BETA-3-SNAPSHOT, time=2019-10-18T23:35:50+0200, commit=627423d59822891c73de4a4cbbfa3cdb0467b9a6
-```
-
-and Apache FreeMarker
-
-```text
-> freemarker-cli -t templates/info.ftl
-FreeMarker Information
----------------------------------------------------------------------------
-FreeMarker version     : 2.3.29
-Template name          : templates/info.ftl
-Language               : en
-Locale                 : en_AT
-Timestamp              : Oct 19, 2019 10:31:16 AM
-Output encoding        : UTF-8
-Output format          : plainText
-
-User Supplied Properties
----------------------------------------------------------------------------
-
-Template Directories
----------------------------------------------------------------------------
-[1] /Users/sgoeschl/work/github/sgoeschl/freemarker-cli/target/appassembler
-[2] /Applications/Java/freemarker-cli-2.0.0
-
-SystemTool
----------------------------------------------------------------------------
-Host name       : murderbot.local
-User name       : sgoeschl
-Command line    : -t, templates/info.ftl
-
-FreeMarker Document Model
----------------------------------------------------------------------------
-- YamlTool
-- Statics
-- SystemTool
-- documents
-- JsoupTool
-- JsonPathTool
-- GrokTool
-- XmlTool
-- Enums
-- SystemProperties
-- ExcelTool
-- Documents
-- PropertiesTool
-- ObjectConstructor
-- Environment
-- CSVTool
-- CSVFormat
-
-```
-
-## 5.1 Transforming GitHub JSON To Markdown
+## 6.1 Transforming GitHub JSON To Markdown
 
 A simple example with real JSON data
 
@@ -257,7 +269,7 @@ creates the following output
 
 ![](./site/image/github.png)
 
-## 5.2 Markdown Test User Documentation
+## 6.2 Markdown Test User Documentation
 
 For a customer I created a Groovy script to fetch all products for a list of users - the script generates a JSON file which can be easily transformed to Markdown
 
@@ -291,7 +303,7 @@ which creates the following PDF document (please note that even the links within
 
 ![Customer User Products PDF](./site/image/customer-user-products-pdf.png "Customer User Products PDF")
 
-## 5.3 CSV to HTML/Markdown Transformation
+## 6.3 CSV to HTML/Markdown Transformation
 
 Sometimes you have a CSV file which needs to be translated in Markdown or HTML - there are on-line solutions available such as [CSV To Markdown Table Generator](https://donatstudios.com/CsvToMarkdownTable) but having a local solution gives you more flexibility.
 
@@ -349,7 +361,7 @@ The resulting file actually looks pleasant when compared to raw CSV
 
 ![Contract CSV to HTML](./site/image/contract.png "Contract CSV to HTML")
 
-## 5.4 Transform XML To Plain Text
+## 6.4 Transform XML To Plain Text
 
 Of course you can also transform a XML document
 
@@ -402,7 +414,7 @@ Sincere salutations,
 D. H.
 ```
 
-## 5.5 Transform JSON To CSV
+## 6.5 Transform JSON To CSV
 
 One day I was asked a to prepare a CSV files containind REST endpoints described by Swagger - technically this is a JSON to CSV transformation. Of course I could create that CSV manually but writing a FTL template doing that was simply more fun and saves time in the future.
 
@@ -444,7 +456,7 @@ ENDPOINT;METHOD;DESCRIPTION
 /api/pets/{id};DELETE;Deletes a single pet based on the ID supplied
 ```
 
-## 5.6 Transforming Excel Documents
+## 6.6 Transforming Excel Documents
 
 Another day my project management asked me to create a CSV configuration file based on an Excel documents - as usual manual copying was not an option due to required data cleanup and data transformation. So I thought about Apache POI which support XLS and XLSX documents - integration of Apache POI was a breeze but the resulting code was not particulary useful example. So a more generic transformation was provided to show the transformation of Excel documents ...
 
@@ -532,7 +544,7 @@ but the result looks reasonable
 
 ![](./site/image/excel-to-html.png)
 
-## 5.7 Transform Property Files To CSV
+## 6.7 Transform Property Files To CSV
 
 In this sample we transform all property files found in a directory (recursive search using include pattern) to a CSV file
 
@@ -709,7 +721,7 @@ INFO: Rendered page #2.
 
 ![](./site/image/transactions.png)
 
-## 5.9 Transforming HTML To CSV
+## 6.9 Transforming HTML To CSV
 
 Recently I got the rather unusual question how to determine the list of dependecied of an application - one easy way is the Maven "dependencies.html" but this is unstructured data. Having said that the Jsoup library is perfectly able to parse most real-life HTML and provides a DOM model
 
@@ -777,7 +789,7 @@ org.ow2.asm,asm,5.0.4,jar,BSD
 stax,stax-api,1.0.1,jar,The Apache Software License Version 2.0
 ```
 
-## 5.10 Transform CSV To Shell Script
+## 6.10 Transform CSV To Shell Script
 
 For a customer project we wanted to record REST request / responses using WireMock - really quick and dirty. So we decided to avoid any sophisticated test tool but generate a ready-to-use shell script executing cURL commands. It turned out that handling of dollar signs is a bit tricky
 
@@ -842,7 +854,7 @@ time,user,status,duration,size
 2019-09-27T21:02:54,DDDDDDD,200,0.528268,206
 ```
 
-## 5.11 Unleashing The Power Of Grok
+## 6.11 Unleashing The Power Of Grok
 
 Think of `Grok` as modular regular expressions with a pre-defined functionality to parse access logs or any other data where you can't comprehend the regular expression any longer, one very simple example is `QUOTEDSTRING`
 
@@ -896,7 +908,7 @@ While this looks small and tidy there are some nifty features
 * The source document is streamed line by line and not loaded into memory in one piece
 * This also works for using `stdin` so are able to parse GB of access log or other files
 
-## 5.12 CSV Transformation
+## 6.12 CSV Transformation
 
 Sometimes you have a CSV file which is not quite right - you need to change the format. Lets have a look how `freemarker-cli` can help
 
@@ -939,7 +951,7 @@ Some useful hints
 * For available CSV formats please see [Apache Commons CSV User Guide](http://commons.apache.org/proper/commons-csv/user-guide.html)
 * Stripping the Excel BOM (Byte Order Mark) works out-of-box
 
-## 5.13 Executing Arbitray Commands
+## 6.13 Executing Arbitray Commands
 
 Using Apache Commons Exec allows to execute arbitrary commands - nice but dangerous. It was recently quite useful to to invoke AWS CLI to generate a Confluence paga about the overall setup of our AWS accounts. 
 
@@ -995,7 +1007,7 @@ h3. AWS EC2 Instance
 </#macro>
 ```
 
-## 5.14 Using Advanced FreeMarker Features
+## 6.14 Using Advanced FreeMarker Features
 
 There is a `demo.ftl` which shows some advanced FreeMarker functionality
 
@@ -1150,15 +1162,15 @@ ${CommonsExecTool.execute("date")}
 </#function>
 ```
 
-# 6. Design Considerations
+# 7. Design Considerations
 
-## 6.1 How It Works
+## 7.1 How It Works
 
 * The user-supplied files are loaded into memory or if there are no file the script reads the from `stdin`
 * The FreeMarker data model containing the documents and helper object is created and passed to the template
 * The generated output is written to the user-supplied file or to `stdout`
 
-## 6.2 FreeMarker Data Model
+## 7.2 FreeMarker Data Model
 
 Within the script a FreeMarker data model is set up and passed to the template - it contains the documents to be processed and helper objects
 
@@ -1182,9 +1194,9 @@ Within the script a FreeMarker data model is set up and passed to the template -
 | XmlTool               | XML parser exposing a `parse` method                                |
 | YamlTool              | SnakeYAML to parse YAML files                                       |
 
-# 7. Tips & Tricks
+# 8. Tips & Tricks
 
-## 7.1 Template Base Directory
+## 8.1 Template Base Directory
 
 When doing some ad-hoc scripting it is useful to rely on a base directory to resolve the FTL templates
 
@@ -1193,7 +1205,7 @@ When doing some ad-hoc scripting it is useful to rely on a base directory to res
 
 > ./bin/freemarker-cli -t templates/json/html/customer-user-products.ftl freemarker-cli/site/sample/json/customer-user-products.jso
 
-## 7.2 Using Pipes
+## 8.2 Using Pipes
 
 When doing ad-hoc scripting it useful to pipe the output of one command directly into "freemarker-cli"
 

@@ -19,7 +19,6 @@ package com.github.sgoeschl.freemarker.cli.impl;
 import com.github.sgoeschl.freemarker.cli.util.ClosableUtils;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class CloseableReaper implements Closeable {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         synchronized (this) {
             closeables.forEach(ClosableUtils::closeQuietly);
             closeables.clear();

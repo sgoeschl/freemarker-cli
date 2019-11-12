@@ -19,7 +19,6 @@ package com.github.sgoeschl.freemarker.cli.model;
 import com.github.sgoeschl.freemarker.cli.util.ClosableUtils;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
@@ -81,7 +80,7 @@ public class Documents implements Closeable {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         documents.forEach(ClosableUtils::closeQuietly);
     }
 

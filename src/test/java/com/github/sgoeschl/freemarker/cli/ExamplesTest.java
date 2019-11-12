@@ -88,7 +88,12 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunGrokExamples() throws IOException {
-        assertValid(execute("-t templates/accesslog/combined-access.ftl site/sample/accesslog/combined-access.log "));
+        assertValid(execute("-t templates/accesslog/combined-access.ftl site/sample/accesslog/combined-access.log"));
+    }
+
+    @Test
+    public void shouldRunWithExposedEnvironmentVariableExamples() throws IOException {
+        assertValid(execute("-b ./src/test -E -t templates/environment.ftl"));
     }
 
     private static void assertValid(String output) {
