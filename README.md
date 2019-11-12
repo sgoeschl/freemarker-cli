@@ -122,16 +122,18 @@ Some years later the not-so-small Groovy script was still growing so I decided
 
 ```text
 > ./bin/freemarker-cli -h
-Usage: freemarker-cli [-hvV] [--stdin] [-b=<baseDir>] [-e=<sourceEncoding>]
+Usage: freemarker-cli [-EhV] [--stdin] [-b=<baseDir>] [-e=<sourceEncoding>]
                       [--include=<include>] [-l=<locale>] [-o=<outputFile>]
                       [--output-encoding=<outputEncoding>] -t=<template>
                       [-D=<String=String>]... [<sources>...]
 Apache FreeMarker CLI
       [<sources>...]        Any number of input source files and/or directories
-  -b, --basedir=<baseDir>   Base directory to resolve FreeMarker templates
+  -b, --basedir=<baseDir>   Additional template directory to resolve FreeMarker
+                              templates
   -D=<String=String>        Set a system property
   -e, --source-encoding=<sourceEncoding>
                             Encoding of source file
+  -E, --expose-env          Expose environment variables
   -h, --help                Show this help message and exit.
       --include=<include>   File pattern for directory search
   -l, --locale=<locale>     Locale being used for output file, e.g. 'en_US
@@ -140,8 +142,8 @@ Apache FreeMarker CLI
                             Encoding of output file, e.g. UTF-8
       --stdin               Read source document from stdin
   -t, --template=<template> FreeMarker template used for rendering
-  -v, --verbose             Verbose mode
   -V, --version             Print version information and exit.
+
 ```
 
 # 5. Examples
