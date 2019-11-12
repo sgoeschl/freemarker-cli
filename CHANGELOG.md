@@ -2,13 +2,13 @@
 
 All notable changes to this project will be documented in this file. We try to adhere to https://github.com/olivierlacan/keep-a-changelog.
 
-## 2.0.0-BETA-4-SNAPSHOT 
+## 2.0.0-BETA-4-SNAPSHOT - 2019-11-12
 
 ### Added
 - Support executing arbitrary command based on Apache Commons Exec
 - The `JsonPathTool` supports parsing a string
 
-## 2.0.0-BETA-3-SNAPSHOT - 2019-10-20
+## 2.0.0-BETA-3 - 2019-10-20
 
 ### Added
 - Keeping track of internally created "Closables" of a document and closing them after rendering
