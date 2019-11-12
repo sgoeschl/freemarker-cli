@@ -31,7 +31,7 @@ public class JsonPathTool {
         }
     }
 
-    public DocumentContext parse(String json) throws IOException {
+    public DocumentContext parse(String json) {
         return JsonPath.parse(json);
     }
 
