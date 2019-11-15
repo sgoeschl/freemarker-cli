@@ -61,7 +61,7 @@ public class FreeMarkerTask implements Callable<Integer> {
             final Map<String, Object> dataModel = dataModel(documents);
             final Template template = getTemplate(settings, configuration);
 
-            try (Writer out = settings.getWriter()) {
+            try (final Writer out = settings.getWriter()) {
                 template.process(dataModel, out);
             }
 
@@ -89,7 +89,7 @@ public class FreeMarkerTask implements Callable<Integer> {
      * Loading FreeMarker templates from absolute paths is not encouraged due to security
      * concern (see https://freemarker.apache.org/docs/pgui_config_templateloading.html#autoid_42)
      * which are mostly irrelevant when running on the command line. So we resolve the absolute file
-     * instead of relyong on existing template loaders.
+     * instead of relying on existing template loaders.
      */
     private Template getTemplate(Settings settings, Configuration configuration) throws IOException {
         final File templateFile = new File(settings.getTemplateName());

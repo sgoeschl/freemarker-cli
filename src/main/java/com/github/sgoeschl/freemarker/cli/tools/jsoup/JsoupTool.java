@@ -26,7 +26,7 @@ import java.io.InputStream;
 public class JsoupTool {
 
     public org.jsoup.nodes.Document parse(Document document) {
-        try (InputStream is = document.getInputStream()) {
+        try (final InputStream is = document.getInputStream()) {
             final byte[] bytes = IOUtils.toByteArray(is);
             return Jsoup.parse(new String(bytes, document.getCharset()));
         } catch (IOException e) {
