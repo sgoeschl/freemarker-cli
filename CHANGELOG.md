@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file. We try to a
 
 * Move `ObjectConstructor`, `Statics` and `Enums` into `FreeMarkerTool`
 
-## 2.0.0-BETA-4-SNAPSHOT - 2019-11-12
+## 2.0.0-BETA-4 - 2019-11-12
 
 ### Added
 - Support executing arbitrary command based on Apache Commons Exec
