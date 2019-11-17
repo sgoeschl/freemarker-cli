@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. We try to adhere to https://github.com/olivierlacan/keep-a-changelog.
 
+## 2.0.0-BETA-5-SNAPSHOT
+
+### Added
+
+* Add RAT & PMD report to Maven site generation
+
+### Changed
+
+* Move `ObjectConstructor`, `Statics` and `Enums` into `FreeMarkerTool`
+
 ## 2.0.0-BETA-4-SNAPSHOT - 2019-11-12
 
 ### Added
