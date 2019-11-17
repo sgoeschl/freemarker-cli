@@ -16,12 +16,11 @@
  */
 package com.github.sgoeschl.freemarker.cli;
 
-import com.github.sgoeschl.freemarker.cli.Main.GitVersionProvider;
 import com.github.sgoeschl.freemarker.cli.impl.TemplateDirectoryResolver;
 import com.github.sgoeschl.freemarker.cli.model.Settings;
+import com.github.sgoeschl.freemarker.cli.picocli.GitVersionProvider;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.IVersionProvider;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
@@ -29,18 +28,15 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.Callable;
 
 import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNotEmpty;
-import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
 
 @Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
@@ -179,36 +175,5 @@ public class Main implements Callable<Integer> {
 
     private static List<File> getTemplateDirectories(String baseDir) {
         return new TemplateDirectoryResolver(baseDir).resolve();
-    }
-
-    public static final class GitVersionProvider implements IVersionProvider {
-
-        private final String gitBuildVersion;
-        private final String gitCommitId;
-        private final String gitCommitTime;
-
-        public GitVersionProvider() {
-            final Properties gitProperties = getGitProperties();
-            this.gitBuildVersion = gitProperties.getProperty("git.build.version", "unknown");
-            this.gitCommitId = gitProperties.getProperty("git.commit.id", "unknown");
-            this.gitCommitTime = gitProperties.getProperty("git.commit.time", "unknown");
-        }
-
-        @Override
-        public String[] getVersion() {
-            return new String[] { format("version=%s, time=%s, commit=%s", gitBuildVersion, gitCommitTime, gitCommitId) };
-        }
-
-        private static Properties getGitProperties() {
-            final Properties properties = new Properties();
-            try (InputStream is = Main.class.getClassLoader().getResourceAsStream("git.properties")) {
-                if (is != null) {
-                    properties.load(is);
-                }
-            } catch (Exception e) {
-                return properties;
-            }
-            return properties;
-        }
     }
 }
