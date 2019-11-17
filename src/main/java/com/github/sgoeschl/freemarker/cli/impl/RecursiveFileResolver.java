@@ -24,7 +24,6 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
@@ -35,7 +34,7 @@ import static org.apache.commons.io.FileUtils.listFiles;
 
 /**
  * Resolve a list of files or directories recursively and
- * skip hidden files & directories.
+ * skip hidden files &amp; directories.
  */
 public class RecursiveFileResolver {
 

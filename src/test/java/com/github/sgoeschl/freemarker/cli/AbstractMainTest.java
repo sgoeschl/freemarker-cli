@@ -26,7 +26,7 @@ abstract class AbstractMainTest {
     private static final String SPACE = " ";
 
     String execute(String commandLine) throws IOException {
-        try (final Writer writer = new StringWriter()) {
+        try (Writer writer = new StringWriter()) {
             final String[] args = commandLine.split(SPACE);
             if (Main.execute(args, writer) == 0) {
                 return writer.toString();

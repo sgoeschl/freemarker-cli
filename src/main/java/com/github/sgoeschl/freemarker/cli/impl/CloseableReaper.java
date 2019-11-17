@@ -16,8 +16,6 @@
  */
 package com.github.sgoeschl.freemarker.cli.impl;
 
-import com.github.sgoeschl.freemarker.cli.util.ClosableUtils;
-
 import java.io.Closeable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

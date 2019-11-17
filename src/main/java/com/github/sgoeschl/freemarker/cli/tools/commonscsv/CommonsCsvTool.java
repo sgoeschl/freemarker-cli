@@ -64,6 +64,7 @@ public class CommonsCsvTool {
      *
      * @param records records to process
      * @param name    column name to process
+     * @return unique keys
      */
     public List<String> toKeys(Collection<CSVRecord> records, String name) {
         return toKeys(records, new ValueResolver(name));
@@ -74,30 +75,33 @@ public class CommonsCsvTool {
      *
      * @param records records to process
      * @param index   column index to map
+     * @return unique keys
      */
     public List<String> toKeys(Collection<CSVRecord> records, Integer index) {
         return toKeys(records, new ValueResolver(index));
     }
 
     /**
-     * Map the given value of the CVS record into (key -> record). If duplicates
+     * Map the given value of the CVS record into (key to record). If duplicates
      * are encountered return the first occurence of the CVS record. The map
      * retains the insertion order of they keys.
      *
      * @param records records to process
      * @param name    column name to map
+     * @return map of records
      */
     public Map<String, CSVRecord> toMap(Collection<CSVRecord> records, String name) {
         return toMap(records, new ValueResolver(name));
     }
 
     /**
-     * Map the given value of the CVS record into (key -> record). If duplicates
+     * Map the given value of the CVS record into (key to record). If duplicates
      * are encountered return the first occurence of the CVS record. The map
      * retains the insertion order of they keys.
      *
      * @param records records to process
      * @param index   column index to map
+     * @return map of records
      */
     public Map<String, CSVRecord> toMap(Collection<CSVRecord> records, Integer index) {
         return toMap(records, new ValueResolver(index));
@@ -108,6 +112,7 @@ public class CommonsCsvTool {
      *
      * @param records records to process
      * @param name    column name to map
+     * @return map of records
      */
     public Map<String, List<CSVRecord>> toMultiMap(Collection<CSVRecord> records, String name) {
         return toMultiMap(records, new ValueResolver(name));
@@ -118,6 +123,7 @@ public class CommonsCsvTool {
      *
      * @param records records to process
      * @param index   column index to map
+     * @return map of records
      */
     public Map<String, List<CSVRecord>> toMultiMap(Collection<CSVRecord> records, Integer index) {
         return toMultiMap(records, new ValueResolver(index));
@@ -127,6 +133,8 @@ public class CommonsCsvTool {
      * Get a CSVPrinter using the FreeMarker's writer instance.
      *
      * @param csvFormat CSV format to use for writing records
+     * @return CSVPrinter instance
+     * @throws IOException thrown if the parameters of the format are inconsistent or if either out or format are null.
      */
     public CSVPrinter printer(CSVFormat csvFormat) throws IOException {
         return new CSVPrinter(getSettings().getWriter(), csvFormat);
@@ -137,6 +145,7 @@ public class CommonsCsvTool {
      * is not possible to define commony used delimiters on the command line.
      *
      * @param name symbolic name of delimiter
+     * @return CSV delimiter
      */
     public char toDelimiter(String name) {
         if (isNullOrEmtpty(name)) {

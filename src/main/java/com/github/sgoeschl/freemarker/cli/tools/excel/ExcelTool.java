@@ -35,7 +35,7 @@ import static org.apache.poi.ss.usermodel.Row.MissingCellPolicy.CREATE_NULL_AS_B
 public class ExcelTool {
 
     public Workbook parse(Document document) {
-        try (final InputStream is = document.getInputStream()) {
+        try (InputStream is = document.getInputStream()) {
             return WorkbookFactory.create(is);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse Ecxel document: " + document, e);

@@ -26,7 +26,7 @@ import java.io.InputStream;
 public class JsonPathTool {
 
     public DocumentContext parse(Document document) throws IOException {
-        try (final InputStream is = document.getInputStream()) {
+        try (InputStream is = document.getInputStream()) {
             return JsonPath.parse(is);
         }
     }

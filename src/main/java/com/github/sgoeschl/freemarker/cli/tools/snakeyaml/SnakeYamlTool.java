@@ -26,7 +26,7 @@ import java.util.Map;
 public class SnakeYamlTool {
 
     public Map<String, Object> parse(Document document) {
-        try (final InputStream is = document.getInputStream()) {
+        try (InputStream is = document.getInputStream()) {
             final Yaml yaml = new Yaml();
             return yaml.load(is);
         } catch (IOException e) {

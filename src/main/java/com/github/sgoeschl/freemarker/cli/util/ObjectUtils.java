@@ -19,7 +19,7 @@ package com.github.sgoeschl.freemarker.cli.util;
 public class ObjectUtils {
 
     public static boolean isNullOrEmtpty(String value) {
-        return (value == null) || value.trim().isEmpty();
+        return value == null || value.trim().isEmpty();
     }
 
     public static boolean isNotEmpty(String value) {

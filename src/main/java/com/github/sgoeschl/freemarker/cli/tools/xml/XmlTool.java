@@ -25,7 +25,7 @@ import java.io.InputStream;
 public class XmlTool {
 
     public NodeModel parse(Document document) throws Exception {
-        try (final InputStream is = document.getInputStream()) {
+        try (InputStream is = document.getInputStream()) {
             return NodeModel.parse(new InputSource(is));
         }
     }

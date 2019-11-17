@@ -36,7 +36,7 @@ public class CommonsExecTool {
     }
 
     private String execute(CommandLine commandLine) {
-        try (final ByteArrayOutputStream boas = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream boas = new ByteArrayOutputStream()) {
             final Executor executor = new DefaultExecutor();
             executor.setStreamHandler(new PumpStreamHandler(boas));
             executor.execute(commandLine);

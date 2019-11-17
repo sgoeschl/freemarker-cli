@@ -16,12 +16,12 @@
  */
 package com.github.sgoeschl.freemarker.cli;
 
-import com.github.sgoeschl.freemarker.cli.model.Document;
-import com.github.sgoeschl.freemarker.cli.model.Documents;
-import com.github.sgoeschl.freemarker.cli.model.Settings;
 import com.github.sgoeschl.freemarker.cli.impl.DocumentFactory;
 import com.github.sgoeschl.freemarker.cli.impl.DocumentResolver;
 import com.github.sgoeschl.freemarker.cli.impl.TemplateLoaderResolver;
+import com.github.sgoeschl.freemarker.cli.model.Document;
+import com.github.sgoeschl.freemarker.cli.model.Documents;
+import com.github.sgoeschl.freemarker.cli.model.Settings;
 import com.github.sgoeschl.freemarker.cli.tools.Tools;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
@@ -56,12 +56,12 @@ public class FreeMarkerTask implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        try (final Documents documents = documents()) {
+        try (Documents documents = documents()) {
             final Configuration configuration = configuration();
             final Map<String, Object> dataModel = dataModel(documents);
             final Template template = getTemplate(settings, configuration);
 
-            try (final Writer out = settings.getWriter()) {
+            try (Writer out = settings.getWriter()) {
                 template.process(dataModel, out);
             }
 

@@ -17,8 +17,8 @@
 package com.github.sgoeschl.freemarker.cli;
 
 import com.github.sgoeschl.freemarker.cli.Main.GitVersionProvider;
-import com.github.sgoeschl.freemarker.cli.model.Settings;
 import com.github.sgoeschl.freemarker.cli.impl.TemplateDirectoryResolver;
+import com.github.sgoeschl.freemarker.cli.model.Settings;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.IVersionProvider;
@@ -107,7 +107,13 @@ public class Main implements Callable<Integer> {
         return new CommandLine(new Main(args)).execute(args);
     }
 
-    /** User for testing to inject a writer */
+    /**
+     * Used for testing to inject a writer.
+     *
+     * @param args   command line parameters
+     * @param writer writer used for template rendering
+     * @return exit code
+     */
     public static int execute(String[] args, Writer writer) {
         return new CommandLine(new Main(args, writer)).execute(args);
     }
@@ -195,7 +201,7 @@ public class Main implements Callable<Integer> {
 
         private static Properties getGitProperties() {
             final Properties properties = new Properties();
-            try (final InputStream is = Main.class.getClassLoader().getResourceAsStream("git.properties")) {
+            try (InputStream is = Main.class.getClassLoader().getResourceAsStream("git.properties")) {
                 if (is != null) {
                     properties.load(is);
                 }
