@@ -12,13 +12,13 @@ All notable changes to this project will be documented in this file. We try to a
 
 * Move `ObjectConstructor`, `Statics` and `Enums` into `FreeMarkerTool`
 
-## 2.0.0-BETA-4 - 2019-11-12
+## [2.0.0-BETA-4] - 2019-11-12
 
 ### Added
 - Support executing arbitrary command based on Apache Commons Exec
 - The `JsonPathTool` supports parsing a string
 
-## 2.0.0-BETA-3 - 2019-10-20
+## [2.0.0-BETA-3] - 2019-10-20
 
 ### Added
 - Keeping track of internally created "Closables" of a document and closing them after rendering
@@ -27,7 +27,7 @@ All notable changes to this project will be documented in this file. We try to a
 ### Fixed
 - Use expected order of FreeMarker MultiTemplateLoader to reolve a template
 
-## 2.0.0-BETA-2 - 2019-10-15
+## [2.0.0-BETA-2] - 2019-10-15
 
 ### Added
 - Add "-E" command line option to expose all environment variable as top-level entry in the data model 
@@ -51,4 +51,7 @@ All notable changes to this project will be documented in this file. We try to a
 - Works as standalone application with OS wrapper scripts
 - Existing templates will break due to naming changes of injected helper classes
 
+[2.0.0-BETA-4]: https://github.com/sgoeschl/freemarker-cli/releases/tag/v2.0.0-BETA-4
+[2.0.0-BETA-3]: https://github.com/sgoeschl/freemarker-cli/releases/tag/v2.0.0-BETA-3
+[2.0.0-BETA-2]: https://github.com/sgoeschl/freemarker-cli/releases/tag/v2.0.0-BETA-2
 [2.0.0-BETA-1]: https://github.com/sgoeschl/freemarker-cli/releases/tag/v2.0.0-BETA-1
