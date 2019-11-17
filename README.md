@@ -27,7 +27,7 @@ So I went with 'Apache Groovy', 'JsonPath' and 'Apache Velocity'
 
 * Playing with Groovy over the public holidays
 * Groovy has a built-in package manager which makes distribution a breeze
-* Provding samples to transform JSON to Markdown
+* Providing samples to transform JSON to Markdown
 
 Using Velocity actually created some minor issues so I migrated to [Apache FreeMarker](https://freemarker.apache.org) during Christmas 2016
 
@@ -35,7 +35,7 @@ Using Velocity actually created some minor issues so I migrated to [Apache FreeM
 * I was painful to get Velocity Tools working
 * Velocity XML processing support is also painful
 * Spring 4.3 deprecated Velocity support which could affect me in the long run
-* Freemarker has no additional dependencies and things are just working :-)
+* FreeMarker has no additional dependencies and things are just working :-)
 
 While I love Apache Velocity (Apache Turbine anyone?) I decided to give FreeMarker a chance and migrated my [velocity-cli](https://github.com/sgoeschl/velocity-cli) to FreeMarker.
 
@@ -414,7 +414,7 @@ D. H.
 
 ## 6.5 Transform JSON To CSV
 
-One day I was asked a to prepare a CSV files containind REST endpoints described by Swagger - technically this is a JSON to CSV transformation. Of course I could create that CSV manually but writing a FTL template doing that was simply more fun and saves time in the future.
+One day I was asked a to prepare a CSV files containing REST endpoints described by Swagger - technically this is a JSON to CSV transformation. Of course I could create that CSV manually but writing a FTL template doing that was simply more fun and saves time in the future.
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
@@ -452,7 +452,7 @@ ENDPOINT;METHOD;DESCRIPTION
 
 ## 6.6 Transforming Excel Documents
 
-Another day my project management asked me to create a CSV configuration file based on an Excel documents - as usual manual copying was not an option due to required data cleanup and data transformation. So I thought about Apache POI which support XLS and XLSX documents - integration of Apache POI was a breeze but the resulting code was not particulary useful example. So a more generic transformation was provided to show the transformation of Excel documents ...
+Another day my project management asked me to create a CSV configuration file based on an Excel documents - as usual manual copying was not an option due to required data cleanup and data transformation. So I thought about Apache POI which support XLS and XLSX documents - integration of Apache POI was a breeze but the resulting code was not particularly useful example. So a more generic transformation was provided to show the transformation of Excel documents ...
 
 ```text
 > ./bin/freemarker-cli -t templates/excel/html/transform.ftl site/sample/excel/test.xls
@@ -717,7 +717,7 @@ INFO: Rendered page #2.
 
 ## 6.9 Transforming HTML To CSV
 
-Recently I got the rather unusual question how to determine the list of dependecied of an application - one easy way is the Maven "dependencies.html" but this is unstructured data. Having said that the Jsoup library is perfectly able to parse most real-life HTML and provides a DOM model
+Recently I got the rather unusual question how to determine the list of dependencies of an application - one easy way is the Maven "dependencies.html" but this is unstructured data. Having said that the Jsoup library is perfectly able to parse most real-life HTML and provides a DOM model
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
@@ -945,9 +945,9 @@ Some useful hints
 * For available CSV formats please see [Apache Commons CSV User Guide](http://commons.apache.org/proper/commons-csv/user-guide.html)
 * Stripping the Excel BOM (Byte Order Mark) works out-of-box
 
-## 6.13 Executing Arbitray Commands
+## 6.13 Executing Arbitrary Commands
 
-Using Apache Commons Exec allows to execute arbitrary commands - nice but dangerous. It was recently quite useful to to invoke AWS CLI to generate a Confluence paga about the overall setup of our AWS accounts. 
+Using Apache Commons Exec allows to execute arbitrary commands - nice but dangerous. It was recently quite useful to to invoke AWS CLI to generate a Confluence page about the overall setup of our AWS accounts. 
 
 A few snippets to illustrate the points
 
@@ -1007,7 +1007,7 @@ There is a `demo.ftl` which shows some advanced FreeMarker functionality
 
 * Invoking a Java constructor
 * Invoke a static method of non-instantiable class
-* Work with Java enums
+* Work with Java enumerations
 * Access System properties
 * Access Environment variables
 
