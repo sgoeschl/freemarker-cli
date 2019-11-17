@@ -23,6 +23,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.sgoeschl.freemarker.cli.util.ClosableUtils.closeQuietly;
+
 /**
  * Keep track of closables created on behalf of the client to close
  * them all later on.
@@ -43,7 +45,7 @@ public class CloseableReaper implements Closeable {
     @Override
     public void close() {
         synchronized (this) {
-            closeables.forEach(ClosableUtils::closeQuietly);
+            closeables.forEach(c -> closeQuietly(c.get()));
             closeables.clear();
         }
     }

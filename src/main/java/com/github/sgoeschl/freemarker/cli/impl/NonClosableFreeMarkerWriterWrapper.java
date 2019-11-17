@@ -89,9 +89,4 @@ public class NonClosableFreeMarkerWriterWrapper extends Writer {
     public String toString() {
         return delegate.toString();
     }
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-    }
 }

@@ -23,11 +23,14 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.io.FileUtils.listFiles;
 
 /**
@@ -51,30 +54,30 @@ public class RecursiveFileResolver {
     }
 
     public List<File> resolve() {
+        return sources.stream()
+                .map(this::resolve)
+                .flatMap(Collection::stream)
+                .collect(toList());
+    }
 
-        final List<File> result = new ArrayList<>();
-
-        for (String source : sources) {
-            final File file = new File(source);
-            if (file.isFile()) {
-                result.add(file);
-            } else {
-                result.addAll(resolveDirectory(file));
-            }
+    private List<File> resolve(String source) {
+        final File file = new File(source);
+        if (file.isFile()) {
+            return singletonList(file);
+        } else {
+            return new ArrayList<>(resolveDirectory(file));
         }
-
-        return result;
     }
 
     private List<File> resolveDirectory(File directory) {
         return new ArrayList<>(listFiles(directory, fileFilter(), directoryFilter()));
     }
 
-    private IOFileFilter directoryFilter() {
-        return HiddenFileFilter.VISIBLE;
-    }
-
     private IOFileFilter fileFilter() {
         return new AndFileFilter(new WildcardFileFilter(includes), HiddenFileFilter.VISIBLE);
+    }
+
+    private static IOFileFilter directoryFilter() {
+        return HiddenFileFilter.VISIBLE;
     }
 }

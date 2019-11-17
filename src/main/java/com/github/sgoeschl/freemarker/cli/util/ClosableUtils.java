@@ -18,7 +18,6 @@ package com.github.sgoeschl.freemarker.cli.util;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 
 public class ClosableUtils {
 
@@ -31,9 +30,4 @@ public class ClosableUtils {
             // ignore
         }
     }
-
-    public static void closeQuietly(final WeakReference<Closeable> closeable) {
-        closeQuietly(closeable.get());
-    }
-
 }
