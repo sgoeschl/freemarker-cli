@@ -25,7 +25,7 @@ import java.util.Properties;
 public class PropertiesTool {
 
     public Properties parse(Document document) {
-        try (InputStream is = document.getInputStream()) {
+        try (final InputStream is = document.getInputStream()) {
             final Properties properties = new Properties();
             properties.load(is);
             return properties;

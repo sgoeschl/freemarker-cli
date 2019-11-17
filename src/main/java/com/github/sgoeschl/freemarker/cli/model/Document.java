@@ -78,7 +78,7 @@ public class Document implements Closeable {
     }
 
     /**
-     * Try to get the length lazely, efficient and without consuming the input stream.
+     * Try to get the length lazily, efficient and without consuming the input stream.
      */
     public long getLength() {
         if (dataSource instanceof FileDataSource) {
@@ -100,7 +100,7 @@ public class Document implements Closeable {
 
     public String getText(String charsetName) throws IOException {
         final StringWriter writer = new StringWriter();
-        try (InputStream is = getInputStream()) {
+        try (final InputStream is = getInputStream()) {
             IOUtils.copy(is, writer, forName(charsetName));
             return writer.toString();
         }
