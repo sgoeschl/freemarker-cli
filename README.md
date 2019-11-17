@@ -81,19 +81,17 @@ FreeMarker version     : 2.3.29
 Template name          : templates/info.ftl
 Language               : en
 Locale                 : en_AT
-Timestamp              : Nov 12, 2019 7:32:23 PM
+Timestamp              : Nov 17, 2019 5:59:10 PM
 Output encoding        : UTF-8
 Output format          : plainText
 
-Documents
----------------------------------------------------------------------------
 
 User Supplied Properties
 ---------------------------------------------------------------------------
 
 Template Directories
 ---------------------------------------------------------------------------
-[1] /Users/sgoeschl
+[1] /Users/sgoeschl/work/github/sgoeschl/freemarker-cli
 [2] /Users/sgoeschl/.freemarker-cli
 [3] /Applications/Java/freemarker-cli-2.0.0
 
@@ -419,27 +417,23 @@ D. H.
 One day I was asked a to prepare a CSV files containind REST endpoints described by Swagger - technically this is a JSON to CSV transformation. Of course I could create that CSV manually but writing a FTL template doing that was simply more fun and saves time in the future.
 
 ```text
-<#ftl output_format="plainText" >
-<#assign xml = XmlTool.parse(documents[0])>
-<#list xml.recipients.person as recipient>
-To: ${recipient.name}
-${recipient.address}
+<#ftl output_format="plainText" strip_text="true">
+<#assign json = JsonPathTool.parse(documents[0])>
+<#assign basePath = json.read("$.basePath")>
+<#assign paths = json.read("$.paths")>
 
-Dear ${recipient.name},
-
-Thank you for your interest in our products. We will be sending you a catalog shortly.
-To take advantage of our free gift offer, please fill in the survey attached to this
-letter and return it to the address on the reverse. Only one participant is allowed for
-each household.
-
-Sincere salutations,
-
-
-D. H.
-
----------------------------------------------------------------------------------------
-</#list>
-
+<#compress>
+    ENDPOINT;METHOD;DESCRIPTION
+    <#list paths as endpoint,metadata>
+        <#assign relative_url = basePath + endpoint>
+        <#assign methods = metadata?keys>
+        <#list methods as method>
+            <#assign description = paths[endpoint][method]["description"]?replace(";", ",")>
+            ${relative_url};${method?upper_case};${description}
+        </#list>
+    </#list>
+</#compress>
+${'\n'}
 ```
 
 Invoking the FTL template
@@ -1025,7 +1019,6 @@ gives you
 
 ```text
 <#ftl output_format="plainText" >
-
 1) FreeMarker Special Variables
 ---------------------------------------------------------------------------
 
@@ -1039,28 +1032,28 @@ Output format          : ${.output_format}
 
 2) Invoke a constructor of a Java class
 ---------------------------------------------------------------------------
-<#assign date = ObjectConstructor("java.util.Date", 1000 * 3600 * 24)>
+<#assign date = FreeMarkerTool.objectConstructor("java.util.Date", 1000 * 3600 * 24)>
 new java.utilDate(1000 * 3600 * 24): ${date?datetime}
 
 3) Invoke a static method of an non-constructor class
 ---------------------------------------------------------------------------
-System.currentTimeMillis: ${Statics["java.lang.System"].currentTimeMillis()}
+System.currentTimeMillis: ${FreeMarkerTool.statics["java.lang.System"].currentTimeMillis()}
 
 4) Access an Enumeration
 ---------------------------------------------------------------------------
-java.math.RoundingMode#UP: ${Enums["java.math.RoundingMode"].UP}
+java.math.RoundingMode#UP: ${FreeMarkerTool.enums["java.math.RoundingMode"].UP}
 
 5) Loop Over The Values Of An Enumeration
 ---------------------------------------------------------------------------
-<#list Enums["java.math.RoundingMode"]?values as roundingMode>
-* java.math.RoundingMode.${roundingMode}
+<#list FreeMarkerTool.enums["java.math.RoundingMode"]?values as roundingMode>
+    * java.math.RoundingMode.${roundingMode}
 </#list>
 
 6) Display list of input files
 ---------------------------------------------------------------------------
 List all files:
 <#list documents as document>
-- Document: name=${document.name} location=${document.location} length=${document.length} encoding=${document.encoding!""}
+    - Document: name=${document.name} location=${document.location} length=${document.length} encoding=${document.encoding!""}
 </#list>
 
 7) SystemTool
@@ -1085,15 +1078,15 @@ user.home    : ${SystemProperties["user.home"]!""}
 9) Environment Variables
 ---------------------------------------------------------------------------
 <#list Environment as name,value>
-* ${name} ==> ${value}
+    * ${name} ==> ${value}
 </#list>
 
 10) Accessing Documents
 ---------------------------------------------------------------------------
 Get the number of documents:
-    - ${Documents.size()}
+- ${Documents.size()}
 <#if !Documents.isEmpty()>
-Get the first document
+    Get the first document
     - ${Documents.get(0)!"NA"}
 </#if>
 List all files containing "README" in the name
@@ -1115,7 +1108,7 @@ Get all documents
 Top-level entries in the current data model
 
 <#list .data_model?keys as key>
-- ${key}
+    - ${key}
 </#list>
 
 12) Create a UUID
@@ -1124,10 +1117,10 @@ Top-level entries in the current data model
 See https://stackoverflow.com/questions/43501297/i-have-a-simplescalar-i-need-its-strings-getbytes-return-value-what-can-i-d
 
 <#assign uuidSource = "value and salt">
-<#assign buffer = Statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
+<#assign buffer = FreeMarkerTool.statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
 <#assign bytes = buffer.array()[0..<buffer.limit()]>
-<#assign uuid = Statics["java.util.UUID"].nameUUIDFromBytes(bytes)>
-Random UUID           : ${Statics["java.util.UUID"].randomUUID()}
+<#assign uuid = FreeMarkerTool.statics["java.util.UUID"].nameUUIDFromBytes(bytes)>
+Random UUID           : ${FreeMarkerTool.statics["java.util.UUID"].randomUUID()}
 Name UUID from bytes  : ${uuid}
 Name UUID as function : ${uuidFromValueAndSalt("value and ", "salt")}
 
@@ -1156,9 +1149,9 @@ ${CommonsExecTool.execute("date")}
 <#--------------------------------------------------------------------------->
 <#function uuidFromValueAndSalt value salt>
     <#assign uuidSource = value + salt>
-    <#assign buffer = Statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
+    <#assign buffer = FreeMarkerTool.statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
     <#assign bytes = buffer.array()[0..<buffer.limit()]>
-    <#return Statics["java.util.UUID"].nameUUIDFromBytes(bytes)>
+    <#return FreeMarkerTool.statics["java.util.UUID"].nameUUIDFromBytes(bytes)>
 </#function>
 ```
 
@@ -1181,15 +1174,13 @@ Within the script a FreeMarker data model is set up and passed to the template -
 | CSVTool               | CSV parser exposing a `parse` method                                |
 | Documents             | Helper to find documents, e.g. by name or extension                 |
 | documents             | List of documents passed on the command line                        |
-| Enums                 | Helper to work with Java enumerations                               |
 | Environment           | Environment variables                                               |
 | ExcelTool             | Excel parser exposing a `parse` method                              |
+| FreeMarkerTool        | FreeMarker helper classes                                           |
 | GrokTool              | Use Grok for powerful regular expressions                           |
 | JsonPathTool          | JSON Parser                                                         |
 | JsoupTool             | Jsoup HTML parser                                                   |
-| ObjectConstructor     | Creata Java instances using reflection                              |
 | PropertiesTool        | Properties parser exposing a `parse` method                         |
-| Statics               | Invoke static Java methods using reflection                         |
 | SystemProperties      | JVM System properties                                               |
 | XmlTool               | XML parser exposing a `parse` method                                |
 | YamlTool              | SnakeYAML to parse YAML files                                       |

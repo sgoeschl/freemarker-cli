@@ -28,28 +28,28 @@ Output format          : ${.output_format}
 
 2) Invoke a constructor of a Java class
 ---------------------------------------------------------------------------
-<#assign date = ObjectConstructor("java.util.Date", 1000 * 3600 * 24)>
+<#assign date = FreeMarkerTool.objectConstructor("java.util.Date", 1000 * 3600 * 24)>
 new java.utilDate(1000 * 3600 * 24): ${date?datetime}
 
 3) Invoke a static method of an non-constructor class
 ---------------------------------------------------------------------------
-System.currentTimeMillis: ${Statics["java.lang.System"].currentTimeMillis()}
+System.currentTimeMillis: ${FreeMarkerTool.statics["java.lang.System"].currentTimeMillis()}
 
 4) Access an Enumeration
 ---------------------------------------------------------------------------
-java.math.RoundingMode#UP: ${Enums["java.math.RoundingMode"].UP}
+java.math.RoundingMode#UP: ${FreeMarkerTool.enums["java.math.RoundingMode"].UP}
 
 5) Loop Over The Values Of An Enumeration
 ---------------------------------------------------------------------------
-<#list Enums["java.math.RoundingMode"]?values as roundingMode>
-* java.math.RoundingMode.${roundingMode}
+<#list FreeMarkerTool.enums["java.math.RoundingMode"]?values as roundingMode>
+    * java.math.RoundingMode.${roundingMode}
 </#list>
 
 6) Display list of input files
 ---------------------------------------------------------------------------
 List all files:
 <#list documents as document>
-- Document: name=${document.name} location=${document.location} length=${document.length} encoding=${document.encoding!""}
+    - Document: name=${document.name} location=${document.location} length=${document.length} encoding=${document.encoding!""}
 </#list>
 
 7) SystemTool
@@ -74,15 +74,15 @@ user.home    : ${SystemProperties["user.home"]!""}
 9) Environment Variables
 ---------------------------------------------------------------------------
 <#list Environment as name,value>
-* ${name} ==> ${value}
+    * ${name} ==> ${value}
 </#list>
 
 10) Accessing Documents
 ---------------------------------------------------------------------------
 Get the number of documents:
-    - ${Documents.size()}
+- ${Documents.size()}
 <#if !Documents.isEmpty()>
-Get the first document
+    Get the first document
     - ${Documents.get(0)!"NA"}
 </#if>
 List all files containing "README" in the name
@@ -104,7 +104,7 @@ Get all documents
 Top-level entries in the current data model
 
 <#list .data_model?keys as key>
-- ${key}
+    - ${key}
 </#list>
 
 12) Create a UUID
@@ -113,10 +113,10 @@ Top-level entries in the current data model
 See https://stackoverflow.com/questions/43501297/i-have-a-simplescalar-i-need-its-strings-getbytes-return-value-what-can-i-d
 
 <#assign uuidSource = "value and salt">
-<#assign buffer = Statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
+<#assign buffer = FreeMarkerTool.statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
 <#assign bytes = buffer.array()[0..<buffer.limit()]>
-<#assign uuid = Statics["java.util.UUID"].nameUUIDFromBytes(bytes)>
-Random UUID           : ${Statics["java.util.UUID"].randomUUID()}
+<#assign uuid = FreeMarkerTool.statics["java.util.UUID"].nameUUIDFromBytes(bytes)>
+Random UUID           : ${FreeMarkerTool.statics["java.util.UUID"].randomUUID()}
 Name UUID from bytes  : ${uuid}
 Name UUID as function : ${uuidFromValueAndSalt("value and ", "salt")}
 
@@ -145,7 +145,7 @@ ${CommonsExecTool.execute("date")}
 <#--------------------------------------------------------------------------->
 <#function uuidFromValueAndSalt value salt>
     <#assign uuidSource = value + salt>
-    <#assign buffer = Statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
+    <#assign buffer = FreeMarkerTool.statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
     <#assign bytes = buffer.array()[0..<buffer.limit()]>
-    <#return Statics["java.util.UUID"].nameUUIDFromBytes(bytes)>
+    <#return FreeMarkerTool.statics["java.util.UUID"].nameUUIDFromBytes(bytes)>
 </#function>

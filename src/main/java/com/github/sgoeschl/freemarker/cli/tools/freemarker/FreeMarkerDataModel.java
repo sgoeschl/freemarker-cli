@@ -32,11 +32,9 @@ public class FreeMarkerDataModel {
 
     public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();
-        final BeansWrapperBuilder builder = new BeansWrapperBuilder(Configuration.VERSION_2_3_28);
+        final BeansWrapperBuilder builder = new BeansWrapperBuilder(Configuration.VERSION_2_3_29);
         final BeansWrapper beansWrapper = builder.build();
-        dataModel.put("ObjectConstructor", new ObjectConstructor());
-        dataModel.put("Statics", beansWrapper.getStaticModels());
-        dataModel.put("Enums", beansWrapper.getEnumModels());
+        dataModel.put("FreeMarkerTool", new FreeMarkerTool());
         return dataModel;
     }
 }

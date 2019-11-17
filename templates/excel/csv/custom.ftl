@@ -50,7 +50,7 @@
 <#--------------------------------------------------------------------------->
 <#function uuidFromValueAndSalt value salt>
     <#assign uuidSource = value + salt>
-    <#assign buffer = Statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
+    <#assign buffer = FreeMarkerTool.statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
     <#assign bytes = buffer.array()[0..<buffer.limit()]>
-    <#return Statics["java.util.UUID"].nameUUIDFromBytes(bytes)>
+    <#return FreeMarkerTool.statics["java.util.UUID"].nameUUIDFromBytes(bytes)>
 </#function>
