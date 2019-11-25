@@ -55,19 +55,19 @@ public class Settings {
     /** Enable verbose mode **/
     private final boolean verbose;
 
-    /** Optional output file */
+    /** Optional output file if not written to stdout */
     private final File outputFile;
 
-    /** Include pattern for recursice directly search of sourc files */
+    /** Include pattern for recursice directly search of source files */
     private final String include;
 
     /** The locale to use for rendering */
     private final Locale locale;
 
-    /** Read from "System.in"? */
+    /** Read from "System.in" */
     private final boolean isReadFromStdin;
 
-    /** Expose environment variables ins data model? */
+    /** Expose environment variables globally in the data model? */
     private final boolean isEnvironmentExposed;
 
     /** User-supplied list of source files or directories */
@@ -76,7 +76,7 @@ public class Settings {
     /** User-supplied system properties, i.e. "-Dfoo=bar" */
     private final Map<String, String> properties;
 
-    /** The writer oused for rendering templates */
+    /** The writer used for rendering templates */
     private final Writer writer;
 
     private Settings(

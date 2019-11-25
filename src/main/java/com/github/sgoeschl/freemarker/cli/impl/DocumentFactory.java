@@ -30,6 +30,9 @@ import java.nio.charset.Charset;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+/**
+ * Creates a document from various sources.
+ */
 public class DocumentFactory {
 
     private static final String STRING_LOCATION = "string";

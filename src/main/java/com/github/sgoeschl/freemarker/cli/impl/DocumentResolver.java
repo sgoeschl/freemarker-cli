@@ -29,13 +29,21 @@ import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
+/**
+ * Resolves a list of input files & directories.
+ */
 public class DocumentResolver {
 
-    private final List<String> sources;
+    /** List of input files and/or directories */
+    private final Collection<String> sources;
+
+    /** Include pattern for resolving files from a directory */
     private final String include;
+
+    /** The charset to use for loading a text file */
     private final Charset charset;
 
-    public DocumentResolver(List<String> sources, String include, Charset charset) {
+    public DocumentResolver(Collection<String> sources, String include, Charset charset) {
         this.sources = requireNonNull(sources);
         this.include = include;
         this.charset = charset;

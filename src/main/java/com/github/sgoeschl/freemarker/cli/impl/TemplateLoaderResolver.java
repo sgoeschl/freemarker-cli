@@ -52,5 +52,4 @@ public class TemplateLoaderResolver {
             throw new RuntimeException("Failed to create MultiTemplateLoader: " + directory, e);
         }
     }
-
 }

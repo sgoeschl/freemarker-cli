@@ -40,14 +40,14 @@ public class RecursiveFileResolver {
 
     private static final String DEFAULT_INCLUDE = "*";
 
-    private final List<String> sources;
+    private final Collection<String> sources;
     private final String includes;
 
     public RecursiveFileResolver(String source, String includes) {
         this(singletonList(source), includes);
     }
 
-    public RecursiveFileResolver(List<String> sources, String includes) {
+    public RecursiveFileResolver(Collection<String> sources, String includes) {
         this.sources = requireNonNull(sources);
         this.includes = isNullOrEmtpty(includes) ? DEFAULT_INCLUDE : includes;
     }

@@ -78,5 +78,4 @@ public class TemplateDirectoryResolver {
     private static boolean isTemplateDirectory(File directory) {
         return directory != null && directory.exists() && directory.isDirectory() && directory.canRead();
     }
-
 }
