@@ -1,4 +1,4 @@
-<#ftl output_format="plainText" >
+<#ftl output_format="plainText">
 <#--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -17,7 +17,6 @@
 -->
 1) FreeMarker Special Variables
 ---------------------------------------------------------------------------
-
 FreeMarker version     : ${.version}
 Template name          : ${.current_template_name}
 Language               : ${.lang}
@@ -42,7 +41,7 @@ java.math.RoundingMode#UP: ${FreeMarkerTool.enums["java.math.RoundingMode"].UP}
 5) Loop Over The Values Of An Enumeration
 ---------------------------------------------------------------------------
 <#list FreeMarkerTool.enums["java.math.RoundingMode"]?values as roundingMode>
-    * java.math.RoundingMode.${roundingMode}
+    - java.math.RoundingMode.${roundingMode}<#lt>
 </#list>
 
 6) Display list of input files
@@ -74,7 +73,7 @@ user.home    : ${SystemProperties["user.home"]!""}
 9) Environment Variables
 ---------------------------------------------------------------------------
 <#list Environment as name,value>
-    * ${name} ==> ${value}
+    - ${name} ==> ${value}<#lt>
 </#list>
 
 10) Accessing Documents
@@ -100,18 +99,14 @@ Get all documents
 
 11) Document Data Model
 ---------------------------------------------------------------------------
-
 Top-level entries in the current data model
-
 <#list .data_model?keys as key>
-    - ${key}
+    - ${key}<#lt>
 </#list>
 
 12) Create a UUID
 ---------------------------------------------------------------------------
-
 See https://stackoverflow.com/questions/43501297/i-have-a-simplescalar-i-need-its-strings-getbytes-return-value-what-can-i-d
-
 <#assign uuidSource = "value and salt">
 <#assign buffer = FreeMarkerTool.statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
 <#assign bytes = buffer.array()[0..<buffer.limit()]>
@@ -122,7 +117,6 @@ Name UUID as function : ${uuidFromValueAndSalt("value and ", "salt")}
 
 13) Printing Special Characters
 ---------------------------------------------------------------------------
-
 German Special Characters: äöüßÄÖÜ
 
 14) Locale-specific output
@@ -130,7 +124,6 @@ German Special Characters: äöüßÄÖÜ
 <#setting number_format=",##0.00">
 <#assign smallNumber = 1.234>
 <#assign largeNumber = 12345678.9>
-
 Small Number :  ${smallNumber}
 Large Number :  ${largeNumber}
 Currency     :  ${largeNumber} EUR
