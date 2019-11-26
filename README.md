@@ -195,22 +195,22 @@ Usage: freemarker-cli [-EhV] [--stdin] [-b=<baseDir>] [-e=<sourceEncoding>]
                       [-D=<String=String>]... [<sources>...]
 Apache FreeMarker CLI
       [<sources>...]        Any number of input source files and/or directories
-  -b, --basedir=<baseDir>   Additional template directory to resolve FreeMarker
-                              templates
-  -D=<String=String>        Set a system property
-  -e, --source-encoding=<sourceEncoding>
-                            Encoding of source file
-  -E, --expose-env          Expose environment variables
+  -b, --basedir=<baseDir>   Additional template base directory to resolve
+                              FreeMarker templates
+  -D=<String=String>        Set system property
+  -e, --input-encoding=<sourceEncoding>
+                            Encoding of input file
+  -E, --expose-env          Expose environment variables and user-supplied
+                              properties globally
   -h, --help                Show this help message and exit.
-      --include=<include>   File pattern for directory search
+      --include=<include>   File pattern for directory search of source files
   -l, --locale=<locale>     Locale being used for output file, e.g. 'en_US
   -o, --output=<outputFile> Output file
       --output-encoding=<outputEncoding>
                             Encoding of output file, e.g. UTF-8
       --stdin               Read source document from stdin
-  -t, --template=<template> FreeMarker template used for rendering
-  -V, --version             Print version information and exit.
-
+  -t, --template=<template> FreeMarker template to render
+  -V, --version  
 ```
 
 # 6. Examples

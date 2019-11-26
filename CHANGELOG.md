@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file. We try to a
 
 ### Changed
 
+* Expose user-supplied system properties as top-level variables when using `-E`
+* Keep track of all `Closables` created & handed out to FreeMarker template rendering
 * Move `ObjectConstructor`, `Statics` and `Enums` into `FreeMarkerTool`
 
 ## [2.0.0-BETA-4] - 2019-11-12

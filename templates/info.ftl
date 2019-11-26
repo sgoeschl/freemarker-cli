@@ -53,6 +53,6 @@ Command line    : ${SystemTool.getSettings().getArgs()?join(", ")}
 
 FreeMarker Document Model
 ---------------------------------------------------------------------------
-<#list .data_model?keys as key>
+<#list .data_model?keys?sort as key>
 - ${key}
 </#list>

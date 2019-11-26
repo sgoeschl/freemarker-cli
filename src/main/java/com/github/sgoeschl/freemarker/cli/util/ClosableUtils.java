@@ -26,7 +26,7 @@ public class ClosableUtils {
             if (closeable != null) {
                 closeable.close();
             }
-        } catch (final IOException ioe) {
+        } catch (final IOException e) {
             // ignore
         }
     }

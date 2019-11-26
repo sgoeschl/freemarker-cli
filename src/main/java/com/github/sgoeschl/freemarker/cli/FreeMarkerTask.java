@@ -31,6 +31,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
 import org.apache.commons.io.FileUtils;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
@@ -40,18 +41,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import static com.github.sgoeschl.freemarker.cli.util.ClosableUtils.closeQuietly;
 import static freemarker.template.Configuration.VERSION_2_3_29;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 
-public class FreeMarkerTask implements Callable<Integer> {
+public class FreeMarkerTask implements Callable<Integer>, Closeable {
 
     private static final String STDIN = "stdin";
 
     private final Settings settings;
+    private final Map<String, Object> tools;
 
     public FreeMarkerTask(Settings settings) {
         this.settings = requireNonNull(settings);
+        this.tools = tools(settings);
     }
 
     @Override
@@ -70,6 +74,15 @@ public class FreeMarkerTask implements Callable<Integer> {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException("Failed to render FreeMarker Template: " + settings.getTemplateName(), e);
+        }
+    }
+
+    @Override
+    public void close() {
+        for (Object object : tools.values()) {
+            if (object instanceof Closeable) {
+                closeQuietly((Closeable) object);
+            }
         }
     }
 
@@ -102,17 +115,11 @@ public class FreeMarkerTask implements Callable<Integer> {
         }
     }
 
-    private DefaultObjectWrapper objectWrapper() {
-        final DefaultObjectWrapperBuilder builder = new DefaultObjectWrapperBuilder(VERSION_2_3_29);
-        builder.setIterableSupport(false);
-        return builder.build();
-    }
-
     private Map<String, Object> dataModel(Documents documents) {
         final Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("documents", documents.getAll());
         dataModel.put("Documents", documents);
-        dataModel.putAll(new Tools(settings).create());
+        dataModel.putAll(this.tools);
         return dataModel;
     }
 
@@ -136,7 +143,17 @@ public class FreeMarkerTask implements Callable<Integer> {
         return new TemplateLoaderResolver(settings.getTemplateDirectories()).resolve();
     }
 
-    private boolean isAbsoluteTemplateFile(File file) {
+    private static Map<String, Object> tools(Settings settings) {
+        return new Tools(settings).create();
+    }
+
+    private static DefaultObjectWrapper objectWrapper() {
+        final DefaultObjectWrapperBuilder builder = new DefaultObjectWrapperBuilder(VERSION_2_3_29);
+        builder.setIterableSupport(false);
+        return builder.build();
+    }
+
+    private static boolean isAbsoluteTemplateFile(File file) {
         return file.isAbsolute() && file.exists() & !file.isDirectory();
     }
 }

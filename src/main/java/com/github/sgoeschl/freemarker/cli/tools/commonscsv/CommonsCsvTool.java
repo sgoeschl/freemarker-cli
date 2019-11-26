@@ -16,6 +16,7 @@
  */
 package com.github.sgoeschl.freemarker.cli.tools.commonscsv;
 
+import com.github.sgoeschl.freemarker.cli.impl.CloseableReaper;
 import com.github.sgoeschl.freemarker.cli.model.Document;
 import com.github.sgoeschl.freemarker.cli.model.Settings;
 import org.apache.commons.csv.CSVFormat;
@@ -24,6 +25,7 @@ import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.input.BOMInputStream;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,12 +39,14 @@ import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
-public class CommonsCsvTool {
+public class CommonsCsvTool implements Closeable {
 
     private final Settings settings;
+    private final CloseableReaper closeableReaper;
 
     public CommonsCsvTool(Settings settings) {
         this.settings = requireNonNull(settings);
+        this.closeableReaper = new CloseableReaper();
     }
 
     public CSVParser parse(Document document, CSVFormat format) {
@@ -53,6 +57,7 @@ public class CommonsCsvTool {
         try {
             // We can't close the input stream since it will consumed later
             final BOMInputStream bomInputStream = new BOMInputStream(document.getInputStream(), false);
+            closeableReaper.add(bomInputStream);
             return CSVParser.parse(bomInputStream, document.getCharset(), format);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse CSV: " + document, e);
@@ -174,6 +179,11 @@ public class CommonsCsvTool {
                     throw new IllegalArgumentException("Unsupported CSV delimiter: " + name);
                 }
         }
+    }
+
+    @Override
+    public void close() {
+        closeableReaper.close();
     }
 
     private List<String> toKeys(Collection<CSVRecord> csvRecords, Function<CSVRecord, String> value) {

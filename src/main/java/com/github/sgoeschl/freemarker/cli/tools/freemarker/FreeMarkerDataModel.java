@@ -19,7 +19,6 @@ package com.github.sgoeschl.freemarker.cli.tools.freemarker;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.BeansWrapperBuilder;
 import freemarker.template.Configuration;
-import freemarker.template.utility.ObjectConstructor;
 
 import java.util.HashMap;
 import java.util.Map;

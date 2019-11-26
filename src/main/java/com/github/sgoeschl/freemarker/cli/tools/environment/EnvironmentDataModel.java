@@ -39,6 +39,7 @@ public class EnvironmentDataModel {
 
         if (settings.isEnvironmentExposed()) {
             dataModel.putAll(env);
+            dataModel.putAll(settings.getProperties());
         }
 
         return dataModel;

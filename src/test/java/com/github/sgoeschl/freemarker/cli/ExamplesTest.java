@@ -16,6 +16,7 @@
  */
 package com.github.sgoeschl.freemarker.cli;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -94,6 +95,24 @@ public class ExamplesTest extends AbstractMainTest {
     @Test
     public void shouldRunWithExposedEnvironmentVariableExamples() throws IOException {
         assertValid(execute("-b ./src/test -E -t templates/environment.ftl"));
+    }
+
+    @Test
+    @Ignore("Manual test to check memory consumption and resource handling")
+    public void shouldCloseAllResources() throws IOException {
+        for (int i = 0; i < 1000; i++) {
+            shouldRunInfo();
+            shouldRunDemoExamples();
+            shouldRunCsvExamples();
+            shouldRunExcelExamples();
+            shouldRunHtmlExamples();
+            shouldRunJsonExamples();
+            shouldRunPropertiesExamples();
+            shouldRunYamlExamples();
+            shouldRunXmlExamples();
+            shouldRunGrokExamples();
+            shouldRunWithExposedEnvironmentVariableExamples();
+        }
     }
 
     private static void assertValid(String output) {

@@ -42,7 +42,7 @@ import static java.util.Objects.requireNonNull;
 @Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
 public class Main implements Callable<Integer> {
 
-    @Option(names = { "-b", "--basedir" }, description = "Additional template base directory to resolve FreeMarker templates")
+    @Option(names = { "-b", "--basedir" }, description = "Optional template base directory to resolve FreeMarker templates")
     private String baseDir;
 
     @Option(names = { "-t", "--template" }, description = "FreeMarker template to render", required = true)
@@ -57,28 +57,28 @@ public class Main implements Callable<Integer> {
     @Option(names = { "-o", "--output" }, description = "Output file")
     private String outputFile;
 
-    @Option(names = { "--include" }, description = "File pattern for directory search of source files")
+    @Option(names = { "--include" }, description = "File pattern for input directory")
     private String include;
 
     @Option(names = { "-l", "--locale" }, description = "Locale being used for output file, e.g. 'en_US")
     private String locale;
 
-    @Option(names = { "--stdin" }, description = "Read source document from stdin")
+    @Option(names = { "--stdin" }, description = "Read input document from stdin")
     private boolean readFromStdin;
 
     @Option(names = { "-D" }, description = "Set system property")
     private Map<String, String> properties;
 
-    @Option(names = { "-E", "--expose-env" }, description = "Expose environment variables globally")
+    @Option(names = { "-E", "--expose-env" }, description = "Expose environment variables and user-supplied properties globally")
     private boolean isEnvironmentExposed;
 
-    @Parameters(description = "Any number of input source files and/or directories")
+    @Parameters(description = "Any number of input files and/or input directories")
     private List<String> sources;
 
     /** User-supplied command line parameters */
     private final String[] args;
 
-    /** User-supplied writer */
+    /** User-supplied writer (used mainly for unit testing) */
     private Writer userSuppliedWriter;
 
     private Main(String[] args) {
@@ -140,8 +140,8 @@ public class Main implements Callable<Integer> {
                 .setWriter(writer(outputFile, outputEncoding))
                 .build();
 
-        try {
-            return new FreeMarkerTask(settings).call();
+        try (FreeMarkerTask freeMarkerTask = new FreeMarkerTask(settings)) {
+            return freeMarkerTask.call();
         } finally {
             if (settings.hasOutputFile()) {
                 close(settings.getWriter());
