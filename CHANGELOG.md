@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file. We try to a
 ### Added
 
 * Add RAT & PMD report to Maven site generation
+* Add `-times` command line option to execute the transformation N times
 
 ### Changed
 

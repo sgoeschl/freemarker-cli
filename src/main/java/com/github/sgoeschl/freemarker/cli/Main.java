@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNotEmpty;
+import static java.lang.Math.abs;
 import static java.util.Objects.requireNonNull;
 
 @Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
@@ -71,6 +72,9 @@ public class Main implements Callable<Integer> {
 
     @Option(names = { "-E", "--expose-env" }, description = "Expose environment variables and user-supplied properties globally")
     private boolean isEnvironmentExposed;
+
+    @Option(names = { "--times" }, defaultValue = "1", description = "Re-run X times for profiling")
+    private int times;
 
     @Parameters(description = "Any number of input files and/or input directories")
     private List<String> sources;
@@ -117,14 +121,32 @@ public class Main implements Callable<Integer> {
     @Override
     public Integer call() {
 
-        // set system properties as soon as possible
-        if (properties != null && !properties.isEmpty()) {
-            System.getProperties().putAll(properties);
+        int result = 0;
+
+        for (int i = 0; i < abs(times); i++) {
+
+            // set system properties as soon as possible
+            if (properties != null && !properties.isEmpty()) {
+                System.getProperties().putAll(properties);
+            }
+            
+            final List<File> templateDirectories = getTemplateDirectories(baseDir);
+            final Settings settings = settings(templateDirectories);
+
+            try (FreeMarkerTask freeMarkerTask = new FreeMarkerTask(settings)) {
+                result = freeMarkerTask.call();
+            } finally {
+                if (settings.hasOutputFile()) {
+                    close(settings.getWriter());
+                }
+            }
         }
 
-        final List<File> templateDirectories = getTemplateDirectories(baseDir);
+        return result;
+    }
 
-        final Settings settings = Settings.builder()
+    private Settings settings(List<File> templateDirectories) {
+        return Settings.builder()
                 .setArgs(args)
                 .setTemplateDirectories(templateDirectories)
                 .setTemplateName(template)
@@ -139,14 +161,6 @@ public class Main implements Callable<Integer> {
                 .setProperties(properties != null ? properties : new HashMap<>())
                 .setWriter(writer(outputFile, outputEncoding))
                 .build();
-
-        try (FreeMarkerTask freeMarkerTask = new FreeMarkerTask(settings)) {
-            return freeMarkerTask.call();
-        } finally {
-            if (settings.hasOutputFile()) {
-                close(settings.getWriter());
-            }
-        }
     }
 
     private Writer writer(String outputFile, String ouputEncoding) {
