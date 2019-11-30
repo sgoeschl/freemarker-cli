@@ -37,7 +37,6 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNotEmpty;
-import static java.lang.Math.abs;
 import static java.util.Objects.requireNonNull;
 
 @Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
@@ -120,29 +119,25 @@ public class Main implements Callable<Integer> {
 
     @Override
     public Integer call() {
-
         int result = 0;
+        for (int i = 0; i < times; i++) {
+            result = callOnce();
+        }
+        return result;
+    }
 
-        for (int i = 0; i < abs(times); i++) {
+    private Integer callOnce() {
+        updateSystemProperties();
+        final List<File> templateDirectories = getTemplateDirectories(baseDir);
+        final Settings settings = settings(templateDirectories);
 
-            // set system properties as soon as possible
-            if (properties != null && !properties.isEmpty()) {
-                System.getProperties().putAll(properties);
-            }
-            
-            final List<File> templateDirectories = getTemplateDirectories(baseDir);
-            final Settings settings = settings(templateDirectories);
-
-            try (FreeMarkerTask freeMarkerTask = new FreeMarkerTask(settings)) {
-                result = freeMarkerTask.call();
-            } finally {
-                if (settings.hasOutputFile()) {
-                    close(settings.getWriter());
-                }
+        try (FreeMarkerTask freeMarkerTask = new FreeMarkerTask(settings)) {
+            return freeMarkerTask.call();
+        } finally {
+            if (settings.hasOutputFile()) {
+                close(settings.getWriter());
             }
         }
-
-        return result;
     }
 
     private Settings settings(List<File> templateDirectories) {
@@ -174,6 +169,12 @@ public class Main implements Callable<Integer> {
             }
         } catch (IOException e) {
             throw new RuntimeException("Unable to create writer", e);
+        }
+    }
+
+    private void updateSystemProperties() {
+        if (properties != null && !properties.isEmpty()) {
+            System.getProperties().putAll(properties);
         }
     }
 

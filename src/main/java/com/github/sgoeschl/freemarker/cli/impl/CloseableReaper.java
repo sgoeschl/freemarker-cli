@@ -42,6 +42,7 @@ public class CloseableReaper implements Closeable {
 
     @Override
     public void close() {
+        // Ensure that we close instances only once
         synchronized (this) {
             closeables.forEach(c -> closeQuietly(c.get()));
             closeables.clear();

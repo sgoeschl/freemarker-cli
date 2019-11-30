@@ -34,6 +34,11 @@ public class ExamplesTest extends AbstractMainTest {
     }
 
     @Test
+    public void shouldRunMultipleTimes() throws IOException {
+        assertValid(execute("--times=2 -t templates/info.ftl README.md"));
+    }
+
+    @Test
     public void shouldRunDemoExamples() throws IOException {
         assertValid(execute("-t templates/demo.ftl README.md"));
     }
