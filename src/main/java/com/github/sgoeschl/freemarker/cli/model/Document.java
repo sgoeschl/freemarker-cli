@@ -22,11 +22,13 @@ import org.apache.commons.io.LineIterator;
 
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 
+import static com.github.sgoeschl.freemarker.cli.util.ClosableUtils.closeQuietly;
 import static java.nio.charset.Charset.forName;
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.io.IOUtils.lineIterator;
@@ -129,6 +131,15 @@ public class Document {
      */
     public LineIterator getLineIterator(String charsetName) throws IOException {
         return lineIterator(getInputStream(), forName(charsetName));
+    }
+
+    /**
+     * Convinience method to close a Closable.
+     *
+     * @param closeable The closable
+     */
+    public void close(Closeable closeable) {
+        closeQuietly(closeable);
     }
 
     @Override

@@ -16,7 +16,8 @@
   under the License.
 -->
 <#assign grok = GrokTool.compile("%{COMBINEDAPACHELOG}")>
-<#assign lines = documents[0].getLineIterator()>
+<#assign document = documents[0]>
+<#assign lines = document.getLineIterator()>
 
 <#compress>
     TIMESTAMP;VERB;REQUEST;HTTPVERSION
@@ -28,6 +29,6 @@
         <#assign httpversion = parts["httpversion"]>
         ${timestamp};${verb};${request};${httpversion}
     </#list>
-    <#-- We should close the iterator -->
-    ${GrokTool.close(lines)}
+    <#-- Close the iterator to avoid leaks -->
+    ${document.close(lines)}
 </#compress>
