@@ -16,14 +16,20 @@
  */
 package com.github.sgoeschl.freemarker.cli.tools.system;
 
-import com.github.sgoeschl.freemarker.cli.model.Settings;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Objects.requireNonNull;
+
 public class SystemToolDataModel {
 
-    public Map<String, Object> create(Settings settings) {
+    final Map<String, Object> settings;
+
+    public SystemToolDataModel(Map<String, Object> settings) {
+        this.settings = requireNonNull(settings);
+    }
+
+    public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("SystemTool", new SystemTool(settings));
         return dataModel;

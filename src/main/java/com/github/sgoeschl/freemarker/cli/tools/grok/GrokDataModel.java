@@ -19,7 +19,13 @@ package com.github.sgoeschl.freemarker.cli.tools.grok;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Objects.requireNonNull;
+
 public class GrokDataModel {
+
+    public GrokDataModel(Map<String, Object> settings) {
+        requireNonNull(settings);
+    }
 
     public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();

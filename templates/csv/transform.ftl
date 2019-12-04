@@ -15,25 +15,25 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#-- Parse incoming CSV with user-supplied configuration -->
-<#assign initialCvsInFormat = CSVFormat[SystemTool.getProperty("csv.in.format", "DEFAULT")]>
-<#assign csvInDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.in.delimiter", initialCvsInFormat.getDelimiter()))>
-<#assign cvsInFormat = initialCvsInFormat.withDelimiter(csvInDelimiter)>
-<#assign csvParser = CSVTool.parse(documents[0], cvsInFormat)>
-<#-- Create outgoing CSV with user-supplied configuration -->
-<#assign initialCvsOutFormat = CSVFormat[SystemTool.getProperty("csv.out.format", "DEFAULT")]>
-<#assign csvOutDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.out.delimiter", initialCvsOutFormat.getDelimiter()))>
-<#assign cvsOutFormat = initialCvsOutFormat.withDelimiter(csvOutDelimiter)>
-<#assign csvPrinter = CSVTool.printer(cvsOutFormat)>
+<#assign csvParser = createCsvParser(documents[0])>
+<#assign csvPrinter = createCsvPrinter()>
 <#-- Print each line without materializing the CSV in memory -->
 <#compress>
     <#list csvParser.iterator() as record>
         ${csvPrinter.printRecord(record)}
     </#list>
-    <#--
-        Technically we should close those both instances - can be
-        skipped as long as we run as command-line application
-    -->
-    ${csvParser.close()}
-    ${csvPrinter.close()}
 </#compress>
+
+<#function createCsvParser document>
+    <#assign initialCvsInFormat = CSVFormat[SystemTool.getProperty("csv.in.format", "DEFAULT")]>
+    <#assign csvInDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.in.delimiter", initialCvsInFormat.getDelimiter()))>
+    <#assign cvsInFormat = initialCvsInFormat.withDelimiter(csvInDelimiter)>
+    <#return CSVTool.parse(document, cvsInFormat)>
+</#function>
+
+<#function createCsvPrinter>
+    <#assign initialCvsOutFormat = CSVFormat[SystemTool.getProperty("csv.out.format", "DEFAULT")]>
+    <#assign csvOutDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.out.delimiter", initialCvsOutFormat.getDelimiter()))>
+    <#assign cvsOutFormat = initialCvsOutFormat.withDelimiter(csvOutDelimiter)>
+    <#return CSVTool.printer(cvsOutFormat)>
+</#function>

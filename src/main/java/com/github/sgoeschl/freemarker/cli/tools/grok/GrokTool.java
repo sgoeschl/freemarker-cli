@@ -18,6 +18,9 @@ package com.github.sgoeschl.freemarker.cli.tools.grok;
 
 import io.krakens.grok.api.Grok;
 import io.krakens.grok.api.GrokCompiler;
+import org.apache.commons.io.LineIterator;
+
+import static com.github.sgoeschl.freemarker.cli.util.ClosableUtils.closeQuietly;
 
 public class GrokTool {
 
@@ -37,5 +40,9 @@ public class GrokTool {
         grokCompiler.registerPatternFromClasspath(path);
         final Grok grok = grokCompiler.compile(pattern);
         return new GrokWrapper(grok);
+    }
+
+    public void close(LineIterator lineIterator) {
+        closeQuietly(lineIterator);
     }
 }

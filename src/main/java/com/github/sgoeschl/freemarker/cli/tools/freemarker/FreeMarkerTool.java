@@ -28,8 +28,7 @@ public class FreeMarkerTool {
     private final ObjectConstructor objectConstructor;
 
     public FreeMarkerTool() {
-        final BeansWrapperBuilder builder = new BeansWrapperBuilder(Configuration.VERSION_2_3_29);
-        this.beansWrapper = builder.build();
+        this.beansWrapper = new BeansWrapperBuilder(Configuration.VERSION_2_3_29).build();
         this.objectConstructor = new ObjectConstructor();
     }
 

@@ -16,7 +16,6 @@
  */
 package com.github.sgoeschl.freemarker.cli.tools.commonscsv;
 
-import com.github.sgoeschl.freemarker.cli.model.Settings;
 import org.apache.commons.csv.CSVFormat;
 
 import java.util.HashMap;
@@ -26,9 +25,9 @@ import static java.util.Objects.requireNonNull;
 
 public class CommonsCsvDataModel {
 
-    private final Settings settings;
+    private final Map<String, Object> settings;
 
-    public CommonsCsvDataModel(Settings settings) {
+    public CommonsCsvDataModel(Map<String, Object> settings) {
         this.settings = requireNonNull(settings);
     }
 

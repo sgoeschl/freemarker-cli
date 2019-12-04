@@ -16,7 +16,6 @@
  */
 package com.github.sgoeschl.freemarker.cli.tools;
 
-import com.github.sgoeschl.freemarker.cli.model.Settings;
 import com.github.sgoeschl.freemarker.cli.tools.commonscsv.CommonsCsvDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.commonsexec.CommonsExecDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.environment.EnvironmentDataModel;
@@ -34,31 +33,33 @@ import com.github.sgoeschl.freemarker.cli.tools.xml.XmlDataModel;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Objects.requireNonNull;
+
 public class Tools {
 
-    private final Settings settings;
+    private final Map<String, Object> settings;
 
-    public Tools(Settings settings) {
-        this.settings = settings;
+    public Tools(Map<String, Object> settings) {
+        this.settings = requireNonNull(settings);
     }
 
     public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();
 
         dataModel.putAll(new EnvironmentDataModel(settings).create());
-        dataModel.putAll(new FreeMarkerDataModel().create());
-        dataModel.putAll(new SystemPropertiesDataModel().create());
+        dataModel.putAll(new FreeMarkerDataModel(settings).create());
+        dataModel.putAll(new SystemPropertiesDataModel(settings).create());
 
         dataModel.putAll(new CommonsCsvDataModel(settings).create());
-        dataModel.putAll(new CommonsExecDataModel().create());
-        dataModel.putAll(new ExcelDataModel().create());
-        dataModel.putAll(new GrokDataModel().create());
-        dataModel.putAll(new JsonPathDataModel().create());
-        dataModel.putAll(new JsoupDataModel().create());
-        dataModel.putAll(new PropertiesParserDataModel().create());
-        dataModel.putAll(new SnakeYamlDataModel().create());
-        dataModel.putAll(new SystemToolDataModel().create(settings));
-        dataModel.putAll(new XmlDataModel().create());
+        dataModel.putAll(new CommonsExecDataModel(settings).create());
+        dataModel.putAll(new ExcelDataModel(settings).create());
+        dataModel.putAll(new GrokDataModel(settings).create());
+        dataModel.putAll(new JsonPathDataModel(settings).create());
+        dataModel.putAll(new JsoupDataModel(settings).create());
+        dataModel.putAll(new PropertiesParserDataModel(settings).create());
+        dataModel.putAll(new SnakeYamlDataModel(settings).create());
+        dataModel.putAll(new SystemToolDataModel(settings).create());
+        dataModel.putAll(new XmlDataModel(settings).create());
 
         return dataModel;
     }

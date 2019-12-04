@@ -16,9 +16,6 @@
  */
 package com.github.sgoeschl.freemarker.cli.model;
 
-import com.github.sgoeschl.freemarker.cli.util.ClosableUtils;
-
-import java.io.Closeable;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
@@ -29,7 +26,7 @@ import static org.apache.commons.io.FilenameUtils.wildcardMatch;
  * Container for documents with a couple of convinience functions to select
  * a subset of documents.
  */
-public class Documents implements Closeable {
+public class Documents {
 
     private final List<Document> documents;
 
@@ -77,11 +74,6 @@ public class Documents implements Closeable {
         return documents.stream()
                 .filter(d -> wildcardMatch(d.getName(), wildcard))
                 .collect(toList());
-    }
-
-    @Override
-    public void close() {
-        documents.forEach(ClosableUtils::closeQuietly);
     }
 
     @Override

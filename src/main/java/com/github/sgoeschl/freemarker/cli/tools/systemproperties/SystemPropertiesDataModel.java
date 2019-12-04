@@ -19,7 +19,13 @@ package com.github.sgoeschl.freemarker.cli.tools.systemproperties;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Objects.requireNonNull;
+
 public class SystemPropertiesDataModel {
+
+    public SystemPropertiesDataModel(Map<String, Object> settings) {
+        requireNonNull(settings);
+    }
 
     public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();

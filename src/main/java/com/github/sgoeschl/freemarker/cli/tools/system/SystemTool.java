@@ -16,20 +16,38 @@
  */
 package com.github.sgoeschl.freemarker.cli.tools.system;
 
-import com.github.sgoeschl.freemarker.cli.model.Settings;
-
-import java.io.Writer;
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+@SuppressWarnings("unchecked")
 public class SystemTool {
 
-    private final Settings settings;
+    private final List<String> args;
+    private final Map<String, String> properties;
+    private final List<File> templateDirectories;
 
-    public SystemTool(Settings settings) {
-        this.settings = settings;
+    public SystemTool(Map<String, Object> settings) {
+        this.args = (List<String>) settings.getOrDefault("args", Collections.emptyList());
+        this.properties = (Map<String, String>) settings.getOrDefault("properties", new HashMap<>());
+        this.templateDirectories = (List<File>) settings.getOrDefault("templateDirectories", Collections.emptyList());
+    }
+
+    public List<String> getArgs() {
+        return args;
+    }
+
+    public List<File> getTemplateDirectories() {
+        return templateDirectories;
+    }
+
+    public Map<String, String> getUserSuppliedProperties() {
+        return properties;
     }
 
     public Properties getProperties() {
@@ -56,20 +74,12 @@ public class SystemTool {
         return System.getenv(name) != null ? System.getenv(name) : def;
     }
 
-    public Settings getSettings() {
-        return settings;
-    }
-
     public String getHostName() {
         try {
             return InetAddress.getLocalHost().getHostName();
         } catch (UnknownHostException ignored) {
             return "localhost";
         }
-    }
-
-    public Writer getWriter() {
-        return getSettings().getWriter();
     }
 
     public long currentTimeMillis() {

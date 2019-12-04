@@ -18,7 +18,6 @@ package com.github.sgoeschl.freemarker.cli.tools.commonscsv;
 
 import com.github.sgoeschl.freemarker.cli.impl.CloseableReaper;
 import com.github.sgoeschl.freemarker.cli.model.Document;
-import com.github.sgoeschl.freemarker.cli.model.Settings;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
@@ -27,6 +26,7 @@ import org.apache.commons.io.input.BOMInputStream;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -41,12 +41,16 @@ import static java.util.stream.Collectors.toList;
 
 public class CommonsCsvTool implements Closeable {
 
-    private final Settings settings;
+    private final Writer writer;
     private final CloseableReaper closeableReaper;
 
-    public CommonsCsvTool(Settings settings) {
-        this.settings = requireNonNull(settings);
+    public CommonsCsvTool(Map<String, Object> settings) {
+        this.writer = (Writer) settings.get("writer");
         this.closeableReaper = new CloseableReaper();
+    }
+
+    public Writer getWriter() {
+        return writer;
     }
 
     public CSVParser parse(Document document, CSVFormat format) {
@@ -142,7 +146,7 @@ public class CommonsCsvTool implements Closeable {
      * @throws IOException thrown if the parameters of the format are inconsistent or if either out or format are null.
      */
     public CSVPrinter printer(CSVFormat csvFormat) throws IOException {
-        return new CSVPrinter(getSettings().getWriter(), csvFormat);
+        return new CSVPrinter(writer, csvFormat);
     }
 
     /**
@@ -211,21 +215,17 @@ public class CommonsCsvTool implements Closeable {
         return result;
     }
 
-    Settings getSettings() {
-        return settings;
-    }
-
     private static final class ValueResolver implements Function<CSVRecord, String> {
 
         private final Integer index;
         private final String name;
 
-        public ValueResolver(Integer index) {
+        ValueResolver(Integer index) {
             this.index = requireNonNull(index);
             this.name = null;
         }
 
-        public ValueResolver(String name) {
+        ValueResolver(String name) {
             this.index = null;
             this.name = requireNonNull(name);
         }
@@ -235,5 +235,4 @@ public class CommonsCsvTool implements Closeable {
             return index != null ? record.get(index) : record.get(name);
         }
     }
-
 }

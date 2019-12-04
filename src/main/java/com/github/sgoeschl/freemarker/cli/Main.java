@@ -42,7 +42,7 @@ import static java.util.Objects.requireNonNull;
 @Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
 public class Main implements Callable<Integer> {
 
-    @Option(names = { "-b", "--basedir" }, description = "Optional template base directory to resolve FreeMarker templates")
+    @Option(names = { "-b", "--basedir" }, description = "Optional template base directory")
     private String baseDir;
 
     @Option(names = { "-t", "--template" }, description = "FreeMarker template to render", required = true)
@@ -60,7 +60,7 @@ public class Main implements Callable<Integer> {
     @Option(names = { "--include" }, description = "File pattern for input directory")
     private String include;
 
-    @Option(names = { "-l", "--locale" }, description = "Locale being used for output file, e.g. 'en_US")
+    @Option(names = { "-l", "--locale" }, description = "Locale being used for output file, e.g. 'en_US'")
     private String locale;
 
     @Option(names = { "--stdin" }, description = "Read input document from stdin")
@@ -75,7 +75,7 @@ public class Main implements Callable<Integer> {
     @Option(names = { "--times" }, defaultValue = "1", description = "Re-run X times for profiling")
     private int times;
 
-    @Parameters(description = "Any number of input files and/or input directories")
+    @Parameters(description = "List of input files and/or input directories")
     private List<String> sources;
 
     /** User-supplied command line parameters */

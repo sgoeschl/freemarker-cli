@@ -16,19 +16,18 @@
  */
 package com.github.sgoeschl.freemarker.cli.tools.environment;
 
-import com.github.sgoeschl.freemarker.cli.model.Settings;
-
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.util.Objects.requireNonNull;
-
+@SuppressWarnings("unchecked")
 public class EnvironmentDataModel {
 
-    private final Settings settings;
+    private final boolean isEnvironmentExposed;
+    private final Map<String, String> properties;
 
-    public EnvironmentDataModel(Settings settings) {
-        this.settings = requireNonNull(settings);
+    public EnvironmentDataModel(Map<String, Object> settings) {
+        this.isEnvironmentExposed = (Boolean) settings.getOrDefault("isEnvironmentExposed", Boolean.FALSE);
+        this.properties = (Map<String, String>) settings.getOrDefault("properties", new HashMap<String, String>());
     }
 
     public Map<String, Object> create() {
@@ -37,9 +36,9 @@ public class EnvironmentDataModel {
 
         dataModel.put("Environment", env);
 
-        if (settings.isEnvironmentExposed()) {
+        if (isEnvironmentExposed) {
             dataModel.putAll(env);
-            dataModel.putAll(settings.getProperties());
+            dataModel.putAll(properties);
         }
 
         return dataModel;

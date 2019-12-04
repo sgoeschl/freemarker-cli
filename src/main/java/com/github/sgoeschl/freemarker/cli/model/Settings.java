@@ -178,6 +178,17 @@ public class Settings {
         return writer;
     }
 
+    public Map<String, Object> toMap() {
+        final Map<String, Object> result = new HashMap<>();
+        result.put("args", getArgs());
+        result.put("properties", getProperties());
+        result.put("isEnvironmentExposed", isEnvironmentExposed());
+        result.put("isVerbose", isVerbose());
+        result.put("templateDirectories", getTemplateDirectories());
+        result.put("writer", getWriter());
+        return result;
+    }
+
     @Override
     public String toString() {
         return "Settings{" +

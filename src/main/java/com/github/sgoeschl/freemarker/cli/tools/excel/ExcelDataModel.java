@@ -19,7 +19,13 @@ package com.github.sgoeschl.freemarker.cli.tools.excel;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Objects.requireNonNull;
+
 public class ExcelDataModel {
+
+    public ExcelDataModel(Map<String, Object> settings) {
+        requireNonNull(settings);
+    }
 
     public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();

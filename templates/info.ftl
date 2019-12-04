@@ -35,13 +35,13 @@ Documents
 
 User Supplied Properties
 ---------------------------------------------------------------------------
-<#list SystemTool.getSettings().getProperties() as name,value>
+<#list SystemTool.getUserSuppliedProperties() as name,value>
 - ${name} ==> ${value}
 </#list>
 
 Template Directories
 ---------------------------------------------------------------------------
-<#list SystemTool.getSettings().getTemplateDirectories() as directory>
+<#list SystemTool.getTemplateDirectories() as directory>
 [${directory?counter}] ${directory}
 </#list>
 
@@ -49,7 +49,7 @@ SystemTool
 ---------------------------------------------------------------------------
 Host name       : ${SystemTool.getHostName()}
 User name       : ${SystemTool.getProperty("user.name", "N.A.")}
-Command line    : ${SystemTool.getSettings().getArgs()?join(", ")}
+Command line    : ${SystemTool.getArgs()?join(", ")}
 
 FreeMarker Document Model
 ---------------------------------------------------------------------------

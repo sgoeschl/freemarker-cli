@@ -29,6 +29,7 @@ import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
+import freemarker.template.Version;
 import org.apache.commons.io.FileUtils;
 
 import java.io.Closeable;
@@ -49,6 +50,7 @@ import static java.util.Objects.requireNonNull;
 public class FreeMarkerTask implements Callable<Integer>, Closeable {
 
     private static final String STDIN = "stdin";
+    private static final Version FREEMARKER_VERSION = VERSION_2_3_29;
 
     private final Settings settings;
     private final Map<String, Object> tools;
@@ -60,7 +62,8 @@ public class FreeMarkerTask implements Callable<Integer>, Closeable {
 
     @Override
     public Integer call() {
-        try (Documents documents = documents()) {
+        try {
+            final Documents documents = documents();
             final Configuration configuration = configuration();
             final Map<String, Object> dataModel = dataModel(documents);
             final Template template = getTemplate(settings, configuration);
@@ -87,14 +90,15 @@ public class FreeMarkerTask implements Callable<Integer>, Closeable {
     }
 
     private Configuration configuration() {
-        final Configuration configuration = new Configuration(VERSION_2_3_29);
-        configuration.setObjectWrapper(objectWrapper());
-        configuration.setTemplateLoader(templateLoader());
+        final Configuration configuration = new Configuration(FREEMARKER_VERSION);
+        configuration.setAPIBuiltinEnabled(false);
         configuration.setDefaultEncoding(settings.getTemplateEncoding().name());
-        configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        configuration.setLogTemplateExceptions(false);
-        configuration.setOutputEncoding(settings.getOutputEncoding().name());
         configuration.setLocale(settings.getLocale());
+        configuration.setLogTemplateExceptions(false);
+        configuration.setObjectWrapper(objectWrapper());
+        configuration.setOutputEncoding(settings.getOutputEncoding().name());
+        configuration.setTemplateLoader(templateLoader());
+        configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         return configuration;
     }
 
@@ -144,11 +148,11 @@ public class FreeMarkerTask implements Callable<Integer>, Closeable {
     }
 
     private static Map<String, Object> tools(Settings settings) {
-        return new Tools(settings).create();
+        return new Tools(settings.toMap()).create();
     }
 
     private static DefaultObjectWrapper objectWrapper() {
-        final DefaultObjectWrapperBuilder builder = new DefaultObjectWrapperBuilder(VERSION_2_3_29);
+        final DefaultObjectWrapperBuilder builder = new DefaultObjectWrapperBuilder(FREEMARKER_VERSION);
         builder.setIterableSupport(false);
         return builder.build();
     }

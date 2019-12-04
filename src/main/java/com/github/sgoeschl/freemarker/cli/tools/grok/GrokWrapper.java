@@ -16,12 +16,12 @@
  */
 package com.github.sgoeschl.freemarker.cli.tools.grok;
 
-import com.github.sgoeschl.freemarker.cli.util.ObjectUtils;
 import io.krakens.grok.api.Grok;
 
 import java.util.Collections;
 import java.util.Map;
 
+import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
 import static java.util.Objects.requireNonNull;
 
 public class GrokWrapper {
@@ -33,7 +33,7 @@ public class GrokWrapper {
     }
 
     public Map<String, Object> match(String line) {
-        if (ObjectUtils.isNullOrEmtpty(line)) {
+        if (isNullOrEmtpty(line)) {
             return Collections.emptyMap();
         }
 

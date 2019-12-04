@@ -17,13 +17,11 @@
 package com.github.sgoeschl.freemarker.cli.model;
 
 import com.github.sgoeschl.freemarker.cli.activation.StringDataSource;
-import com.github.sgoeschl.freemarker.cli.impl.CloseableReaper;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -38,7 +36,7 @@ import static org.apache.commons.io.IOUtils.lineIterator;
  * accessing content it is loaded on demand on not kept in memory to
  * allow processing of large volumes of data.
  */
-public class Document implements Closeable {
+public class Document {
 
     private static final int UKNOWN_LENGTH = -1;
 
@@ -54,15 +52,11 @@ public class Document implements Closeable {
     /** The location of the content */
     private final String location;
 
-    /** Collect all closables handed out to the caller to be closed later */
-    private final CloseableReaper closables;
-
     public Document(String name, DataSource dataSource, String location, Charset charset) {
         this.name = requireNonNull(name);
         this.dataSource = requireNonNull(dataSource);
         this.location = requireNonNull(location);
         this.charset = requireNonNull(charset);
-        this.closables = new CloseableReaper();
     }
 
     public String getName() {
@@ -92,8 +86,13 @@ public class Document implements Closeable {
         }
     }
 
+    /**
+     * The caller is responsible to close the input stream.
+     *
+     * @return input stream
+     */
     public InputStream getInputStream() throws IOException {
-        return closables.add(dataSource.getInputStream());
+        return dataSource.getInputStream();
     }
 
     public String getText() throws IOException {
@@ -108,17 +107,28 @@ public class Document implements Closeable {
         }
     }
 
+    /**
+     * Returns an Iterator for the lines in an <code>InputStream</code>, using
+     * the default character encoding specified. The caller is responsible to close
+     * the line iterator.
+     *
+     * @return line iterator
+     */
     public LineIterator getLineIterator() throws IOException {
         return getLineIterator(getCharset().name());
     }
 
+    /**
+     * Returns an Iterator for the lines in an <code>InputStream</code>, using
+     * the character encoding specified. The caller is responsible to close
+     * the line iterator.
+     *
+     * @param charsetName The name of the requested charset; may be either
+     *                    a canonical name or an alias
+     * @return line iterator
+     */
     public LineIterator getLineIterator(String charsetName) throws IOException {
-        return closables.add(lineIterator(getInputStream(), forName(charsetName)));
-    }
-
-    @Override
-    public void close() {
-        closables.close();
+        return lineIterator(getInputStream(), forName(charsetName));
     }
 
     @Override

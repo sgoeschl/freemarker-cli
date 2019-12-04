@@ -20,7 +20,6 @@ import org.apache.commons.io.output.NullWriter;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -31,14 +30,14 @@ public class TemplateLoadingTest extends AbstractMainTest {
     private static final String CURR_DIR = System.getProperty("user.dir", ".");
 
     @Test
-    public void shouldLoadRelativeTemplate() throws IOException {
+    public void shouldLoadRelativeTemplate() {
         final String[] args = new String[] { "-t", ANY_TEMPLATE_NAME };
 
         assertEquals(SUCCESS, Main.execute(args, new NullWriter()));
     }
 
     @Test
-    public void shouldLoadAbsoluteTemplate() throws IOException {
+    public void shouldLoadAbsoluteTemplate() {
         final String absoluteFileName = new File(CURR_DIR, ANY_TEMPLATE_NAME).getAbsolutePath();
         final String[] args = new String[] { "-t", absoluteFileName };
 

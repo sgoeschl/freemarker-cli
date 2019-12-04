@@ -28,4 +28,6 @@
         <#assign httpversion = parts["httpversion"]>
         ${timestamp};${verb};${request};${httpversion}
     </#list>
+    <#-- We should close the iterator -->
+    ${GrokTool.close(lines)}
 </#compress>

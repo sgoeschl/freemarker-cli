@@ -16,9 +16,9 @@
  */
 package com.github.sgoeschl.freemarker.cli.tools.commonscsv;
 
+import com.github.sgoeschl.freemarker.cli.impl.DocumentFactory;
 import com.github.sgoeschl.freemarker.cli.model.Document;
 import com.github.sgoeschl.freemarker.cli.model.Settings;
-import com.github.sgoeschl.freemarker.cli.impl.DocumentFactory;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
@@ -49,19 +49,21 @@ public class CommonsCsvToolTest {
 
     @Test
     public void shallParseCvsFile() throws IOException {
-        final CSVParser parser = commonsCsvTool().parse(document(), DEFAULT.withHeader());
-
-        assertNotNull(parser);
-        assertEquals(32, parser.getHeaderMap().size());
-        assertEquals(22, parser.getRecords().size());
+        try (CSVParser parser = commonsCsvTool().parse(document(), DEFAULT.withHeader())) {
+            assertNotNull(parser);
+            assertEquals(32, parser.getHeaderMap().size());
+            assertEquals(22, parser.getRecords().size());
+        }
     }
 
     @Test
     public void shallGetKeysFromCsvRecords() throws IOException {
         final CommonsCsvTool commonsCsvTool = commonsCsvTool();
-        final CSVParser parser = commonsCsvTool.parse(document(), DEFAULT.withHeader());
+        final List<String> keys;
 
-        final List<String> keys = commonsCsvTool.toKeys(parser.getRecords(), CONTRACT_ID);
+        try (CSVParser parser = commonsCsvTool.parse(document(), DEFAULT.withHeader())) {
+            keys = commonsCsvTool.toKeys(parser.getRecords(), CONTRACT_ID);
+        }
 
         assertEquals(7, keys.size());
         assertEquals(7, keys.size());
@@ -77,9 +79,11 @@ public class CommonsCsvToolTest {
     @Test
     public void shallCreateMapFromCsvRecords() throws IOException {
         final CommonsCsvTool commonsCsvTool = commonsCsvTool();
-        final CSVParser parser = commonsCsvTool.parse(document(), DEFAULT.withHeader());
+        final Map<String, CSVRecord> map;
 
-        final Map<String, CSVRecord> map = commonsCsvTool.toMap(parser.getRecords(), CONTRACT_ID);
+        try (CSVParser parser = commonsCsvTool.parse(document(), DEFAULT.withHeader())) {
+            map = commonsCsvTool.toMap(parser.getRecords(), CONTRACT_ID);
+        }
 
         assertEquals(7, map.size());
         assertEquals(ANY_KEY, map.get(ANY_KEY).get(CONTRACT_ID_IDX));
@@ -88,9 +92,11 @@ public class CommonsCsvToolTest {
     @Test
     public void shallCreateMultiMapFromCsvRecords() throws IOException {
         final CommonsCsvTool commonsCsvTool = commonsCsvTool();
-        final CSVParser parser = commonsCsvTool.parse(document(), DEFAULT.withHeader());
+        final Map<String, List<CSVRecord>> map;
 
-        final Map<String, List<CSVRecord>> map = commonsCsvTool.toMultiMap(parser.getRecords(), CONTRACT_ID);
+        try (CSVParser parser = commonsCsvTool.parse(document(), DEFAULT.withHeader())) {
+            map = commonsCsvTool.toMultiMap(parser.getRecords(), CONTRACT_ID);
+        }
 
         assertEquals(7, map.size());
         assertEquals(ANY_KEY, map.get(ANY_KEY).get(0).get(CONTRACT_ID_IDX));
@@ -100,19 +106,21 @@ public class CommonsCsvToolTest {
     public void shallPrintCsvRecords() throws IOException {
         final CommonsCsvTool commonsCsvTool = commonsCsvTool();
         final CSVFormat cvsFormat = DEFAULT.withHeader();
-        final CSVParser parser = commonsCsvTool.parse(document(), cvsFormat);
-        final CSVPrinter printer = commonsCsvTool.printer(cvsFormat);
 
-        printer.printRecord(parser.getHeaderMap());
+        try (CSVParser parser = commonsCsvTool.parse(document(), cvsFormat)) {
+            try (CSVPrinter printer = commonsCsvTool.printer(cvsFormat)) {
+                printer.printRecord(parser.getHeaderMap());
+            }
+        }
 
-        assertTrue(commonsCsvTool.getSettings().getWriter().toString().contains(CONTRACT_ID));
+        assertTrue(commonsCsvTool.getWriter().toString().contains(CONTRACT_ID));
     }
 
     @Test
-    public void shallStripBomFromCsvFile() {
-        final CSVParser parser = commonsCsvTool().parse(document(BOM_CSV), EXCEL.withHeader().withDelimiter(';'));
-
-        assertEquals("Text", parser.getHeaderNames().get(0));
+    public void shallStripBomFromCsvFile() throws IOException {
+        try (CSVParser parser = commonsCsvTool().parse(document(BOM_CSV), EXCEL.withHeader().withDelimiter(';'))) {
+            assertEquals("Text", parser.getHeaderNames().get(0));
+        }
     }
 
     @Test
@@ -134,11 +142,11 @@ public class CommonsCsvToolTest {
         return new CommonsCsvTool(settings());
     }
 
-    private Settings settings() {
+    private Map<String, Object> settings() {
         return Settings.builder()
                 .setTemplateName(ANY_TEMPLATE)
                 .setWriter(new StringWriter())
-                .build();
+                .build()
+                .toMap();
     }
-
 }

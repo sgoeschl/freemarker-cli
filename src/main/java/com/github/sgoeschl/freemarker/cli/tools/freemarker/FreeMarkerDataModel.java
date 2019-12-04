@@ -16,12 +16,10 @@
  */
 package com.github.sgoeschl.freemarker.cli.tools.freemarker;
 
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.ext.beans.BeansWrapperBuilder;
-import freemarker.template.Configuration;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Expose a few internal helper classes from Freemarker for advanced
@@ -29,10 +27,12 @@ import java.util.Map;
  */
 public class FreeMarkerDataModel {
 
+    public FreeMarkerDataModel(Map<String, Object> settings) {
+        requireNonNull(settings);
+    }
+
     public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();
-        final BeansWrapperBuilder builder = new BeansWrapperBuilder(Configuration.VERSION_2_3_29);
-        final BeansWrapper beansWrapper = builder.build();
         dataModel.put("FreeMarkerTool", new FreeMarkerTool());
         return dataModel;
     }
