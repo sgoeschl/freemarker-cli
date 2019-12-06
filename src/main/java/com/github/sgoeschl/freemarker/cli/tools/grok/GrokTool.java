@@ -20,7 +20,10 @@ import io.krakens.grok.api.Grok;
 import io.krakens.grok.api.GrokCompiler;
 import org.apache.commons.io.LineIterator;
 
+import java.util.Map;
+
 import static com.github.sgoeschl.freemarker.cli.util.ClosableUtils.closeQuietly;
+import static java.util.Objects.requireNonNull;
 
 public class GrokTool {
 
@@ -28,7 +31,8 @@ public class GrokTool {
 
     private final GrokCompiler grokCompiler;
 
-    public GrokTool() {
+    public GrokTool(Map<String, Object> settings) {
+        requireNonNull(settings);
         this.grokCompiler = GrokCompiler.newInstance();
     }
 

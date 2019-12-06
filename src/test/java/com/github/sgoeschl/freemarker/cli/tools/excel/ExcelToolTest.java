@@ -16,13 +16,14 @@
  */
 package com.github.sgoeschl.freemarker.cli.tools.excel;
 
-import com.github.sgoeschl.freemarker.cli.model.Document;
 import com.github.sgoeschl.freemarker.cli.impl.DocumentFactory;
+import com.github.sgoeschl.freemarker.cli.model.Document;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -89,7 +90,7 @@ public class ExcelToolTest {
     }
 
     private ExcelTool excelTool() {
-        return new ExcelTool();
+        return new ExcelTool(new HashMap<>());
     }
 
     private Document document(File file) {

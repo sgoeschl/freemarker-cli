@@ -16,17 +16,17 @@
  */
 package com.github.sgoeschl.freemarker.cli.tools;
 
-import com.github.sgoeschl.freemarker.cli.tools.commonscsv.CommonsCsvDataModel;
-import com.github.sgoeschl.freemarker.cli.tools.commonsexec.CommonsExecDataModel;
-import com.github.sgoeschl.freemarker.cli.tools.excel.ExcelDataModel;
-import com.github.sgoeschl.freemarker.cli.tools.freemarker.FreeMarkerDataModel;
-import com.github.sgoeschl.freemarker.cli.tools.grok.GrokDataModel;
-import com.github.sgoeschl.freemarker.cli.tools.jsonpath.JsonPathDataModel;
-import com.github.sgoeschl.freemarker.cli.tools.jsoup.JsoupDataModel;
-import com.github.sgoeschl.freemarker.cli.tools.properties.PropertiesParserDataModel;
-import com.github.sgoeschl.freemarker.cli.tools.snakeyaml.SnakeYamlDataModel;
-import com.github.sgoeschl.freemarker.cli.tools.system.SystemToolDataModel;
-import com.github.sgoeschl.freemarker.cli.tools.xml.XmlDataModel;
+import com.github.sgoeschl.freemarker.cli.tools.commonscsv.CommonsCsvTool;
+import com.github.sgoeschl.freemarker.cli.tools.commonsexec.CommonsExecTool;
+import com.github.sgoeschl.freemarker.cli.tools.excel.ExcelTool;
+import com.github.sgoeschl.freemarker.cli.tools.freemarker.FreeMarkerTool;
+import com.github.sgoeschl.freemarker.cli.tools.grok.GrokTool;
+import com.github.sgoeschl.freemarker.cli.tools.jsonpath.JsonPathTool;
+import com.github.sgoeschl.freemarker.cli.tools.jsoup.JsoupTool;
+import com.github.sgoeschl.freemarker.cli.tools.properties.PropertiesTool;
+import com.github.sgoeschl.freemarker.cli.tools.snakeyaml.SnakeYamlTool;
+import com.github.sgoeschl.freemarker.cli.tools.system.SystemTool;
+import com.github.sgoeschl.freemarker.cli.tools.xml.XmlTool;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,18 +44,18 @@ public class Tools {
     public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();
 
-        dataModel.putAll(new FreeMarkerDataModel(settings).create());
-        dataModel.putAll(new PropertiesParserDataModel(settings).create());
-        dataModel.putAll(new SystemToolDataModel(settings).create());
+        dataModel.put("FreeMarkerTool", new FreeMarkerTool(settings));
+        dataModel.put("PropertiesTool", new PropertiesTool(settings));
+        dataModel.put("SystemTool", new SystemTool(settings));
 
-        dataModel.putAll(new CommonsCsvDataModel(settings).create());
-        dataModel.putAll(new CommonsExecDataModel(settings).create());
-        dataModel.putAll(new ExcelDataModel(settings).create());
-        dataModel.putAll(new GrokDataModel(settings).create());
-        dataModel.putAll(new JsonPathDataModel(settings).create());
-        dataModel.putAll(new JsoupDataModel(settings).create());
-        dataModel.putAll(new SnakeYamlDataModel(settings).create());
-        dataModel.putAll(new XmlDataModel(settings).create());
+        dataModel.put("CSVTool", new CommonsCsvTool(settings));
+        dataModel.put("CommonsExecTool", new CommonsExecTool(settings));
+        dataModel.put("ExcelTool", new ExcelTool(settings));
+        dataModel.put("GrokTool", new GrokTool(settings));
+        dataModel.put("JsonPathTool", new JsonPathTool(settings));
+        dataModel.put("JsoupTool", new JsoupTool(settings));
+        dataModel.put("YamlTool", new SnakeYamlTool(settings));
+        dataModel.put("XmlTool", new XmlTool(settings));
 
         return dataModel;
     }

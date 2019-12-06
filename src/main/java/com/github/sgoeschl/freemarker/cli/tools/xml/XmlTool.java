@@ -21,8 +21,15 @@ import freemarker.ext.dom.NodeModel;
 import org.xml.sax.InputSource;
 
 import java.io.InputStream;
+import java.util.Map;
+
+import static java.util.Objects.requireNonNull;
 
 public class XmlTool {
+
+    public XmlTool(Map<String, Object> settings) {
+        requireNonNull(settings);
+    }
 
     public NodeModel parse(Document document) throws Exception {
         try (InputStream is = document.getInputStream()) {

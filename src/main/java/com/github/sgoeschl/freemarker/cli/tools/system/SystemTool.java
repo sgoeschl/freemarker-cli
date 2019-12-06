@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import static java.util.Collections.emptyList;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Provides system related functionality, e.g. accessing environment variable,
@@ -38,6 +39,7 @@ public class SystemTool {
     private final List<File> templateDirectories;
 
     public SystemTool(Map<String, Object> settings) {
+        requireNonNull(settings);
         this.args = (List<String>) settings.getOrDefault("user.args", emptyList());
         this.properties = (Map<String, String>) settings.getOrDefault("user.properties", new HashMap<>());
         this.templateDirectories = (List<File>) settings.getOrDefault("freemarker.template.directories", emptyList());

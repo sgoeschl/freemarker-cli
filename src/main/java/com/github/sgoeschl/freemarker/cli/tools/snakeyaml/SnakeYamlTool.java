@@ -23,7 +23,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
+import static java.util.Objects.requireNonNull;
+
 public class SnakeYamlTool {
+
+    public SnakeYamlTool(Map<String, Object> settings) {
+        requireNonNull(settings);
+    }
 
     public Map<String, Object> parse(Document document) {
         try (InputStream is = document.getInputStream()) {
