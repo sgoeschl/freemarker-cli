@@ -29,6 +29,4 @@
         <#assign httpversion = parts["httpversion"]>
         ${timestamp};${verb};${request};${httpversion}
     </#list>
-    <#-- Close the iterator to avoid leaks -->
-    ${document.close(lines)}
 </#compress>

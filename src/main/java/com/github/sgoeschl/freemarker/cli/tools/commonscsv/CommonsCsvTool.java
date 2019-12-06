@@ -49,20 +49,15 @@ public class CommonsCsvTool implements Closeable {
         this.closeableReaper = new CloseableReaper();
     }
 
-    public Writer getWriter() {
-        return writer;
-    }
-
     public CSVParser parse(Document document, CSVFormat format) {
         if (document == null) {
             throw new IllegalArgumentException("No document was provided");
         }
 
         try {
-            // We can't close the input stream since it will consumed later
             final BOMInputStream bomInputStream = new BOMInputStream(document.getInputStream(), false);
-            closeableReaper.add(bomInputStream);
-            return CSVParser.parse(bomInputStream, document.getCharset(), format);
+            final CSVParser csvParser = CSVParser.parse(bomInputStream, document.getCharset(), format);
+            return closeableReaper.add(csvParser);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse CSV: " + document, e);
         }
@@ -146,7 +141,7 @@ public class CommonsCsvTool implements Closeable {
      * @throws IOException thrown if the parameters of the format are inconsistent or if either out or format are null.
      */
     public CSVPrinter printer(CSVFormat csvFormat) throws IOException {
-        return new CSVPrinter(writer, csvFormat);
+        return closeableReaper.add(new CSVPrinter(writer, csvFormat));
     }
 
     /**
@@ -188,6 +183,10 @@ public class CommonsCsvTool implements Closeable {
     @Override
     public void close() {
         closeableReaper.close();
+    }
+
+    Writer getWriter() {
+        return writer;
     }
 
     private List<String> toKeys(Collection<CSVRecord> csvRecords, Function<CSVRecord, String> value) {

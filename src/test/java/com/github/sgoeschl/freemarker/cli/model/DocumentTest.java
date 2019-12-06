@@ -39,32 +39,47 @@ public class DocumentTest {
 
     @Test
     public void shouldSupportTextDocument() throws IOException {
-        final Document document = DocumentFactory.create("stdin", ANY_TEXT);
-
-        assertEquals("stdin", document.getName());
-        assertEquals("string", document.getLocation());
-        assertEquals(UTF_8, document.getCharset());
-        assertTrue(document.getLength() > 0);
-        assertEquals(ANY_TEXT, document.getText());
+        try (Document document = DocumentFactory.create("stdin", ANY_TEXT)) {
+            assertEquals("stdin", document.getName());
+            assertEquals("string", document.getLocation());
+            assertEquals(UTF_8, document.getCharset());
+            assertTrue(document.getLength() > 0);
+            assertEquals(ANY_TEXT, document.getText());
+        }
     }
 
     @Test
     public void shouldSupportFileDocument() throws IOException {
-        final Document document = DocumentFactory.create(ANY_FILE, ANY_CHAR_SET);
-
-        assertEquals(ANY_FILE_NAME, document.getName());
-        assertEquals(ANY_FILE.getAbsolutePath(), document.getLocation());
-        assertEquals(Charset.defaultCharset(), document.getCharset());
-        assertTrue(document.getLength() > 0);
-        assertFalse(document.getText().isEmpty());
+        try (Document document = DocumentFactory.create(ANY_FILE, ANY_CHAR_SET)) {
+            assertEquals(ANY_FILE_NAME, document.getName());
+            assertEquals(ANY_FILE.getAbsolutePath(), document.getLocation());
+            assertEquals(Charset.defaultCharset(), document.getCharset());
+            assertTrue(document.getLength() > 0);
+            assertFalse(document.getText().isEmpty());
+        }
     }
 
     @Test
     public void shouldSupportLineInterator() throws IOException {
-        final Document document = DocumentFactory.create("test", ANY_TEXT);
+        try (Document document = DocumentFactory.create("test", ANY_TEXT)) {
+            try (LineIterator iterator = document.getLineIterator(ANY_CHAR_SET.name())) {
+                assertEquals(1, count(iterator));
+            }
+        }
+    }
 
-        try (LineIterator iterator = document.getLineIterator(ANY_CHAR_SET.name())) {
-            assertEquals(1, count(iterator));
+    @Test
+    public void shouldReadLines() throws IOException {
+        try (Document document = DocumentFactory.create("test", ANY_TEXT)) {
+            assertEquals(1, document.getLines().size());
+            assertEquals(ANY_TEXT, document.getLines().get(0));
+        }
+    }
+
+    @Test
+    public void shouldGetBytes() throws IOException {
+        try (Document document = DocumentFactory.create("test", ANY_TEXT)) {
+            assertEquals(11, document.getBytes().length);
         }
     }
 
