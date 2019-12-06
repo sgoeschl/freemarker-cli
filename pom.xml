@@ -139,6 +139,10 @@
                     <repositoryLayout>flat</repositoryLayout>
                     <repositoryName>lib</repositoryName>
                     <extraJvmArguments>-Xms64m -Xmx512m</extraJvmArguments>
+                    <endorsedDir>endorsed</endorsedDir>
+                    <useWildcardClassPath>true</useWildcardClassPath>
+                    <copyConfigurationDirectory>true</copyConfigurationDirectory>
+                    <configurationDirectory>config</configurationDirectory>
                     <programs>
                         <program>
                             <platforms>
