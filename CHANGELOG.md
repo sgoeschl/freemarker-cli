@@ -5,15 +5,20 @@ All notable changes to this project will be documented in this file. We try to a
 ## 2.0.0-BETA-5-SNAPSHOT
 
 ### Added
-
-* Add RAT & PMD report to Maven site generation
-* Add `-times` command line option to execute the transformation N times
+- Tools are loaded from `freemarker-cli.tools.properties` and freely configurable
+- Add RAT & PMD report to Maven site generation
+- Add `-times` command line option to execute the transformation N times
 
 ### Changed
+- Do not use `documents[0]` as top-level variable - use `Documents.get(0)` instead
+- Available CSV formats are exposed using the CSVTool and not the global data model
+- Expose user-supplied system properties as top-level variables when using `-E`
+- Keep track of all `Closables` created & handed out to FreeMarker template rendering
+- Move `ObjectConstructor`, `Statics` and `Enums` into `FreeMarkerTool`
 
-* Expose user-supplied system properties as top-level variables when using `-E`
-* Keep track of all `Closables` created & handed out to FreeMarker template rendering
-* Move `ObjectConstructor`, `Statics` and `Enums` into `FreeMarkerTool`
+### Deleted
+- `Environment` & `SystemProperties` were deleted and the functionality moved to `SystemTool`
+- All `DataModel` classes were deleted
 
 ## [2.0.0-BETA-4] - 2019-11-12
 
