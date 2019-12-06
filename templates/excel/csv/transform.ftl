@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign format = SystemProperties["csv.format"]!"DEFAULT">
+<#assign format = SystemTool.properties["csv.format"]!"DEFAULT">
 <#-- Parse the first document & sheet of the Excel document -->
 <#assign workbook = ExcelTool.parse(documents[0])>
 <#assign sheet = ExcelTool.getSheets(workbook)[0]>

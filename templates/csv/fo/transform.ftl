@@ -16,7 +16,7 @@
   under the License.
 -->
 <#assign name = documents[0].name>
-<#assign csvFormatName = SystemProperties["csv.format"]!"DEFAULT">
+<#assign csvFormatName = SystemTool.properties["csv.format"]!"DEFAULT">
 <#assign cvsFormat = CSVTool.formats[csvFormatName].withHeader()>
 <#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>

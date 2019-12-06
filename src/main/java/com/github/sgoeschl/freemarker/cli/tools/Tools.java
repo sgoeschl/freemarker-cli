@@ -18,16 +18,14 @@ package com.github.sgoeschl.freemarker.cli.tools;
 
 import com.github.sgoeschl.freemarker.cli.tools.commonscsv.CommonsCsvDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.commonsexec.CommonsExecDataModel;
-import com.github.sgoeschl.freemarker.cli.tools.environment.EnvironmentDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.excel.ExcelDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.freemarker.FreeMarkerDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.grok.GrokDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.jsonpath.JsonPathDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.jsoup.JsoupDataModel;
-import com.github.sgoeschl.freemarker.cli.tools.propertiesparser.PropertiesParserDataModel;
+import com.github.sgoeschl.freemarker.cli.tools.properties.PropertiesParserDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.snakeyaml.SnakeYamlDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.system.SystemToolDataModel;
-import com.github.sgoeschl.freemarker.cli.tools.systemproperties.SystemPropertiesDataModel;
 import com.github.sgoeschl.freemarker.cli.tools.xml.XmlDataModel;
 
 import java.util.HashMap;
@@ -46,9 +44,9 @@ public class Tools {
     public Map<String, Object> create() {
         final Map<String, Object> dataModel = new HashMap<>();
 
-        dataModel.putAll(new EnvironmentDataModel(settings).create());
         dataModel.putAll(new FreeMarkerDataModel(settings).create());
-        dataModel.putAll(new SystemPropertiesDataModel(settings).create());
+        dataModel.putAll(new PropertiesParserDataModel(settings).create());
+        dataModel.putAll(new SystemToolDataModel(settings).create());
 
         dataModel.putAll(new CommonsCsvDataModel(settings).create());
         dataModel.putAll(new CommonsExecDataModel(settings).create());
@@ -56,9 +54,7 @@ public class Tools {
         dataModel.putAll(new GrokDataModel(settings).create());
         dataModel.putAll(new JsonPathDataModel(settings).create());
         dataModel.putAll(new JsoupDataModel(settings).create());
-        dataModel.putAll(new PropertiesParserDataModel(settings).create());
         dataModel.putAll(new SnakeYamlDataModel(settings).create());
-        dataModel.putAll(new SystemToolDataModel(settings).create());
         dataModel.putAll(new XmlDataModel(settings).create());
 
         return dataModel;

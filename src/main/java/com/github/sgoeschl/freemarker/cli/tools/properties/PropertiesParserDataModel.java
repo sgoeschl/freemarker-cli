@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.tools.propertiesparser;
+package com.github.sgoeschl.freemarker.cli.tools.properties;
 
 import java.util.HashMap;
 import java.util.Map;

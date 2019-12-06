@@ -57,22 +57,26 @@ Host name       : ${SystemTool.getHostName()}
 Command line    : ${SystemTool.getArgs()?join(", ")}
 User name       : ${SystemTool.getProperty("user.name", "N.A.")}
 Timestamp       : ${SystemTool.currentTimeMillis()?c}
-Environment     : ${SystemTool.getEnvironment("foo", SystemTool.getProperty("foo", "N.A."))}
+Environment     : ${SystemTool.envs["FOO"]!"N.A."}
 
 8) Access System Properties
 ---------------------------------------------------------------------------
-app.dir      : ${SystemProperties["app.dir"]!""}
-app.home     : ${SystemProperties["app.home"]!""}
-app.pid      : ${SystemProperties["app.pid"]!""}
-basedir      : ${SystemProperties["basedir"]!""}
-java.version : ${SystemProperties["java.version"]!""}
-user.name    : ${SystemProperties["user.name"]!""}
-user.dir     : ${SystemProperties["user.dir"]!""}
-user.home    : ${SystemProperties["user.home"]!""}
+app.dir      : ${SystemTool.properties["app.dir"]!""}
+app.home     : ${SystemTool.properties["app.home"]!""}
+app.pid      : ${SystemTool.properties["app.pid"]!""}
+basedir      : ${SystemTool.properties["basedir"]!""}
+java.version : ${SystemTool.properties["java.version"]!""}
+user.name    : ${SystemTool.properties["user.name"]!""}
+user.dir     : ${SystemTool.properties["user.dir"]!""}
+user.home    : ${SystemTool.properties["user.home"]!""}
 
-9) Environment Variables
+<#list SystemTool.properties as name,value>
+    - ${name} ==> ${value}<#lt>
+</#list>
+
+9) Acessing Environment Variables
 ---------------------------------------------------------------------------
-<#list Environment as name,value>
+<#list SystemTool.envs as name,value>
     - ${name} ==> ${value}<#lt>
 </#list>
 

@@ -64,7 +64,7 @@ public class FreeMarkerTask implements Callable<Integer>, Closeable {
     public Integer call() {
         try (Documents documents = documents()) {
             final Configuration configuration = configuration();
-            final Map<String, Object> dataModel = dataModel(documents);
+            final Map<String, Object> dataModel = dataModel(documents, this.tools);
             final Template template = getTemplate(settings, configuration);
 
             try (Writer out = settings.getWriter()) {
@@ -118,11 +118,19 @@ public class FreeMarkerTask implements Callable<Integer>, Closeable {
         }
     }
 
-    private Map<String, Object> dataModel(Documents documents) {
+    private Map<String, Object> dataModel(Documents documents, Map<String, Object> tools) {
         final Map<String, Object> dataModel = new HashMap<>();
+
         dataModel.put("documents", documents.getAll());
         dataModel.put("Documents", documents);
-        dataModel.putAll(this.tools);
+
+        if (settings.isEnvironmentExposed()) {
+            dataModel.putAll(System.getenv());
+            dataModel.putAll(settings.getProperties());
+        }
+
+        dataModel.putAll(tools);
+
         return dataModel;
     }
 
@@ -139,7 +147,7 @@ public class FreeMarkerTask implements Callable<Integer>, Closeable {
     }
 
     private DocumentResolver documentResolver() {
-        return new DocumentResolver(settings.getSources(), settings.getInclude(), settings.getSourceEncoding());
+        return new DocumentResolver(settings.getSources(), settings.getInclude(), settings.getInputEncoding());
     }
 
     private TemplateLoader templateLoader() {

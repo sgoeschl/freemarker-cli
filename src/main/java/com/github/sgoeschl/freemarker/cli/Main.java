@@ -49,7 +49,7 @@ public class Main implements Callable<Integer> {
     private String template;
 
     @Option(names = { "-e", "--input-encoding" }, description = "Encoding of input file", defaultValue = "UTF-8")
-    String sourceEncoding;
+    String inputEncoding;
 
     @Option(names = { "--output-encoding" }, description = "Encoding of output file, e.g. UTF-8", defaultValue = "UTF-8")
     String outputEncoding;
@@ -145,7 +145,7 @@ public class Main implements Callable<Integer> {
                 .setArgs(args)
                 .setTemplateDirectories(templateDirectories)
                 .setTemplateName(template)
-                .setSourceEncoding(sourceEncoding)
+                .setInputEncoding(inputEncoding)
                 .setOutputEncoding(outputEncoding)
                 .setOutputFile(outputFile)
                 .setInclude(include)

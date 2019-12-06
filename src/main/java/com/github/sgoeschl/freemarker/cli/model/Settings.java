@@ -47,7 +47,7 @@ public class Settings {
     private final String templateName;
 
     /** Encoding of source files */
-    private final Charset sourceEncoding;
+    private final Charset inputEncoding;
 
     /** Encoding of output files */
     private final Charset outputEncoding;
@@ -83,7 +83,7 @@ public class Settings {
             List<String> args,
             List<File> templateDirectories,
             String template,
-            Charset sourceEncoding,
+            Charset inputEncoding,
             Charset outputEncoding,
             boolean verbose,
             File outputFile,
@@ -97,7 +97,7 @@ public class Settings {
         this.args = requireNonNull(args);
         this.templateDirectories = requireNonNull(templateDirectories);
         this.templateName = requireNonNull(template);
-        this.sourceEncoding = sourceEncoding;
+        this.inputEncoding = inputEncoding;
         this.outputEncoding = outputEncoding;
         this.verbose = verbose;
         this.outputFile = outputFile;
@@ -126,8 +126,8 @@ public class Settings {
         return templateName;
     }
 
-    public Charset getSourceEncoding() {
-        return sourceEncoding;
+    public Charset getInputEncoding() {
+        return inputEncoding;
     }
 
     public Charset getOutputEncoding() {
@@ -180,12 +180,11 @@ public class Settings {
 
     public Map<String, Object> toMap() {
         final Map<String, Object> result = new HashMap<>();
-        result.put("args", getArgs());
-        result.put("properties", getProperties());
-        result.put("isEnvironmentExposed", isEnvironmentExposed());
-        result.put("isVerbose", isVerbose());
-        result.put("templateDirectories", getTemplateDirectories());
-        result.put("writer", getWriter());
+        result.put("user.args", getArgs());
+        result.put("user.properties", getProperties());
+        result.put("freemarker.verbose", isVerbose());
+        result.put("freemarker.template.directories", getTemplateDirectories());
+        result.put("freemarker.writer", getWriter());
         return result;
     }
 
@@ -195,14 +194,13 @@ public class Settings {
                 "args=" + args +
                 ", templateDirectories=" + templateDirectories +
                 ", templateName='" + templateName + '\'' +
-                ", sourceEncoding=" + sourceEncoding +
+                ", inputEncoding=" + inputEncoding +
                 ", outputEncoding=" + outputEncoding +
                 ", verbose=" + verbose +
                 ", outputFile=" + outputFile +
                 ", include='" + include + '\'' +
                 ", locale=" + locale +
                 ", isReadFromStdin=" + isReadFromStdin +
-                ", isEnvironmentExposed=" + isEnvironmentExposed +
                 ", sources=" + sources +
                 ", properties=" + properties +
                 ", writer=" + writer +
@@ -217,7 +215,7 @@ public class Settings {
         private List<String> args;
         private List<File> templateDirectories;
         private String templateName;
-        private String sourceEncoding;
+        private String inputEncoding;
         private String outputEncoding;
         private boolean verbose;
         private String outputFile;
@@ -232,7 +230,7 @@ public class Settings {
         private SettingsBuilder() {
             this.args = emptyList();
             this.sources = emptyList();
-            this.setSourceEncoding(UTF_8.name());
+            this.setInputEncoding(UTF_8.name());
             this.setOutputEncoding(UTF_8.name());
             this.templateDirectories = emptyList();
             this.properties = new HashMap<>();
@@ -258,8 +256,8 @@ public class Settings {
             return this;
         }
 
-        public SettingsBuilder setSourceEncoding(String sourceEncoding) {
-            this.sourceEncoding = sourceEncoding;
+        public SettingsBuilder setInputEncoding(String inputEncoding) {
+            this.inputEncoding = inputEncoding;
             return this;
         }
 
@@ -314,14 +312,14 @@ public class Settings {
         }
 
         public Settings build() {
+            final Charset inputEncoding = Charset.forName(this.inputEncoding);
             final Charset outputEncoding = Charset.forName(this.outputEncoding);
-            final Charset sourceEncoding = Charset.forName(this.sourceEncoding);
 
             return new Settings(
                     args,
                     templateDirectories,
                     templateName,
-                    sourceEncoding,
+                    inputEncoding,
                     outputEncoding,
                     verbose,
                     outputFile != null ? new File(outputFile) : null,

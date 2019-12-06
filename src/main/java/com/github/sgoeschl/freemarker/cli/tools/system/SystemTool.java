@@ -19,12 +19,17 @@ package com.github.sgoeschl.freemarker.cli.tools.system;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import static java.util.Collections.emptyList;
+
+/**
+ * Provides system related functionality, e.g. accessing environment variable,
+ * system properties, hostname, ...
+ */
 @SuppressWarnings("unchecked")
 public class SystemTool {
 
@@ -33,9 +38,9 @@ public class SystemTool {
     private final List<File> templateDirectories;
 
     public SystemTool(Map<String, Object> settings) {
-        this.args = (List<String>) settings.getOrDefault("args", Collections.emptyList());
-        this.properties = (Map<String, String>) settings.getOrDefault("properties", new HashMap<>());
-        this.templateDirectories = (List<File>) settings.getOrDefault("templateDirectories", Collections.emptyList());
+        this.args = (List<String>) settings.getOrDefault("user.args", emptyList());
+        this.properties = (Map<String, String>) settings.getOrDefault("user.properties", new HashMap<>());
+        this.templateDirectories = (List<File>) settings.getOrDefault("freemarker.template.directories", emptyList());
     }
 
     public List<String> getArgs() {
@@ -62,15 +67,15 @@ public class SystemTool {
         return System.getProperty(key, def);
     }
 
-    public Map<String, String> getEnvironment() {
+    public Map<String, String> getEnvs() {
         return System.getenv();
     }
 
-    public String getEnvironment(String name) {
+    public String getEnv(String name) {
         return System.getenv(name);
     }
 
-    public String getEnvironment(String name, String def) {
+    public String getEnv(String name, String def) {
         return System.getenv(name) != null ? System.getenv(name) : def;
     }
 

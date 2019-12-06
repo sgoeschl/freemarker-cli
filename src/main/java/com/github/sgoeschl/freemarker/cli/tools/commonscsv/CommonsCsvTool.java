@@ -48,7 +48,7 @@ public class CommonsCsvTool implements Closeable {
 
     public CommonsCsvTool(Map<String, Object> settings) {
         this.formats = createCSVFormats();
-        this.writer = (Writer) settings.get("writer");
+        this.writer = (Writer) settings.get("freemarker.writer");
         this.closeableReaper = new CloseableReaper();
     }
 

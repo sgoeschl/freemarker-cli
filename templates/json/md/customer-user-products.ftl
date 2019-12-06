@@ -27,7 +27,7 @@
 |:------------------------------|:------------------------------------------|
 | Source Document Name          | ${sourceDocumentName}                     |
 | Report Generation Date        | ${.now?iso_utc}                           |
-| Report User Name              | ${SystemProperties["user.name"]}          |
+| Report User Name              | ${SystemTool.properties["user.name"]}     |
 
 # 2. Users
 
