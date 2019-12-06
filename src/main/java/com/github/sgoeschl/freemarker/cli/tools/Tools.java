@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import static java.util.Arrays.stream;
+
 public class Tools {
 
     public Map<String, Object> create(Map<String, Object> settings) {
@@ -35,13 +37,30 @@ public class Tools {
         return result;
     }
 
-    private Object createTool(String clazzName, Map<String, Object> settings) {
+    private static Object createTool(String clazzName, Map<String, Object> settings) {
         try {
             final Class<?> clazz = Class.forName(clazzName);
-            final Constructor constructor = clazz.getConstructor(Map.class);
-            return constructor.newInstance(settings);
+            final Constructor<?>[] constructors = clazz.getConstructors();
+            final Constructor constructorWithSettings = findSingleParameterConstructor(constructors, Map.class);
+            final Constructor defaultConstructor = findDefaultConstructor(constructors);
+            return constructorWithSettings != null ? constructorWithSettings.newInstance(settings) : defaultConstructor.newInstance();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to create tool: clazzName", e);
+            throw new RuntimeException("Failed to create tool: " + clazzName, e);
         }
     }
+
+    private static Constructor findSingleParameterConstructor(Constructor[] constructors, Class parameterClazz) {
+        return stream(constructors)
+                .filter(c -> c.getParameterCount() == 1 && c.getParameterTypes()[0].equals(parameterClazz))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private static Constructor findDefaultConstructor(Constructor[] constructors) {
+        return stream(constructors)
+                .filter(c -> c.getParameterCount() == 0)
+                .findFirst()
+                .orElse(null);
+    }
+
 }

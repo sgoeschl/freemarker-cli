@@ -16,6 +16,7 @@
  */
 package com.github.sgoeschl.freemarker.cli;
 
+import com.github.sgoeschl.freemarker.cli.impl.PropertiesFileResolver;
 import com.github.sgoeschl.freemarker.cli.impl.TemplateDirectoryResolver;
 import com.github.sgoeschl.freemarker.cli.model.Settings;
 import com.github.sgoeschl.freemarker.cli.picocli.GitVersionProvider;
@@ -28,7 +29,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -38,13 +38,14 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 
+import static com.github.sgoeschl.freemarker.cli.util.ClosableUtils.closeQuietly;
 import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNotEmpty;
 import static java.util.Objects.requireNonNull;
 
 @Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
 public class Main implements Callable<Integer> {
 
-    private static final String FREEMARKER_CLI_TOOLS_PROPERTY_FILE = "/freemarker-cli.tools.properties";
+    private static final String FREEMARKER_CLI_TOOLS_PROPERTY_FILE = "freemarker-cli.tools.properties";
 
     @Option(names = { "-b", "--basedir" }, description = "Optional template base directory")
     private String baseDir;
@@ -78,6 +79,12 @@ public class Main implements Callable<Integer> {
 
     @Option(names = { "--times" }, defaultValue = "1", description = "Re-run X times for profiling")
     private int times;
+
+    @Option(names = { "--tool" }, description = "Add user-supplied tool")
+    private Properties userSuppliedTools;
+
+    @Option(names = { "--tools" }, defaultValue = FREEMARKER_CLI_TOOLS_PROPERTY_FILE, description = "Tool configuration from file or classpath")
+    private String toolsFileName;
 
     @Parameters(description = "List of input files and/or input directories")
     private List<String> sources;
@@ -133,15 +140,15 @@ public class Main implements Callable<Integer> {
     private Integer callOnce() {
         updateSystemProperties();
 
-        final Properties tools = loadFreeMarkerToolProperties(FREEMARKER_CLI_TOOLS_PROPERTY_FILE);
+        final Properties toolsProperties = toolsProperties(toolsFileName, userSuppliedTools);
         final List<File> templateDirectories = getTemplateDirectories(baseDir);
-        final Settings settings = settings(tools, templateDirectories);
+        final Settings settings = settings(toolsProperties, templateDirectories);
 
         try (FreeMarkerTask freeMarkerTask = new FreeMarkerTask(settings)) {
             return freeMarkerTask.call();
         } finally {
             if (settings.hasOutputFile()) {
-                close(settings.getWriter());
+                closeQuietly(settings.getWriter());
             }
         }
     }
@@ -185,27 +192,28 @@ public class Main implements Callable<Integer> {
         }
     }
 
-    private static void close(Writer writer) {
-        try {
-            if (writer != null) {
-                writer.close();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to close output writer", e);
-        }
-    }
-
     private static List<File> getTemplateDirectories(String baseDir) {
         return new TemplateDirectoryResolver(baseDir).resolve();
     }
 
-    private static Properties loadFreeMarkerToolProperties(String fileName) {
-        final Properties properties = new Properties();
-        try (final InputStream stream = Main.class.getResourceAsStream(fileName)) {
-            properties.load(stream);
-            return properties;
+    private static Properties toolsProperties(String fileName, Properties userTools) {
+        final Properties result = loadFreeMarkerToolsProperties(fileName);
+        if (userTools != null && !userTools.isEmpty()) {
+            result.putAll(userTools);
+        }
+        return result;
+    }
+
+    private static Properties loadFreeMarkerToolsProperties(String fileName) {
+        try {
+            final Properties properties = new PropertiesFileResolver(fileName).resolve();
+            if (properties != null) {
+                return properties;
+            } else {
+                throw new RuntimeException("FreeMarker tools properties not found" + fileName);
+            }
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load FreeMarker properties: " + fileName, e);
+            throw new RuntimeException("Failed to load FreeMarker tools properties: " + fileName, e);
         }
     }
 }

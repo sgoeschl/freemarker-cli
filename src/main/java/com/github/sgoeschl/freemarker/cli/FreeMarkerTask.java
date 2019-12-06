@@ -62,9 +62,24 @@ public class FreeMarkerTask implements Callable<Integer>, Closeable {
 
     @Override
     public Integer call() {
-        try (Documents documents = documents()) {
-            final Configuration configuration = configuration();
-            final Map<String, Object> dataModel = dataModel(documents, this.tools);
+        return call(settings, tools);
+    }
+
+    @Override
+    public void close() {
+        for (Object object : tools.values()) {
+            if (object instanceof Closeable) {
+                closeQuietly((Closeable) object);
+            }
+        }
+    }
+
+    private static Integer call(Settings settings, Map<String, Object> tools) {
+        final DocumentResolver documentResolver = documentResolver(settings);
+        try (Documents documents = documents(settings, documentResolver)) {
+            final TemplateLoader templateLoader = templateLoader(settings);
+            final Configuration configuration = configuration(settings, templateLoader);
+            final Map<String, Object> dataModel = dataModel(settings, documents, tools);
             final Template template = getTemplate(settings, configuration);
 
             try (Writer out = settings.getWriter()) {
@@ -79,16 +94,7 @@ public class FreeMarkerTask implements Callable<Integer>, Closeable {
         }
     }
 
-    @Override
-    public void close() {
-        for (Object object : tools.values()) {
-            if (object instanceof Closeable) {
-                closeQuietly((Closeable) object);
-            }
-        }
-    }
-
-    private Configuration configuration() {
+    private static Configuration configuration(Settings settings, TemplateLoader templateLoader) {
         final Configuration configuration = new Configuration(FREEMARKER_VERSION);
         configuration.setAPIBuiltinEnabled(false);
         configuration.setDefaultEncoding(settings.getTemplateEncoding().name());
@@ -96,9 +102,29 @@ public class FreeMarkerTask implements Callable<Integer>, Closeable {
         configuration.setLogTemplateExceptions(false);
         configuration.setObjectWrapper(objectWrapper());
         configuration.setOutputEncoding(settings.getOutputEncoding().name());
-        configuration.setTemplateLoader(templateLoader());
+        configuration.setTemplateLoader(templateLoader);
         configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         return configuration;
+    }
+
+    private static TemplateLoader templateLoader(Settings settings) {
+        return new TemplateLoaderResolver(settings.getTemplateDirectories()).resolve();
+    }
+
+    private static DocumentResolver documentResolver(Settings settings) {
+        return new DocumentResolver(settings.getSources(), settings.getInclude(), settings.getInputEncoding());
+    }
+
+    private static Documents documents(Settings settings, DocumentResolver documentResolver) {
+        final List<Document> documents = new ArrayList<>(documentResolver.resolve());
+
+        // Add optional document from STDIN at the start of the list since
+        // this allows easy sequence slicing in FreeMarker.
+        if (settings.isReadFromStdin()) {
+            documents.add(0, DocumentFactory.create(STDIN, System.in, STDIN, UTF_8));
+        }
+
+        return new Documents(documents);
     }
 
     /**
@@ -107,7 +133,7 @@ public class FreeMarkerTask implements Callable<Integer>, Closeable {
      * which are mostly irrelevant when running on the command line. So we resolve the absolute file
      * instead of relying on existing template loaders.
      */
-    private Template getTemplate(Settings settings, Configuration configuration) throws IOException {
+    private static Template getTemplate(Settings settings, Configuration configuration) throws IOException {
         final File templateFile = new File(settings.getTemplateName());
         if (isAbsoluteTemplateFile(templateFile)) {
             return new Template(settings.getTemplateName(),
@@ -118,7 +144,7 @@ public class FreeMarkerTask implements Callable<Integer>, Closeable {
         }
     }
 
-    private Map<String, Object> dataModel(Documents documents, Map<String, Object> tools) {
+    private static Map<String, Object> dataModel(Settings settings, Documents documents, Map<String, Object> tools) {
         final Map<String, Object> dataModel = new HashMap<>();
 
         dataModel.put("documents", documents.getAll());
@@ -132,26 +158,6 @@ public class FreeMarkerTask implements Callable<Integer>, Closeable {
         dataModel.putAll(tools);
 
         return dataModel;
-    }
-
-    private Documents documents() {
-        final List<Document> documents = new ArrayList<>(documentResolver().resolve());
-
-        // Add optional document from STDIN at the start of the list since
-        // this allows easy sequence slicing in FreeMarker.
-        if (settings.isReadFromStdin()) {
-            documents.add(0, DocumentFactory.create(STDIN, System.in, STDIN, UTF_8));
-        }
-
-        return new Documents(documents);
-    }
-
-    private DocumentResolver documentResolver() {
-        return new DocumentResolver(settings.getSources(), settings.getInclude(), settings.getInputEncoding());
-    }
-
-    private TemplateLoader templateLoader() {
-        return new TemplateLoaderResolver(settings.getTemplateDirectories()).resolve();
     }
 
     private static Map<String, Object> tools(Settings settings) {
