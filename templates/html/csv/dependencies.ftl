@@ -15,8 +15,9 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign documentName = documents[0].name>
-<#assign html = JsoupTool.parse(documents[0])>
+<#assign document = Documents.get(0)>
+<#assign documentName = document.name>
+<#assign html = JsoupTool.parse(document)>
 
 <#compress>
     <@writeHeader/>

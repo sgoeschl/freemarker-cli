@@ -16,7 +16,7 @@
   under the License.
 -->
 <#assign cvsFormat = CSVTool.formats["DEFAULT"].withHeader()>
-<#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
+<#assign csvParser = CSVTool.parse(Documents.get(0), cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
 <#--------------------------------------------------------------------------->

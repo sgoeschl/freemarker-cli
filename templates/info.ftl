@@ -28,7 +28,7 @@ Output format          : ${.output_format}
 <#if documents?has_content>
 Documents
 ---------------------------------------------------------------------------
-<#list documents as document>
+<#list Documents.list as document>
 [${document?counter}] ${document.name}, ${document.location}, ${document.length} Bytes
 </#list>
 </#if>

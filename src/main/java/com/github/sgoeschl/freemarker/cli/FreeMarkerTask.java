@@ -147,7 +147,6 @@ public class FreeMarkerTask implements Callable<Integer>, Closeable {
     private static Map<String, Object> dataModel(Settings settings, Documents documents, Map<String, Object> tools) {
         final Map<String, Object> dataModel = new HashMap<>();
 
-        dataModel.put("documents", documents.getAll());
         dataModel.put("Documents", documents);
 
         if (settings.isEnvironmentExposed()) {

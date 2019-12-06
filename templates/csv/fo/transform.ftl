@@ -15,10 +15,9 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign name = documents[0].name>
 <#assign csvFormatName = SystemTool.properties["csv.format"]!"DEFAULT">
 <#assign cvsFormat = CSVTool.formats[csvFormatName].withHeader()>
-<#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
+<#assign csvParser = CSVTool.parse(Documents.get(0), cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
 <#--------------------------------------------------------------------------->

@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign xml = XmlTool.parse(documents[0])>
+<#assign xml = XmlTool.parse(Documents.get(0))>
 <#list xml.recipients.person as recipient>
 To: ${recipient.name}
 ${recipient.address}

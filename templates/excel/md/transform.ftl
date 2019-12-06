@@ -15,8 +15,9 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign documentName = documents[0].name>
-<#assign workbook = ExcelTool.parse(documents[0])>
+<#assign document = Documents.get(0)>
+<#assign documentName = document.name>
+<#assign workbook = ExcelTool.parse(document)>
 <#assign date = .now?iso_utc>
 
 <#compress>

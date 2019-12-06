@@ -47,7 +47,7 @@ java.math.RoundingMode#UP: ${FreeMarkerTool.enums["java.math.RoundingMode"].UP}
 6) Display list of input files
 ---------------------------------------------------------------------------
 List all files:
-<#list documents as document>
+<#list Documents.list as document>
     - Document: name=${document.name} location=${document.location} length=${document.length} encoding=${document.encoding!""}
 </#list>
 
@@ -93,7 +93,7 @@ List all files having "md" extension
     - ${document.name}
 </#list>
 Get all documents
-<#list Documents.getAll() as document>
+<#list Documents.list as document>
     - ${document.name} => ${document.location}
 </#list>
 

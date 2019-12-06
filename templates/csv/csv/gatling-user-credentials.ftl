@@ -15,9 +15,9 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign name = documents[0].name>
+<#assign document = Documents.get(0)>
 <#assign cvsFormat = CSVTool.formats["DEFAULT"].withDelimiter(';')>
-<#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
+<#assign csvParser = CSVTool.parse(document, cvsFormat)>
 <#assign csvRecords = csvParser.records>
 
 <#compress>

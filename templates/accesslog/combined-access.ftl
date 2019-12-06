@@ -16,7 +16,7 @@
   under the License.
 -->
 <#assign grok = GrokTool.compile("%{COMBINEDAPACHELOG}")>
-<#assign document = documents[0]>
+<#assign document = Documents.get(0)>
 <#assign lines = document.getLineIterator()>
 
 <#compress>

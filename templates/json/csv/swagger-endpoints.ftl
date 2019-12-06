@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign json = JsonPathTool.parse(documents[0])>
+<#assign json = JsonPathTool.parse(Documents.get(0))>
 <#assign basePath = json.read("$.basePath")>
 <#assign paths = json.read("$.paths")>
 

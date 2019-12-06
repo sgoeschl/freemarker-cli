@@ -77,7 +77,7 @@ public class DocumentsTest {
 
     @Test
     public void shouldGetAllDocuments() {
-        assertEquals(3, documents().getAll().size());
+        assertEquals(3, documents().getList().size());
     }
 
     @Test

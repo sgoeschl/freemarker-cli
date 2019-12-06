@@ -15,8 +15,9 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign sourceDocumentName = documents[0].name>
-<#assign json = JsonPathTool.parse(documents[0])>
+<#assign document = Documents.get(0)>
+<#assign sourceDocumentName = document.name>
+<#assign json = JsonPathTool.parse(document)>
 <#assign users = json.read("$[*]")>
 <#assign userDetails = json.read("$[*].user")>
 <#compress>

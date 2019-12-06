@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign csvParser = createCsvParser(documents[0])>
+<#assign csvParser = createCsvParser(Documents.get(0))>
 <#assign csvPrinter = createCsvPrinter()>
 <#-- Print each line without materializing the CSV in memory -->
 <#compress>

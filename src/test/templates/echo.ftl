@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#list documents as document>
+<#list Documents.list as document>
 ${document.name}, ${document.location}
 =============================================================================
 ${document.text}

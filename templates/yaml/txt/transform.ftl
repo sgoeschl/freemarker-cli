@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign map = YamlTool.parse(documents[0])>
+<#assign map = YamlTool.parse(Documents.get(0))>
 <#--------------------------------------------------------------------------->
 <#compress>
 <@print map 1/>

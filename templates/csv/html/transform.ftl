@@ -15,9 +15,10 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign name = documents[0].name>
+<#assign document = Documents.get(0)>
+<#assign name = document.name>
 <#assign cvsFormat = CSVTool.formats["DEFAULT"].withHeader()>
-<#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
+<#assign csvParser = CSVTool.parse(document, cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderNames()>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
