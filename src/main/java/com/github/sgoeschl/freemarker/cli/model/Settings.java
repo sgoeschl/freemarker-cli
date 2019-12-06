@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 import static com.github.sgoeschl.freemarker.cli.util.LocaleUtils.parseLocale;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -76,6 +77,9 @@ public class Settings {
     /** User-supplied system properties, i.e. "-Dfoo=bar" */
     private final Map<String, String> properties;
 
+    /** Tools to be created and passed to FreeMarker */
+    private final Properties tools;
+
     /** The writer used for rendering templates */
     private final Writer writer;
 
@@ -93,6 +97,7 @@ public class Settings {
             boolean isEnvironmentExposed,
             List<String> sources,
             Map<String, String> properties,
+            Properties tools,
             Writer writer) {
         this.args = requireNonNull(args);
         this.templateDirectories = requireNonNull(templateDirectories);
@@ -107,6 +112,7 @@ public class Settings {
         this.isEnvironmentExposed = isEnvironmentExposed;
         this.sources = requireNonNull(sources);
         this.properties = requireNonNull(properties);
+        this.tools = requireNonNull(tools);
         this.writer = new NonClosableFreeMarkerWriterWrapper(requireNonNull(writer));
     }
 
@@ -170,6 +176,10 @@ public class Settings {
         return properties;
     }
 
+    public Properties getTools() {
+        return tools;
+    }
+
     public boolean hasOutputFile() {
         return outputFile != null;
     }
@@ -184,6 +194,7 @@ public class Settings {
         result.put("user.properties", getProperties());
         result.put("freemarker.verbose", isVerbose());
         result.put("freemarker.template.directories", getTemplateDirectories());
+        result.put("freemarker.tools.properties", getTools());
         result.put("freemarker.writer", getWriter());
         return result;
     }
@@ -203,6 +214,7 @@ public class Settings {
                 ", isReadFromStdin=" + isReadFromStdin +
                 ", sources=" + sources +
                 ", properties=" + properties +
+                ", tools=" + tools +
                 ", writer=" + writer +
                 ", templateEncoding=" + getTemplateEncoding() +
                 ", readFromStdin=" + isReadFromStdin() +
@@ -225,6 +237,7 @@ public class Settings {
         private boolean isEnvironmentExposed;
         private List<String> sources;
         private Map<String, String> properties;
+        private Properties tools;
         private Writer writer;
 
         private SettingsBuilder() {
@@ -306,6 +319,11 @@ public class Settings {
             return this;
         }
 
+        public SettingsBuilder setTools(Properties tools) {
+            this.tools = tools;
+            return this;
+        }
+
         public SettingsBuilder setWriter(Writer writer) {
             this.writer = writer;
             return this;
@@ -329,6 +347,7 @@ public class Settings {
                     isEnvironmentExposed,
                     sources,
                     properties,
+                    tools,
                     writer
             );
         }

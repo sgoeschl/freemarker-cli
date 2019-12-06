@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static junit.framework.TestCase.assertEquals;
@@ -38,7 +39,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.apache.commons.csv.CSVFormat.DEFAULT;
 import static org.apache.commons.csv.CSVFormat.EXCEL;
 
-public class CommonsCsvToolTest {
+public class CommonsCSVToolTest {
 
     private static final String ANY_KEY = "C71";
     private static final String ANY_TEMPLATE = "info.ftl";
@@ -58,7 +59,7 @@ public class CommonsCsvToolTest {
 
     @Test
     public void shallGetKeysFromCsvRecords() throws IOException {
-        final CommonsCsvTool commonsCsvTool = commonsCsvTool();
+        final CommonsCSVTool commonsCsvTool = commonsCsvTool();
         final List<String> keys;
 
         try (CSVParser parser = commonsCsvTool.parse(document(), DEFAULT.withHeader())) {
@@ -78,7 +79,7 @@ public class CommonsCsvToolTest {
 
     @Test
     public void shallCreateMapFromCsvRecords() throws IOException {
-        final CommonsCsvTool commonsCsvTool = commonsCsvTool();
+        final CommonsCSVTool commonsCsvTool = commonsCsvTool();
         final Map<String, CSVRecord> map;
 
         try (CSVParser parser = commonsCsvTool.parse(document(), DEFAULT.withHeader())) {
@@ -91,7 +92,7 @@ public class CommonsCsvToolTest {
 
     @Test
     public void shallCreateMultiMapFromCsvRecords() throws IOException {
-        final CommonsCsvTool commonsCsvTool = commonsCsvTool();
+        final CommonsCSVTool commonsCsvTool = commonsCsvTool();
         final Map<String, List<CSVRecord>> map;
 
         try (CSVParser parser = commonsCsvTool.parse(document(), DEFAULT.withHeader())) {
@@ -104,7 +105,7 @@ public class CommonsCsvToolTest {
 
     @Test
     public void shallPrintCsvRecords() throws IOException {
-        final CommonsCsvTool commonsCsvTool = commonsCsvTool();
+        final CommonsCSVTool commonsCsvTool = commonsCsvTool();
         final CSVFormat cvsFormat = DEFAULT.withHeader();
 
         try (CSVParser parser = commonsCsvTool.parse(document(), cvsFormat)) {
@@ -138,13 +139,14 @@ public class CommonsCsvToolTest {
         return DocumentFactory.create(file, UTF_8);
     }
 
-    private CommonsCsvTool commonsCsvTool() {
-        return new CommonsCsvTool(settings());
+    private CommonsCSVTool commonsCsvTool() {
+        return new CommonsCSVTool(settings());
     }
 
     private Map<String, Object> settings() {
         return Settings.builder()
                 .setTemplateName(ANY_TEMPLATE)
+                .setTools(new Properties())
                 .setWriter(new StringWriter())
                 .build()
                 .toMap();

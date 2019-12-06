@@ -70,10 +70,6 @@ user.name    : ${SystemTool.properties["user.name"]!""}
 user.dir     : ${SystemTool.properties["user.dir"]!""}
 user.home    : ${SystemTool.properties["user.home"]!""}
 
-<#list SystemTool.properties as name,value>
-    - ${name} ==> ${value}<#lt>
-</#list>
-
 9) Acessing Environment Variables
 ---------------------------------------------------------------------------
 <#list SystemTool.envs as name,value>

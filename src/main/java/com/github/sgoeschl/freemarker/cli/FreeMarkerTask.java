@@ -155,7 +155,7 @@ public class FreeMarkerTask implements Callable<Integer>, Closeable {
     }
 
     private static Map<String, Object> tools(Settings settings) {
-        return new Tools(settings.toMap()).create();
+        return new Tools().create(settings.toMap());
     }
 
     private static DefaultObjectWrapper objectWrapper() {

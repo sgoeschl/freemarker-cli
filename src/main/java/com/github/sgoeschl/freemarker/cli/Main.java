@@ -28,12 +28,14 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.Callable;
 
 import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNotEmpty;
@@ -41,6 +43,8 @@ import static java.util.Objects.requireNonNull;
 
 @Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
 public class Main implements Callable<Integer> {
+
+    private static final String FREEMARKER_CLI_TOOLS_PROPERTY_FILE = "/freemarker-cli.tools.properties";
 
     @Option(names = { "-b", "--basedir" }, description = "Optional template base directory")
     private String baseDir;
@@ -128,8 +132,10 @@ public class Main implements Callable<Integer> {
 
     private Integer callOnce() {
         updateSystemProperties();
+
+        final Properties tools = loadFreeMarkerToolProperties(FREEMARKER_CLI_TOOLS_PROPERTY_FILE);
         final List<File> templateDirectories = getTemplateDirectories(baseDir);
-        final Settings settings = settings(templateDirectories);
+        final Settings settings = settings(tools, templateDirectories);
 
         try (FreeMarkerTask freeMarkerTask = new FreeMarkerTask(settings)) {
             return freeMarkerTask.call();
@@ -140,20 +146,21 @@ public class Main implements Callable<Integer> {
         }
     }
 
-    private Settings settings(List<File> templateDirectories) {
+    private Settings settings(Properties tools, List<File> templateDirectories) {
         return Settings.builder()
+                .isEnvironmentExposed(isEnvironmentExposed)
+                .isReadFromStdin(readFromStdin)
                 .setArgs(args)
-                .setTemplateDirectories(templateDirectories)
-                .setTemplateName(template)
+                .setInclude(include)
                 .setInputEncoding(inputEncoding)
+                .setLocale(locale)
                 .setOutputEncoding(outputEncoding)
                 .setOutputFile(outputFile)
-                .setInclude(include)
-                .setLocale(locale)
-                .isReadFromStdin(readFromStdin)
-                .isEnvironmentExposed(isEnvironmentExposed)
-                .setSources(sources != null ? sources : new ArrayList<>())
                 .setProperties(properties != null ? properties : new HashMap<>())
+                .setSources(sources != null ? sources : new ArrayList<>())
+                .setTemplateDirectories(templateDirectories)
+                .setTemplateName(template)
+                .setTools(tools)
                 .setWriter(writer(outputFile, outputEncoding))
                 .build();
     }
@@ -190,5 +197,15 @@ public class Main implements Callable<Integer> {
 
     private static List<File> getTemplateDirectories(String baseDir) {
         return new TemplateDirectoryResolver(baseDir).resolve();
+    }
+
+    private static Properties loadFreeMarkerToolProperties(String fileName) {
+        final Properties properties = new Properties();
+        try (final InputStream stream = Main.class.getResourceAsStream(fileName)) {
+            properties.load(stream);
+            return properties;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load FreeMarker properties: " + fileName, e);
+        }
     }
 }

@@ -40,13 +40,13 @@ import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
-public class CommonsCsvTool implements Closeable {
+public class CommonsCSVTool implements Closeable {
 
     private final Writer writer;
     private final CloseableReaper closeableReaper;
     private final Map<String, CSVFormat> formats;
 
-    public CommonsCsvTool(Map<String, Object> settings) {
+    public CommonsCSVTool(Map<String, Object> settings) {
         this.formats = createCSVFormats();
         this.writer = (Writer) settings.get("freemarker.writer");
         this.closeableReaper = new CloseableReaper();

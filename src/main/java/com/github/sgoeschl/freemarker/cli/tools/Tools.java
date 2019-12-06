@@ -16,47 +16,32 @@
  */
 package com.github.sgoeschl.freemarker.cli.tools;
 
-import com.github.sgoeschl.freemarker.cli.tools.commonscsv.CommonsCsvTool;
-import com.github.sgoeschl.freemarker.cli.tools.commonsexec.CommonsExecTool;
-import com.github.sgoeschl.freemarker.cli.tools.excel.ExcelTool;
-import com.github.sgoeschl.freemarker.cli.tools.freemarker.FreeMarkerTool;
-import com.github.sgoeschl.freemarker.cli.tools.grok.GrokTool;
-import com.github.sgoeschl.freemarker.cli.tools.jsonpath.JsonPathTool;
-import com.github.sgoeschl.freemarker.cli.tools.jsoup.JsoupTool;
-import com.github.sgoeschl.freemarker.cli.tools.properties.PropertiesTool;
-import com.github.sgoeschl.freemarker.cli.tools.snakeyaml.SnakeYamlTool;
-import com.github.sgoeschl.freemarker.cli.tools.system.SystemTool;
-import com.github.sgoeschl.freemarker.cli.tools.xml.XmlTool;
-
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
-
-import static java.util.Objects.requireNonNull;
+import java.util.Properties;
 
 public class Tools {
 
-    private final Map<String, Object> settings;
+    public Map<String, Object> create(Map<String, Object> settings) {
+        final Map<String, Object> result = new HashMap<>();
+        final Properties toolsProperties = (Properties) settings.get("freemarker.tools.properties");
 
-    public Tools(Map<String, Object> settings) {
-        this.settings = requireNonNull(settings);
+        for (String tool : toolsProperties.stringPropertyNames()) {
+            final String clazzName = toolsProperties.getProperty(tool).trim();
+            result.put(tool, createTool(clazzName, settings));
+        }
+
+        return result;
     }
 
-    public Map<String, Object> create() {
-        final Map<String, Object> dataModel = new HashMap<>();
-
-        dataModel.put("FreeMarkerTool", new FreeMarkerTool(settings));
-        dataModel.put("PropertiesTool", new PropertiesTool(settings));
-        dataModel.put("SystemTool", new SystemTool(settings));
-
-        dataModel.put("CSVTool", new CommonsCsvTool(settings));
-        dataModel.put("CommonsExecTool", new CommonsExecTool(settings));
-        dataModel.put("ExcelTool", new ExcelTool(settings));
-        dataModel.put("GrokTool", new GrokTool(settings));
-        dataModel.put("JsonPathTool", new JsonPathTool(settings));
-        dataModel.put("JsoupTool", new JsoupTool(settings));
-        dataModel.put("YamlTool", new SnakeYamlTool(settings));
-        dataModel.put("XmlTool", new XmlTool(settings));
-
-        return dataModel;
+    private Object createTool(String clazzName, Map<String, Object> settings) {
+        try {
+            final Class<?> clazz = Class.forName(clazzName);
+            final Constructor constructor = clazz.getConstructor(Map.class);
+            return constructor.newInstance(settings);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create tool: clazzName", e);
+        }
     }
 }
