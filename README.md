@@ -119,7 +119,6 @@ FreeMarker Document Model
 - ObjectConstructor
 - Environment
 - CSVTool
-- CSVFormat
 - CommonsExecTool
 ```
 
@@ -315,7 +314,7 @@ The FreeMarker template is shown below
 ```text
 <#ftl output_format="HTML" >
 <#assign name = documents[0].name>
-<#assign cvsFormat = CSVFormat.DEFAULT.withHeader()>
+<#assign cvsFormat = CSVTool.formats["DEFAULT"]withHeader()>
 <#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderNames()>
 <#--------------------------------------------------------------------------->
@@ -618,7 +617,7 @@ For a POC (proof of concept) I created a sample transformation from CSV to XML-F
 <#ftl output_format="XML" >
 <#assign name = documents[0].name>
 <#assign csvFormatName = SystemProperties["csv.format"]!"DEFAULT">
-<#assign cvsFormat = CSVFormat[csvFormatName].withHeader()>
+<#assign cvsFormat = CSVTool.formats[csvFormatName].withHeader()>
 <#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
@@ -794,7 +793,7 @@ and the final FTL is found below
 
 ```
 <#ftl output_format="plainText">
-<#assign cvsFormat = CSVFormat.DEFAULT.withHeader()>
+<#assign cvsFormat = CSVTool.formats["DEFAULT"].withHeader()>
 <#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
 <#assign records = csvParser.records>
 <#assign csvMap = CSVTool.toMap(records, "disposer")>
@@ -913,12 +912,12 @@ renders the following template
 ```
 <#ftl output_format="plainText" strip_text="true">
 <#-- Parse incoming CSV with user-supplied configuration -->
-<#assign initialCvsInFormat = CSVFormat[SystemTool.getProperty("csv.in.format", "DEFAULT")]>
+<#assign initialCvsInFormat = CSVTool.formats[SystemTool.getProperty("csv.in.format", "DEFAULT")]>
 <#assign csvInDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.in.delimiter", initialCvsInFormat.getDelimiter()))>
 <#assign cvsInFormat = initialCvsInFormat.withDelimiter(csvInDelimiter)>
 <#assign csvParser = CSVTool.parse(documents[0], cvsInFormat)>
 <#-- Create outgoing CSV with user-supplied configuration -->
-<#assign initialCvsOutFormat = CSVFormat[SystemTool.getProperty("csv.out.format", "DEFAULT")]>
+<#assign initialCvsOutFormat = CSVTool.formats[SystemTool.getProperty("csv.out.format", "DEFAULT")]>
 <#assign csvOutDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.out.delimiter", initialCvsOutFormat.getDelimiter()))>
 <#assign cvsOutFormat = initialCvsOutFormat.withDelimiter(csvOutDelimiter)>
 <#assign csvPrinter = CSVTool.printer(cvsOutFormat)>
@@ -1170,7 +1169,6 @@ Within the script a FreeMarker data model is set up and passed to the template -
 | Helper                | Description                                                         |
 |-----------------------|---------------------------------------------------------------------|
 | CommonsExecTool       | Executing commons using Apache Commons Exec                         |
-| CSVFormat             | Available CSV formats, e.g. "DEFAULT", "EXCEL"                      |
 | CSVTool               | CSV parser exposing a `parse` method                                |
 | Documents             | Helper to find documents, e.g. by name or extension                 |
 | documents             | List of documents passed on the command line                        |
