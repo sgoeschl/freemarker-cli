@@ -17,7 +17,7 @@
 -->
 <#assign name = documents[0].name>
 <#assign csvFormatName = SystemProperties["csv.format"]!"DEFAULT">
-<#assign cvsFormat = CSVFormat[csvFormatName].withHeader()>
+<#assign cvsFormat = CSVTool.formats[csvFormatName].withHeader()>
 <#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>

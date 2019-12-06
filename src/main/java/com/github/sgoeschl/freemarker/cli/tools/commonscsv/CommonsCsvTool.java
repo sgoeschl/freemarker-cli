@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,8 +44,10 @@ public class CommonsCsvTool implements Closeable {
 
     private final Writer writer;
     private final CloseableReaper closeableReaper;
+    private final Map<String, CSVFormat> formats;
 
     public CommonsCsvTool(Map<String, Object> settings) {
+        this.formats = createCSVFormats();
         this.writer = (Writer) settings.get("writer");
         this.closeableReaper = new CloseableReaper();
     }
@@ -61,6 +64,10 @@ public class CommonsCsvTool implements Closeable {
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse CSV: " + document, e);
         }
+    }
+
+    public Map<String, CSVFormat> getFormats() {
+        return formats;
     }
 
     /**
@@ -211,6 +218,23 @@ public class CommonsCsvTool implements Closeable {
         final List<String> keys = toKeys(records, value);
         keys.forEach(key -> result.put(key, new ArrayList<>()));
         records.forEach(record -> result.get(value.apply(record)).add(record));
+        return result;
+    }
+
+    private static Map<String, CSVFormat> createCSVFormats() {
+        final Map<String, CSVFormat> result = new HashMap<>();
+        result.put("DEFAULT", CSVFormat.DEFAULT);
+        result.put("EXCEL", CSVFormat.EXCEL);
+        result.put("INFORMIX_UNLOAD", CSVFormat.INFORMIX_UNLOAD);
+        result.put("INFORMIX_UNLOAD_CSV", CSVFormat.INFORMIX_UNLOAD_CSV);
+        result.put("MONGODB_CSV", CSVFormat.MONGODB_CSV);
+        result.put("MONGODB_TSV", CSVFormat.MONGODB_TSV);
+        result.put("MYSQL", CSVFormat.MYSQL);
+        result.put("RFC4180", CSVFormat.RFC4180);
+        result.put("ORACLE", CSVFormat.ORACLE);
+        result.put("POSTGRESQL_CSV", CSVFormat.POSTGRESQL_CSV);
+        result.put("POSTGRESQL_TEXT", CSVFormat.POSTGRESQL_TEXT);
+        result.put("TDF", CSVFormat.TDF);
         return result;
     }
 

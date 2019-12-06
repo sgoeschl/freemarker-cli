@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign cvsFormat = CSVFormat.DEFAULT.withHeader()>
+<#assign cvsFormat = CSVTool.formats["DEFAULT"].withHeader()>
 <#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
 <#assign records = csvParser.records>
 <#assign csvMap = CSVTool.toMap(records, "disposer")>

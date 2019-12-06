@@ -16,7 +16,7 @@
   under the License.
 -->
 <#assign name = documents[0].name>
-<#assign cvsFormat = CSVFormat.TDF.withHeader()>
+<#assign cvsFormat = CSVTool.formats["TDF"].withHeader()>
 <#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>

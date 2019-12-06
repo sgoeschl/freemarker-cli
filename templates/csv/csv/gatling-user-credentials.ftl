@@ -16,7 +16,7 @@
   under the License.
 -->
 <#assign name = documents[0].name>
-<#assign cvsFormat = CSVFormat.DEFAULT.withDelimiter(';')>
+<#assign cvsFormat = CSVTool.formats["DEFAULT"].withDelimiter(';')>
 <#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
 <#assign csvRecords = csvParser.records>
 

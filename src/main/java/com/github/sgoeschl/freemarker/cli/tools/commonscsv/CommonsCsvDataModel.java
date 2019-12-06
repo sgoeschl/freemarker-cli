@@ -32,22 +32,7 @@ public class CommonsCsvDataModel {
     }
 
     public Map<String, Object> create() {
-        final Map<String, CSVFormat> csvFormats = new HashMap<>();
-        csvFormats.put("DEFAULT", CSVFormat.DEFAULT);
-        csvFormats.put("EXCEL", CSVFormat.EXCEL);
-        csvFormats.put("INFORMIX_UNLOAD", CSVFormat.INFORMIX_UNLOAD);
-        csvFormats.put("INFORMIX_UNLOAD_CSV", CSVFormat.INFORMIX_UNLOAD_CSV);
-        csvFormats.put("MONGODB_CSV", CSVFormat.MONGODB_CSV);
-        csvFormats.put("MONGODB_TSV", CSVFormat.MONGODB_TSV);
-        csvFormats.put("MYSQL", CSVFormat.MYSQL);
-        csvFormats.put("RFC4180", CSVFormat.RFC4180);
-        csvFormats.put("ORACLE", CSVFormat.ORACLE);
-        csvFormats.put("POSTGRESQL_CSV", CSVFormat.POSTGRESQL_CSV);
-        csvFormats.put("POSTGRESQL_TEXT", CSVFormat.POSTGRESQL_TEXT);
-        csvFormats.put("TDF", CSVFormat.TDF);
-
         final Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("CSVFormat", csvFormats);
         dataModel.put("CSVTool", new CommonsCsvTool(settings));
         return dataModel;
     }
