@@ -112,6 +112,9 @@ public class Document implements Closeable {
     /**
      * Gets the contents of an <code>InputStream</code> as a list of Strings,
      * one entry per line, using the specified character encoding.
+     *
+     * @return the list of Strings, never null
+     * @throws IOException if an I/O error occurs
      */
     public List<String> getLines() throws IOException {
         return getLines(getCharset().name());
@@ -120,6 +123,10 @@ public class Document implements Closeable {
     /**
      * Gets the contents of an <code>InputStream</code> as a list of Strings,
      * one entry per line, using the specified character encoding.
+     *
+     * @param charsetName The name of the requested charset
+     * @return the list of Strings, never null
+     * @throws IOException if an I/O error occurs
      */
     public List<String> getLines(String charsetName) throws IOException {
         try (InputStream inputStream = dataSource.getInputStream()) {
@@ -133,6 +140,7 @@ public class Document implements Closeable {
      * the line iterator.
      *
      * @return line iterator
+     * @throws IOException if an I/O error occurs
      */
     public LineIterator getLineIterator() throws IOException {
         return getLineIterator(getCharset().name());
@@ -143,9 +151,9 @@ public class Document implements Closeable {
      * the character encoding specified. The caller is responsible to close
      * the line iterator.
      *
-     * @param charsetName The name of the requested charset; may be either
-     *                    a canonical name or an alias
+     * @param charsetName The name of the requested charset
      * @return line iterator
+     * @throws IOException if an I/O error occurs
      */
     public LineIterator getLineIterator(String charsetName) throws IOException {
         return closables.add(lineIterator(getInputStream(), forName(charsetName)));

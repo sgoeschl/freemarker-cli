@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
 /**
- * Resolves a list of input files & directories.
+ * Resolves a list of input files &amp; directories.
  */
 public class DocumentResolver {
 
