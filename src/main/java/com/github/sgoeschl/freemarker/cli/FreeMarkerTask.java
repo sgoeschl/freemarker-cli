@@ -32,7 +32,6 @@ import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.Version;
 import org.apache.commons.io.FileUtils;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
@@ -42,12 +41,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import static com.github.sgoeschl.freemarker.cli.util.ClosableUtils.closeQuietly;
 import static freemarker.template.Configuration.VERSION_2_3_29;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 
-public class FreeMarkerTask implements Callable<Integer>, Closeable {
+public class FreeMarkerTask implements Callable<Integer> {
 
     private static final String STDIN = "stdin";
     private static final Version FREEMARKER_VERSION = VERSION_2_3_29;
@@ -63,15 +61,6 @@ public class FreeMarkerTask implements Callable<Integer>, Closeable {
     @Override
     public Integer call() {
         return call(settings, tools);
-    }
-
-    @Override
-    public void close() {
-        for (Object object : tools.values()) {
-            if (object instanceof Closeable) {
-                closeQuietly((Closeable) object);
-            }
-        }
     }
 
     private static Integer call(Settings settings, Map<String, Object> tools) {

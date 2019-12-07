@@ -16,7 +16,6 @@
  */
 package com.github.sgoeschl.freemarker.cli.tools.commonscsv;
 
-import com.github.sgoeschl.freemarker.cli.impl.CloseableReaper;
 import com.github.sgoeschl.freemarker.cli.model.Document;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -24,7 +23,6 @@ import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.input.BOMInputStream;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -40,16 +38,12 @@ import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
-public class CommonsCSVTool implements Closeable {
+public class CommonsCSVTool {
 
     private final Writer writer;
-    private final CloseableReaper closeableReaper;
-    private final Map<String, CSVFormat> formats;
 
     public CommonsCSVTool(Map<String, Object> settings) {
-        this.formats = createCSVFormats();
         this.writer = (Writer) settings.get("freemarker.writer");
-        this.closeableReaper = new CloseableReaper();
     }
 
     public CSVParser parse(Document document, CSVFormat format) {
@@ -59,15 +53,17 @@ public class CommonsCSVTool implements Closeable {
 
         try {
             final BOMInputStream bomInputStream = new BOMInputStream(document.getInputStream(), false);
-            final CSVParser csvParser = CSVParser.parse(bomInputStream, document.getCharset(), format);
-            return closeableReaper.add(csvParser);
+            // As stated in the documentation : "If you do not read all records from the given {@code reader},
+            // you should call {@link #close()} on the parser, unless you close the {@code reader}."
+            // The underlying input stream is closed by the document by its "CloseableReaper".
+            return CSVParser.parse(bomInputStream, document.getCharset(), format);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse CSV: " + document, e);
         }
     }
 
     public Map<String, CSVFormat> getFormats() {
-        return formats;
+        return createCSVFormats();
     }
 
     /**
@@ -148,7 +144,8 @@ public class CommonsCSVTool implements Closeable {
      * @throws IOException thrown if the parameters of the format are inconsistent or if either out or format are null.
      */
     public CSVPrinter printer(CSVFormat csvFormat) throws IOException {
-        return closeableReaper.add(new CSVPrinter(writer, csvFormat));
+        // We do not close the CSVPrinter but the underlying writer at the of processing
+        return new CSVPrinter(writer, csvFormat);
     }
 
     /**
@@ -185,11 +182,6 @@ public class CommonsCSVTool implements Closeable {
                     throw new IllegalArgumentException("Unsupported CSV delimiter: " + name);
                 }
         }
-    }
-
-    @Override
-    public void close() {
-        closeableReaper.close();
     }
 
     Writer getWriter() {

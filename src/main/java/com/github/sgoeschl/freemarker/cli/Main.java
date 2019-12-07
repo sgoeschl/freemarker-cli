@@ -144,7 +144,8 @@ public class Main implements Callable<Integer> {
         final List<File> templateDirectories = getTemplateDirectories(baseDir);
         final Settings settings = settings(toolsProperties, templateDirectories);
 
-        try (FreeMarkerTask freeMarkerTask = new FreeMarkerTask(settings)) {
+        try {
+            final FreeMarkerTask freeMarkerTask = new FreeMarkerTask(settings);
             return freeMarkerTask.call();
         } finally {
             if (settings.hasOutputFile()) {

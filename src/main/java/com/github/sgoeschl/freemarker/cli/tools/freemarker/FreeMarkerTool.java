@@ -28,25 +28,33 @@ import static java.util.Objects.requireNonNull;
 
 public class FreeMarkerTool {
 
-    private final BeansWrapper beansWrapper;
-    private final ObjectConstructor objectConstructor;
+    private volatile BeansWrapper beansWrapper;
+    private volatile ObjectConstructor objectConstructor;
 
     public FreeMarkerTool(Map<String, Object> settings) {
         requireNonNull(settings);
-        this.beansWrapper = new BeansWrapperBuilder(Configuration.VERSION_2_3_29).build();
-        this.objectConstructor = new ObjectConstructor();
     }
 
-    public ObjectConstructor getObjectConstructor() {
+    public synchronized ObjectConstructor getObjectConstructor() {
+        if (objectConstructor == null) {
+            objectConstructor = new ObjectConstructor();
+        }
         return objectConstructor;
     }
 
+    public synchronized BeansWrapper getBeansWrapper() {
+        if (beansWrapper == null) {
+            beansWrapper = new BeansWrapperBuilder(Configuration.VERSION_2_3_29).build();
+        }
+        return beansWrapper;
+    }
+
     public TemplateHashModel getEnums() {
-        return beansWrapper.getEnumModels();
+        return getBeansWrapper().getEnumModels();
     }
 
     public TemplateHashModel getStatics() {
-        return beansWrapper.getStaticModels();
+        return getBeansWrapper().getStaticModels();
     }
 }
 

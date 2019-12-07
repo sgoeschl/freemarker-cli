@@ -27,11 +27,8 @@ public class GrokTool {
 
     private static final String DEFAULT_PATTERN = "/patterns/patterns";
 
-    private final GrokCompiler grokCompiler;
-
     public GrokTool(Map<String, Object> settings) {
         requireNonNull(settings);
-        this.grokCompiler = GrokCompiler.newInstance();
     }
 
     public GrokWrapper compile(String pattern) {
@@ -39,6 +36,7 @@ public class GrokTool {
     }
 
     public GrokWrapper compile(String path, String pattern) {
+        final GrokCompiler grokCompiler = GrokCompiler.newInstance();
         grokCompiler.registerPatternFromClasspath(path);
         final Grok grok = grokCompiler.compile(pattern);
         return new GrokWrapper(grok);

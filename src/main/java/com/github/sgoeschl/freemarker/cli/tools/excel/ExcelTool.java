@@ -16,7 +16,6 @@
  */
 package com.github.sgoeschl.freemarker.cli.tools.excel;
 
-import com.github.sgoeschl.freemarker.cli.impl.CloseableReaper;
 import com.github.sgoeschl.freemarker.cli.model.Document;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -25,7 +24,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -36,25 +34,16 @@ import java.util.Map;
 import static java.util.Objects.requireNonNull;
 import static org.apache.poi.ss.usermodel.Row.MissingCellPolicy.CREATE_NULL_AS_BLANK;
 
-public class ExcelTool implements Closeable {
-
-    private final CloseableReaper closeableReaper;
+public class ExcelTool {
 
     public ExcelTool(Map<String, Object> settings) {
         requireNonNull(settings);
-        this.closeableReaper = new CloseableReaper();
-    }
-
-    @Override
-    public void close() {
-        closeableReaper.close();
     }
 
     public Workbook parse(Document document) {
         try (InputStream is = document.getInputStream()) {
             final Workbook workbook = WorkbookFactory.create(is);
-            closeableReaper.add(workbook);
-            return workbook;
+            return document.addClosable(workbook);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse Ecxel document: " + document, e);
         }

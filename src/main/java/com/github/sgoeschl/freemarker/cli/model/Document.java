@@ -165,6 +165,10 @@ public class Document implements Closeable {
         }
     }
 
+    public <T extends Closeable> T addClosable(T closeable) {
+        return closables.add(closeable);
+    }
+
     @Override
     public void close() {
         closables.close();
