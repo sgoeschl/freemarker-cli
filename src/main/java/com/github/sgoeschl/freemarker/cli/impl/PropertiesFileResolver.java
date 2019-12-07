@@ -44,7 +44,6 @@ public class PropertiesFileResolver {
         } finally {
             stream.close();
         }
-
     }
 
     private static Properties resolveFromFileSystem(String fileName) throws IOException {
