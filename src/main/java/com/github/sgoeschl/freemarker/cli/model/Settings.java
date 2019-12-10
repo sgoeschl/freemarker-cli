@@ -38,6 +38,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class Settings {
 
+    /** FreeMarker CLI configuration containing tools */
+    private final Properties configuration;
+
     /** User-supplied command line arguments */
     private final List<String> args;
 
@@ -77,13 +80,11 @@ public class Settings {
     /** User-supplied system properties, i.e. "-Dfoo=bar" */
     private final Map<String, String> properties;
 
-    /** Tools to be created and passed to FreeMarker */
-    private final Properties tools;
-
     /** The writer used for rendering templates */
     private final Writer writer;
 
     private Settings(
+            Properties configuration,
             List<String> args,
             List<File> templateDirectories,
             String template,
@@ -97,7 +98,6 @@ public class Settings {
             boolean isEnvironmentExposed,
             List<String> sources,
             Map<String, String> properties,
-            Properties tools,
             Writer writer) {
         this.args = requireNonNull(args);
         this.templateDirectories = requireNonNull(templateDirectories);
@@ -112,12 +112,16 @@ public class Settings {
         this.isEnvironmentExposed = isEnvironmentExposed;
         this.sources = requireNonNull(sources);
         this.properties = requireNonNull(properties);
-        this.tools = requireNonNull(tools);
+        this.configuration = requireNonNull(configuration);
         this.writer = new NonClosableFreeMarkerWriterWrapper(requireNonNull(writer));
     }
 
     public static SettingsBuilder builder() {
         return new SettingsBuilder();
+    }
+
+    public Properties getConfiguration() {
+        return configuration;
     }
 
     public List<String> getArgs() {
@@ -176,10 +180,6 @@ public class Settings {
         return properties;
     }
 
-    public Properties getTools() {
-        return tools;
-    }
-
     public boolean hasOutputFile() {
         return outputFile != null;
     }
@@ -191,10 +191,10 @@ public class Settings {
     public Map<String, Object> toMap() {
         final Map<String, Object> result = new HashMap<>();
         result.put("user.args", getArgs());
+        result.put("user.configuration", getConfiguration());
         result.put("user.properties", getProperties());
         result.put("freemarker.verbose", isVerbose());
         result.put("freemarker.template.directories", getTemplateDirectories());
-        result.put("freemarker.tools.properties", getTools());
         result.put("freemarker.writer", getWriter());
         return result;
     }
@@ -214,7 +214,7 @@ public class Settings {
                 ", isReadFromStdin=" + isReadFromStdin +
                 ", sources=" + sources +
                 ", properties=" + properties +
-                ", tools=" + tools +
+                ", tools=" + configuration +
                 ", writer=" + writer +
                 ", templateEncoding=" + getTemplateEncoding() +
                 ", readFromStdin=" + isReadFromStdin() +
@@ -237,7 +237,7 @@ public class Settings {
         private boolean isEnvironmentExposed;
         private List<String> sources;
         private Map<String, String> properties;
-        private Properties tools;
+        private Properties configuration;
         private Writer writer;
 
         private SettingsBuilder() {
@@ -247,6 +247,7 @@ public class Settings {
             this.setOutputEncoding(UTF_8.name());
             this.templateDirectories = emptyList();
             this.properties = new HashMap<>();
+            this.configuration = new Properties();
         }
 
         public SettingsBuilder setArgs(String[] args) {
@@ -319,8 +320,8 @@ public class Settings {
             return this;
         }
 
-        public SettingsBuilder setTools(Properties tools) {
-            this.tools = tools;
+        public SettingsBuilder setConfiguration(Properties configuration) {
+            this.configuration = configuration;
             return this;
         }
 
@@ -334,6 +335,7 @@ public class Settings {
             final Charset outputEncoding = Charset.forName(this.outputEncoding);
 
             return new Settings(
+                    configuration,
                     args,
                     templateDirectories,
                     templateName,
@@ -347,7 +349,6 @@ public class Settings {
                     isEnvironmentExposed,
                     sources,
                     properties,
-                    tools,
                     writer
             );
         }

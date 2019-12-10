@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file. We try to a
 ## 2.0.0-BETA-5-SNAPSHOT
 
 ### Added
-- Tools are loaded from `freemarker-cli.tools.properties` and freely configurable
+- Tools are loaded from `freemarker-cli.properties` and freely configurable
 - Add RAT & PMD report to Maven site generation
 - Add `-times` command line option to execute the transformation N times
 

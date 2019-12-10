@@ -1,7 +1,5 @@
 package com.github.sgoeschl.freemarker.cli.impl;
 
-import com.github.sgoeschl.freemarker.cli.Main;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -32,7 +30,7 @@ public class PropertiesFileResolver {
 
     private static Properties resolveFromClassPath(String fileName) throws IOException {
         final Properties properties = new Properties();
-        final InputStream stream = Main.class.getResourceAsStream("/" + fileName);
+        final InputStream stream = PropertiesFileResolver.class.getResourceAsStream(resourceName(fileName));
 
         if (stream == null) {
             return null;
@@ -56,5 +54,9 @@ public class PropertiesFileResolver {
             properties.load(input);
             return properties;
         }
+    }
+
+    private static String resourceName(String name) {
+        return name.startsWith("/") ? name : "/" + name;
     }
 }

@@ -16,25 +16,25 @@
  */
 package com.github.sgoeschl.freemarker.cli.tools;
 
+import com.github.sgoeschl.freemarker.cli.model.Settings;
+
 import java.lang.reflect.Constructor;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toMap;
 
 public class Tools {
 
-    public Map<String, Object> create(Map<String, Object> settings) {
-        final Map<String, Object> result = new HashMap<>();
-        final Properties toolsProperties = (Properties) settings.get("freemarker.tools.properties");
+    private static final String FREEMARKER_TOOLS_PREFIX = "freemarker.tools.";
 
-        for (String tool : toolsProperties.stringPropertyNames()) {
-            final String clazzName = toolsProperties.getProperty(tool).trim();
-            result.put(tool, createTool(clazzName, settings));
-        }
-
-        return result;
+    public Map<String, Object> create(Settings settings) {
+        final Properties configuration = settings.getConfiguration();
+        final Map<String, Object> settingsMap = settings.toMap();
+        return configuration.stringPropertyNames().stream()
+                .filter(name -> name.startsWith(FREEMARKER_TOOLS_PREFIX))
+                .collect(toMap(Tools::toolName, name -> createTool(configuration.getProperty(name), settingsMap)));
     }
 
     private static Object createTool(String clazzName, Map<String, Object> settings) {
@@ -63,4 +63,7 @@ public class Tools {
                 .orElse(null);
     }
 
+    private static String toolName(String propertyName) {
+        return propertyName.substring(FREEMARKER_TOOLS_PREFIX.length());
+    }
 }

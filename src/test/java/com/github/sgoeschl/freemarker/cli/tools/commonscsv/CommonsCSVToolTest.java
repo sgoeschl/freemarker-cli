@@ -146,7 +146,7 @@ public class CommonsCSVToolTest {
     private Map<String, Object> settings() {
         return Settings.builder()
                 .setTemplateName(ANY_TEMPLATE)
-                .setTools(new Properties())
+                .setConfiguration(new Properties())
                 .setWriter(new StringWriter())
                 .build()
                 .toMap();

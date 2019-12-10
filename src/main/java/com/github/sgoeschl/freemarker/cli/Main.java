@@ -45,46 +45,43 @@ import static java.util.Objects.requireNonNull;
 @Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
 public class Main implements Callable<Integer> {
 
-    private static final String FREEMARKER_CLI_TOOLS_PROPERTY_FILE = "freemarker-cli.tools.properties";
+    private static final String FREEMARKER_CLI_PROPERTY_FILE = "freemarker-cli.properties";
 
     @Option(names = { "-b", "--basedir" }, description = "Optional template base directory")
     private String baseDir;
 
-    @Option(names = { "-t", "--template" }, description = "FreeMarker template to render", required = true)
-    private String template;
+    @Option(names = { "-D" , "--property"}, description = "Set system property")
+    private Map<String, String> properties;
 
     @Option(names = { "-e", "--input-encoding" }, description = "Encoding of input file", defaultValue = "UTF-8")
     String inputEncoding;
 
-    @Option(names = { "--output-encoding" }, description = "Encoding of output file, e.g. UTF-8", defaultValue = "UTF-8")
-    String outputEncoding;
-
-    @Option(names = { "-o", "--output" }, description = "Output file")
-    private String outputFile;
-
-    @Option(names = { "--include" }, description = "File pattern for input directory")
-    private String include;
+    @Option(names = { "-E", "--expose-env" }, description = "Expose environment variables and user-supplied properties globally")
+    private boolean isEnvironmentExposed;
 
     @Option(names = { "-l", "--locale" }, description = "Locale being used for output file, e.g. 'en_US'")
     private String locale;
 
+    @Option(names = { "-o", "--output" }, description = "Output file")
+    private String outputFile;
+
+    @Option(names = { "-t", "--template" }, description = "FreeMarker template to render", required = true)
+    private String template;
+
+    @Option(names = { "--config" }, defaultValue = FREEMARKER_CLI_PROPERTY_FILE, description = "FreeMarker CLI configuration file")
+    private String configFile;
+
+    @Option(names = { "--include" }, description = "File pattern for input directory")
+    private String include;
+
+    @Option(names = { "--output-encoding" }, description = "Encoding of output file, e.g. UTF-8", defaultValue = "UTF-8")
+    String outputEncoding;
+
     @Option(names = { "--stdin" }, description = "Read input document from stdin")
     private boolean readFromStdin;
 
-    @Option(names = { "-D" }, description = "Set system property")
-    private Map<String, String> properties;
-
-    @Option(names = { "-E", "--expose-env" }, description = "Expose environment variables and user-supplied properties globally")
-    private boolean isEnvironmentExposed;
-
     @Option(names = { "--times" }, defaultValue = "1", description = "Re-run X times for profiling")
     private int times;
-
-    @Option(names = { "--tool" }, description = "Add user-supplied tool")
-    private Properties userSuppliedTools;
-
-    @Option(names = { "--tools" }, defaultValue = FREEMARKER_CLI_TOOLS_PROPERTY_FILE, description = "Tool configuration from file or classpath")
-    private String toolsFileName;
 
     @Parameters(description = "List of input files and/or input directories")
     private List<String> sources;
@@ -140,9 +137,9 @@ public class Main implements Callable<Integer> {
     private Integer callOnce() {
         updateSystemProperties();
 
-        final Properties toolsProperties = toolsProperties(toolsFileName, userSuppliedTools);
+        final Properties configuration = loadFreeMarkerCliConfiguration(configFile);
         final List<File> templateDirectories = getTemplateDirectories(baseDir);
-        final Settings settings = settings(toolsProperties, templateDirectories);
+        final Settings settings = settings(configuration, templateDirectories);
 
         try {
             final FreeMarkerTask freeMarkerTask = new FreeMarkerTask(settings);
@@ -154,7 +151,7 @@ public class Main implements Callable<Integer> {
         }
     }
 
-    private Settings settings(Properties tools, List<File> templateDirectories) {
+    private Settings settings(Properties configuration, List<File> templateDirectories) {
         return Settings.builder()
                 .isEnvironmentExposed(isEnvironmentExposed)
                 .isReadFromStdin(readFromStdin)
@@ -168,7 +165,7 @@ public class Main implements Callable<Integer> {
                 .setSources(sources != null ? sources : new ArrayList<>())
                 .setTemplateDirectories(templateDirectories)
                 .setTemplateName(template)
-                .setTools(tools)
+                .setConfiguration(configuration)
                 .setWriter(writer(outputFile, outputEncoding))
                 .build();
     }
@@ -197,15 +194,7 @@ public class Main implements Callable<Integer> {
         return new TemplateDirectoryResolver(baseDir).resolve();
     }
 
-    private static Properties toolsProperties(String fileName, Properties userTools) {
-        final Properties result = loadFreeMarkerToolsProperties(fileName);
-        if (userTools != null && !userTools.isEmpty()) {
-            result.putAll(userTools);
-        }
-        return result;
-    }
-
-    private static Properties loadFreeMarkerToolsProperties(String fileName) {
+    private static Properties loadFreeMarkerCliConfiguration(String fileName) {
         try {
             final Properties properties = new PropertiesFileResolver(fileName).resolve();
             if (properties != null) {

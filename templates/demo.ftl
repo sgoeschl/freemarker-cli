@@ -100,7 +100,7 @@ Get all documents
 11) Document Data Model
 ---------------------------------------------------------------------------
 Top-level entries in the current data model
-<#list .data_model?keys as key>
+<#list .data_model?keys?sort as key>
     - ${key}<#lt>
 </#list>
 

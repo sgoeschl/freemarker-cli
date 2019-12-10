@@ -149,7 +149,7 @@ public class FreeMarkerTask implements Callable<Integer> {
     }
 
     private static Map<String, Object> tools(Settings settings) {
-        return new Tools().create(settings.toMap());
+        return new Tools().create(settings);
     }
 
     private static DefaultObjectWrapper objectWrapper() {
