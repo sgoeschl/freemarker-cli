@@ -22,7 +22,7 @@ import com.github.sgoeschl.freemarker.cli.impl.TemplateLoaderResolver;
 import com.github.sgoeschl.freemarker.cli.model.Document;
 import com.github.sgoeschl.freemarker.cli.model.Documents;
 import com.github.sgoeschl.freemarker.cli.model.Settings;
-import com.github.sgoeschl.freemarker.cli.tools.Tools;
+import com.github.sgoeschl.freemarker.cli.impl.ToolsResolver;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
@@ -47,6 +47,7 @@ import static java.util.Objects.requireNonNull;
 
 public class FreeMarkerTask implements Callable<Integer> {
 
+    private static final int SUCCESS = 0;
     private static final String STDIN = "stdin";
     private static final Version FREEMARKER_VERSION = VERSION_2_3_29;
 
@@ -63,7 +64,7 @@ public class FreeMarkerTask implements Callable<Integer> {
         return call(settings, tools);
     }
 
-    private static Integer call(Settings settings, Map<String, Object> tools) {
+    protected Integer call(Settings settings, Map<String, Object> tools) {
         final DocumentResolver documentResolver = documentResolver(settings);
         try (Documents documents = documents(settings, documentResolver)) {
             final TemplateLoader templateLoader = templateLoader(settings);
@@ -75,7 +76,7 @@ public class FreeMarkerTask implements Callable<Integer> {
                 template.process(dataModel, out);
             }
 
-            return 0;
+            return SUCCESS;
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -83,7 +84,7 @@ public class FreeMarkerTask implements Callable<Integer> {
         }
     }
 
-    private static Configuration configuration(Settings settings, TemplateLoader templateLoader) {
+    protected Configuration configuration(Settings settings, TemplateLoader templateLoader) {
         final Configuration configuration = new Configuration(FREEMARKER_VERSION);
         configuration.setAPIBuiltinEnabled(false);
         configuration.setDefaultEncoding(settings.getTemplateEncoding().name());
@@ -96,15 +97,15 @@ public class FreeMarkerTask implements Callable<Integer> {
         return configuration;
     }
 
-    private static TemplateLoader templateLoader(Settings settings) {
+    protected TemplateLoader templateLoader(Settings settings) {
         return new TemplateLoaderResolver(settings.getTemplateDirectories()).resolve();
     }
 
-    private static DocumentResolver documentResolver(Settings settings) {
+    protected DocumentResolver documentResolver(Settings settings) {
         return new DocumentResolver(settings.getSources(), settings.getInclude(), settings.getInputEncoding());
     }
 
-    private static Documents documents(Settings settings, DocumentResolver documentResolver) {
+    protected Documents documents(Settings settings, DocumentResolver documentResolver) {
         final List<Document> documents = new ArrayList<>(documentResolver.resolve());
 
         // Add optional document from STDIN at the start of the list since
@@ -122,7 +123,7 @@ public class FreeMarkerTask implements Callable<Integer> {
      * which are mostly irrelevant when running on the command line. So we resolve the absolute file
      * instead of relying on existing template loaders.
      */
-    private static Template getTemplate(Settings settings, Configuration configuration) throws IOException {
+    protected Template getTemplate(Settings settings, Configuration configuration) throws IOException {
         final File templateFile = new File(settings.getTemplateName());
         if (isAbsoluteTemplateFile(templateFile)) {
             return new Template(settings.getTemplateName(),
@@ -133,7 +134,7 @@ public class FreeMarkerTask implements Callable<Integer> {
         }
     }
 
-    private static Map<String, Object> dataModel(Settings settings, Documents documents, Map<String, Object> tools) {
+    protected Map<String, Object> dataModel(Settings settings, Documents documents, Map<String, Object> tools) {
         final Map<String, Object> dataModel = new HashMap<>();
 
         dataModel.put("Documents", documents);
@@ -148,8 +149,8 @@ public class FreeMarkerTask implements Callable<Integer> {
         return dataModel;
     }
 
-    private static Map<String, Object> tools(Settings settings) {
-        return new Tools().create(settings);
+    protected Map<String, Object> tools(Settings settings) {
+        return new ToolsResolver().create(settings);
     }
 
     private static DefaultObjectWrapper objectWrapper() {

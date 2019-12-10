@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.tools;
+package com.github.sgoeschl.freemarker.cli.impl;
 
 import com.github.sgoeschl.freemarker.cli.model.Settings;
 
@@ -25,7 +25,8 @@ import java.util.Properties;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toMap;
 
-public class Tools {
+
+public class ToolsResolver {
 
     private static final String FREEMARKER_TOOLS_PREFIX = "freemarker.tools.";
 
@@ -34,9 +35,17 @@ public class Tools {
         final Map<String, Object> settingsMap = settings.toMap();
         return configuration.stringPropertyNames().stream()
                 .filter(name -> name.startsWith(FREEMARKER_TOOLS_PREFIX))
-                .collect(toMap(Tools::toolName, name -> createTool(configuration.getProperty(name), settingsMap)));
+                .collect(toMap(ToolsResolver::toolName, name -> createTool(configuration.getProperty(name), settingsMap)));
     }
 
+    /**
+     * Create a tool instance either using single argument constructor taking a map or
+     * the default constructor.
+     *
+     * @param clazzName Class to instantiate
+     * @param settings Settings used to configure the tool
+     * @return Tool instance
+     */
     private static Object createTool(String clazzName, Map<String, Object> settings) {
         try {
             final Class<?> clazz = Class.forName(clazzName);
