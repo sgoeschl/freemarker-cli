@@ -24,15 +24,16 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
 /**
- * Resolves a list of input files &amp; directories.
+ * Supplies a list of input files &amp; directories.
  */
-public class DocumentResolver {
+public class DocumentSupplier implements Supplier<List<Document>> {
 
     /** List of input files and/or directories */
     private final Collection<String> sources;
@@ -43,20 +44,21 @@ public class DocumentResolver {
     /** The charset to use for loading a text file */
     private final Charset charset;
 
-    public DocumentResolver(Collection<String> sources, String include, Charset charset) {
+    public DocumentSupplier(Collection<String> sources, String include, Charset charset) {
         this.sources = requireNonNull(sources);
         this.include = include;
         this.charset = charset;
     }
 
-    public List<Document> resolve() {
+    @Override
+    public List<Document> get() {
         return sources.stream()
-                .map(this::resolve)
+                .map(this::get)
                 .flatMap(Collection::stream)
                 .collect(toList());
     }
 
-    private List<Document> resolve(String source) {
+    private List<Document> get(String source) {
         if (isUrl(source)) {
             return singletonList(resolveUrl(source));
         } else if (isFile(source)) {

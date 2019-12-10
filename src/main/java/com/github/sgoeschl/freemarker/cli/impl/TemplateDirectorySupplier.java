@@ -19,6 +19,7 @@ package com.github.sgoeschl.freemarker.cli.impl;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
@@ -32,7 +33,7 @@ import static java.util.Arrays.asList;
  *    <li>Application installation directory</li>
  * </ol>
  */
-public class TemplateDirectoryResolver {
+public class TemplateDirectorySupplier implements Supplier<List<File>> {
 
     private static final String UNDEFINED = "__undefined__";
 
@@ -51,11 +52,12 @@ public class TemplateDirectoryResolver {
     /** User-defined template directory */
     private final String userDefinedTemplateDir;
 
-    public TemplateDirectoryResolver(String userDefinedTemplateDir) {
+    public TemplateDirectorySupplier(String userDefinedTemplateDir) {
         this.userDefinedTemplateDir = userDefinedTemplateDir;
     }
 
-    public List<File> resolve() {
+    @Override
+    public List<File> get() {
         final File applicationDir = new File(System.getProperty(APP_HOME, UNDEFINED));
         final File userHomeDir = new File(System.getProperty(USER_HOME, UNDEFINED));
         final File currentWorkingDir = new File(System.getProperty(USER_DIR, UNDEFINED));
@@ -70,7 +72,7 @@ public class TemplateDirectoryResolver {
         ));
 
         return templateLoaderDirectories.stream()
-                .filter(TemplateDirectoryResolver::isTemplateDirectory)
+                .filter(TemplateDirectorySupplier::isTemplateDirectory)
                 .distinct()
                 .collect(Collectors.toList());
     }

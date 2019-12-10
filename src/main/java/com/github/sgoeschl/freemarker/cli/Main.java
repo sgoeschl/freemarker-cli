@@ -17,7 +17,7 @@
 package com.github.sgoeschl.freemarker.cli;
 
 import com.github.sgoeschl.freemarker.cli.impl.PropertiesFileResolver;
-import com.github.sgoeschl.freemarker.cli.impl.TemplateDirectoryResolver;
+import com.github.sgoeschl.freemarker.cli.impl.TemplateDirectorySupplier;
 import com.github.sgoeschl.freemarker.cli.model.Settings;
 import com.github.sgoeschl.freemarker.cli.picocli.GitVersionProvider;
 import picocli.CommandLine;
@@ -191,7 +191,7 @@ public class Main implements Callable<Integer> {
     }
 
     private static List<File> getTemplateDirectories(String baseDir) {
-        return new TemplateDirectoryResolver(baseDir).resolve();
+        return new TemplateDirectorySupplier(baseDir).get();
     }
 
     private static Properties loadFreeMarkerCliConfiguration(String fileName) {

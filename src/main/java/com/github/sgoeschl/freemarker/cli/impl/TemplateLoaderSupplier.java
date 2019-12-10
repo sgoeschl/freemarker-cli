@@ -23,25 +23,27 @@ import freemarker.cache.TemplateLoader;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
-public class TemplateLoaderResolver {
+public class TemplateLoaderSupplier implements Supplier<TemplateLoader> {
 
     private final List<File> templateDirectories;
 
-    public TemplateLoaderResolver(List<File> templateDirectories) {
+    public TemplateLoaderSupplier(List<File> templateDirectories) {
         this.templateDirectories = requireNonNull(templateDirectories);
     }
 
-    public TemplateLoader resolve() {
+    @Override
+    public TemplateLoader get() {
         return multiTemplateLoader(templateDirectories);
     }
 
     private static MultiTemplateLoader multiTemplateLoader(List<File> templateDirectories) {
         return new MultiTemplateLoader(
                 templateDirectories.stream()
-                        .map(TemplateLoaderResolver::fileTemplateLoader)
+                        .map(TemplateLoaderSupplier::fileTemplateLoader)
                         .toArray(TemplateLoader[]::new));
     }
 

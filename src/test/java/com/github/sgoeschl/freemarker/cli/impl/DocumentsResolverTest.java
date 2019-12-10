@@ -29,19 +29,19 @@ public class DocumentsResolverTest {
 
     @Test
     public void shouldResolveFilesOfDirectory() {
-        assertEquals(19, resolver(ANY_DIRECTORY, null).resolve().size());
-        assertEquals(19, resolver(ANY_DIRECTORY, "").resolve().size());
-        assertEquals(19, resolver(ANY_DIRECTORY, "*").resolve().size());
-        assertEquals(5, resolver(ANY_DIRECTORY, "*.csv").resolve().size());
-        assertEquals(4, resolver(ANY_DIRECTORY, "*.x*").resolve().size());
+        assertEquals(19, supplier(ANY_DIRECTORY, null).get().size());
+        assertEquals(19, supplier(ANY_DIRECTORY, "").get().size());
+        assertEquals(19, supplier(ANY_DIRECTORY, "*").get().size());
+        assertEquals(5, supplier(ANY_DIRECTORY, "*.csv").get().size());
+        assertEquals(4, supplier(ANY_DIRECTORY, "*.x*").get().size());
     }
 
     @Test(expected = RuntimeException.class)
     public void shoulThrowExceptionForNonexistingSourceDirectory() {
-        assertEquals(0, resolver("/does-not-exist", null).resolve().size());
+        assertEquals(0, supplier("/does-not-exist", null).get().size());
     }
 
-    private static DocumentResolver resolver(String directory, String include) {
-        return new DocumentResolver(singletonList(directory), include, Charset.defaultCharset());
+    private static DocumentSupplier supplier(String directory, String include) {
+        return new DocumentSupplier(singletonList(directory), include, Charset.defaultCharset());
     }
 }

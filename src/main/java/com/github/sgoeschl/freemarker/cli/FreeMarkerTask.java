@@ -16,19 +16,17 @@
  */
 package com.github.sgoeschl.freemarker.cli;
 
+import com.github.sgoeschl.freemarker.cli.impl.ConfigurationSupplier;
 import com.github.sgoeschl.freemarker.cli.impl.DocumentFactory;
-import com.github.sgoeschl.freemarker.cli.impl.DocumentResolver;
-import com.github.sgoeschl.freemarker.cli.impl.TemplateLoaderResolver;
+import com.github.sgoeschl.freemarker.cli.impl.DocumentSupplier;
+import com.github.sgoeschl.freemarker.cli.impl.TemplateLoaderSupplier;
+import com.github.sgoeschl.freemarker.cli.impl.ToolsSupplier;
 import com.github.sgoeschl.freemarker.cli.model.Document;
 import com.github.sgoeschl.freemarker.cli.model.Documents;
 import com.github.sgoeschl.freemarker.cli.model.Settings;
-import com.github.sgoeschl.freemarker.cli.impl.ToolsResolver;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
-import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.Version;
 import org.apache.commons.io.FileUtils;
 
@@ -40,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 
 import static freemarker.template.Configuration.VERSION_2_3_29;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -52,30 +51,27 @@ public class FreeMarkerTask implements Callable<Integer> {
     private static final Version FREEMARKER_VERSION = VERSION_2_3_29;
 
     private final Settings settings;
-    private final Map<String, Object> tools;
 
     public FreeMarkerTask(Settings settings) {
         this.settings = requireNonNull(settings);
-        this.tools = tools(settings);
     }
 
     @Override
     public Integer call() {
-        return call(settings, tools);
+        return call(settings);
     }
 
-    protected Integer call(Settings settings, Map<String, Object> tools) {
-        final DocumentResolver documentResolver = documentResolver(settings);
-        try (Documents documents = documents(settings, documentResolver)) {
-            final TemplateLoader templateLoader = templateLoader(settings);
-            final Configuration configuration = configuration(settings, templateLoader);
+    protected Integer call(Settings settings) {
+        final Supplier<Map<String, Object>> tools = tools(settings);
+        final Supplier<List<Document>> documentResolver = documentResolver(settings);
+        final Supplier<TemplateLoader> templateLoader = templateLoader(settings);
+        final Supplier<Configuration> configuration = configuration(settings, templateLoader);
+
+        final Template template = getTemplate(settings, configuration);
+
+        try (Writer writer = writer(settings); Documents documents = documents(settings, documentResolver)) {
             final Map<String, Object> dataModel = dataModel(settings, documents, tools);
-            final Template template = getTemplate(settings, configuration);
-
-            try (Writer out = settings.getWriter()) {
-                template.process(dataModel, out);
-            }
-
+            template.process(dataModel, writer);
             return SUCCESS;
         } catch (RuntimeException e) {
             throw e;
@@ -84,29 +80,20 @@ public class FreeMarkerTask implements Callable<Integer> {
         }
     }
 
-    protected Configuration configuration(Settings settings, TemplateLoader templateLoader) {
-        final Configuration configuration = new Configuration(FREEMARKER_VERSION);
-        configuration.setAPIBuiltinEnabled(false);
-        configuration.setDefaultEncoding(settings.getTemplateEncoding().name());
-        configuration.setLocale(settings.getLocale());
-        configuration.setLogTemplateExceptions(false);
-        configuration.setObjectWrapper(objectWrapper());
-        configuration.setOutputEncoding(settings.getOutputEncoding().name());
-        configuration.setTemplateLoader(templateLoader);
-        configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        return configuration;
+    protected Supplier<Configuration> configuration(Settings settings, Supplier<TemplateLoader> templateLoader) {
+        return new ConfigurationSupplier(settings, templateLoader);
     }
 
-    protected TemplateLoader templateLoader(Settings settings) {
-        return new TemplateLoaderResolver(settings.getTemplateDirectories()).resolve();
+    protected Supplier<TemplateLoader> templateLoader(Settings settings) {
+        return new TemplateLoaderSupplier(settings.getTemplateDirectories());
     }
 
-    protected DocumentResolver documentResolver(Settings settings) {
-        return new DocumentResolver(settings.getSources(), settings.getInclude(), settings.getInputEncoding());
+    protected Supplier<List<Document>> documentResolver(Settings settings) {
+        return new DocumentSupplier(settings.getSources(), settings.getInclude(), settings.getInputEncoding());
     }
 
-    protected Documents documents(Settings settings, DocumentResolver documentResolver) {
-        final List<Document> documents = new ArrayList<>(documentResolver.resolve());
+    protected Documents documents(Settings settings, Supplier<List<Document>> documentResolver) {
+        final List<Document> documents = new ArrayList<>(documentResolver.get());
 
         // Add optional document from STDIN at the start of the list since
         // this allows easy sequence slicing in FreeMarker.
@@ -123,18 +110,24 @@ public class FreeMarkerTask implements Callable<Integer> {
      * which are mostly irrelevant when running on the command line. So we resolve the absolute file
      * instead of relying on existing template loaders.
      */
-    protected Template getTemplate(Settings settings, Configuration configuration) throws IOException {
+    protected Template getTemplate(Settings settings, Supplier<Configuration> configurationSupplier) {
         final File templateFile = new File(settings.getTemplateName());
-        if (isAbsoluteTemplateFile(templateFile)) {
-            return new Template(settings.getTemplateName(),
-                    FileUtils.readFileToString(templateFile, settings.getTemplateEncoding()),
-                    configuration);
-        } else {
-            return configuration.getTemplate(settings.getTemplateName());
+        final Configuration configuration = configurationSupplier.get();
+
+        try {
+            if (isAbsoluteTemplateFile(templateFile)) {
+                return new Template(settings.getTemplateName(),
+                        FileUtils.readFileToString(templateFile, settings.getTemplateEncoding()),
+                        configuration);
+            } else {
+                return configuration.getTemplate(settings.getTemplateName());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load template file: " + templateFile);
         }
     }
 
-    protected Map<String, Object> dataModel(Settings settings, Documents documents, Map<String, Object> tools) {
+    protected Map<String, Object> dataModel(Settings settings, Documents documents, Supplier<Map<String, Object>> tools) {
         final Map<String, Object> dataModel = new HashMap<>();
 
         dataModel.put("Documents", documents);
@@ -144,19 +137,17 @@ public class FreeMarkerTask implements Callable<Integer> {
             dataModel.putAll(settings.getProperties());
         }
 
-        dataModel.putAll(tools);
+        dataModel.putAll(tools.get());
 
         return dataModel;
     }
 
-    protected Map<String, Object> tools(Settings settings) {
-        return new ToolsResolver().create(settings);
+    protected Supplier<Map<String, Object>> tools(Settings settings) {
+        return new ToolsSupplier(settings);
     }
 
-    private static DefaultObjectWrapper objectWrapper() {
-        final DefaultObjectWrapperBuilder builder = new DefaultObjectWrapperBuilder(FREEMARKER_VERSION);
-        builder.setIterableSupport(false);
-        return builder.build();
+    protected Writer writer(Settings settings) {
+        return settings.getWriter();
     }
 
     private static boolean isAbsoluteTemplateFile(File file) {
