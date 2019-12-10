@@ -73,53 +73,45 @@ It is recommended
 You can test the installation by executing
 
 ```text
-> freemarker-cli -t templates/info.ftl
-
+> ./bin/freemarker-cli -t templates/info.ftl 
 FreeMarker Information
 ---------------------------------------------------------------------------
 FreeMarker version     : 2.3.29
 Template name          : templates/info.ftl
 Language               : en
 Locale                 : en_AT
-Timestamp              : Nov 17, 2019 5:59:10 PM
+Timestamp              : Dec 10, 2019 10:06:46 PM
 Output encoding        : UTF-8
 Output format          : plainText
-
 
 User Supplied Properties
 ---------------------------------------------------------------------------
 
 Template Directories
 ---------------------------------------------------------------------------
-[1] /Users/sgoeschl/work/github/sgoeschl/freemarker-cli
+[1] /Users/sgoeschl/work/github/sgoeschl/freemarker-cli/target/appassembler
 [2] /Users/sgoeschl/.freemarker-cli
-[3] /Applications/Java/freemarker-cli-2.0.0
 
 SystemTool
 ---------------------------------------------------------------------------
-Host name       : murderbot.local
+Host name       : XXXXXXXX.local
 User name       : sgoeschl
 Command line    : -t, templates/info.ftl
 
 FreeMarker Document Model
 ---------------------------------------------------------------------------
-- YamlTool
-- Statics
-- SystemTool
-- documents
-- JsoupTool
-- JsonPathTool
-- GrokTool
-- XmlTool
-- Enums
-- SystemProperties
-- ExcelTool
-- Documents
-- PropertiesTool
-- ObjectConstructor
-- Environment
 - CSVTool
-- CommonsExecTool
+- Documents
+- ExcelTool
+- ExecTool
+- FreeMarkerTool
+- GrokTool
+- JsonPathTool
+- JsoupTool
+- PropertiesTool
+- SystemTool
+- XmlTool
+- YamlTool
 ```
 
 There a many examples (see below) available you can execute - run `./run-samples.sh` and have a look at the generated output
@@ -188,28 +180,31 @@ Please note that generated PDF files are very likely not found since they requir
 
 ```text
 > ./bin/freemarker-cli -h
-Usage: freemarker-cli [-EhV] [--stdin] [-b=<baseDir>] [-e=<sourceEncoding>]
-                      [--include=<include>] [-l=<locale>] [-o=<outputFile>]
-                      [--output-encoding=<outputEncoding>] -t=<template>
-                      [-D=<String=String>]... [<sources>...]
+Usage: freemarker-cli [-EhV] [--stdin] [-b=<baseDir>] [--config=<configFile>]
+                      [-e=<inputEncoding>] [--include=<include>] [-l=<locale>]
+                      [-o=<outputFile>] [--output-encoding=<outputEncoding>]
+                      -t=<template> [--times=<times>] [-D=<String=String>]...
+                      [<sources>...]
 Apache FreeMarker CLI
-      [<sources>...]        Any number of input source files and/or directories
-  -b, --basedir=<baseDir>   Additional template base directory to resolve
-                              FreeMarker templates
-  -D=<String=String>        Set system property
-  -e, --input-encoding=<sourceEncoding>
+      [<sources>...]        List of input files and/or input directories
+  -b, --basedir=<baseDir>   Optional template base directory
+      --config=<configFile> FreeMarker CLI configuration file
+  -D, --property=<String=String>
+                            Set system property
+  -e, --input-encoding=<inputEncoding>
                             Encoding of input file
   -E, --expose-env          Expose environment variables and user-supplied
                               properties globally
   -h, --help                Show this help message and exit.
-      --include=<include>   File pattern for directory search of source files
-  -l, --locale=<locale>     Locale being used for output file, e.g. 'en_US
+      --include=<include>   File pattern for input directory
+  -l, --locale=<locale>     Locale being used for output file, e.g. 'en_US'
   -o, --output=<outputFile> Output file
       --output-encoding=<outputEncoding>
                             Encoding of output file, e.g. UTF-8
-      --stdin               Read source document from stdin
+      --stdin               Read input document from stdin
   -t, --template=<template> FreeMarker template to render
-  -V, --version  
+      --times=<times>       Re-run X times for profiling
+  -V, --version             Print version information and exit.
 ```
 
 # 6. Examples
@@ -242,7 +237,7 @@ or pipe a cURL response
 
 ```text
 <#ftl output_format="plainText" >
-<#assign json = JsonPath.parse(documents[0])>
+<#assign json = JsonPathTool.parse(Documents.get(0))>
 <#assign users = json.read("$[*]")>
 <#--------------------------------------------------------------------------->
 # GitHub Users
@@ -313,9 +308,10 @@ The FreeMarker template is shown below
 
 ```text
 <#ftl output_format="HTML" >
-<#assign name = documents[0].name>
-<#assign cvsFormat = CSVTool.formats["DEFAULT"]withHeader()>
-<#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
+<#assign document = Documents.get(0)>
+<#assign name = document.name>
+<#assign cvsFormat = CSVTool.formats["DEFAULT"].withHeader()>
+<#assign csvParser = CSVTool.parse(document, cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderNames()>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
@@ -370,7 +366,7 @@ using the following template
 
 ```text
 <#ftl output_format="plainText" >
-<#assign xml = XmlParser.parse(documents[0])>
+<#assign xml = XmlTool.parse(Documents.get(0))>
 <#list xml.recipients.person as recipient>
 To: ${recipient.name}
 ${recipient.address}
@@ -417,7 +413,7 @@ One day I was asked a to prepare a CSV files containing REST endpoints described
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
-<#assign json = JsonPathTool.parse(documents[0])>
+<#assign json = JsonPathTool.parse(Documents.get(0))>
 <#assign basePath = json.read("$.basePath")>
 <#assign paths = json.read("$.paths")>
 
@@ -433,6 +429,7 @@ One day I was asked a to prepare a CSV files containing REST endpoints described
     </#list>
 </#compress>
 ${'\n'}
+
 ```
 
 Invoking the FTL template
@@ -464,8 +461,9 @@ The provided FTL transforms an Excel into a HTML document supporting multiple Ex
 
 ```text
 <#ftl output_format="HTML" >
-<#assign documentName = documents[0].name>
-<#assign workbook = ExcelTool.parse(documents[0])>
+<#assign document = Documents.get(0)>
+<#assign documentName = document.name>
+<#assign workbook = ExcelTool.parse(document)>
 <#assign date = .now?iso_utc>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
@@ -529,8 +527,6 @@ The provided FTL transforms an Excel into a HTML document supporting multiple Ex
         </#list>
     </table>
 </#macro>
-
-
 ```
 
 but the result looks reasonable
@@ -561,7 +557,7 @@ The FTL uses a couple of interesting features
 <#ftl output_format="plainText" strip_text="true">
 <#compress>
     TENANT,SITE,USER_ID,DISPOSER_ID,PASSWORD,SMS_OTP,NAME,DESCRIPTION
-    <#list documents as document>
+    <#list Documents.list as document>
         <#assign properties = PropertiesTool.parse(document)>
         <#assign environments = properties["ENVIRONMENTS"]!"">
         <#assign tenant = extractTenant(environments)>
@@ -578,33 +574,9 @@ The FTL uses a couple of interesting features
 ${'\n'}
 
 <#function extractSite environments>
-    <#if (environments)?contains("_DEV")>
-        <#return "dev">
-    <#elseif (environments)?contains("_FAT")>
-        <#return "fat">
-    <#elseif (environments)?contains("_ST")>
-        <#return "st">
-    <#elseif (environments)?contains("_PROD")>
-        <#return "prod">
-    <#elseif (environments)?contains("_UAT")>
-        <#return "uat">
-    <#else>
-        <#return "???">
-    </#if>
 </#function>
 
 <#function extractTenant environments>
-    <#if (environments)?contains("AT_")>
-        <#return "at">
-    <#elseif (environments)?contains("BCR_")>
-        <#return "ro">
-    <#elseif (environments)?contains("CSAS_")>
-        <#return "cz">
-    <#elseif (environments)?contains("SK_")>
-        <#return "sk">
-    <#else>
-        <#return "???">
-    </#if>
 </#function>
 
 ```
@@ -615,10 +587,10 @@ For a POC (proof of concept) I created a sample transformation from CSV to XML-F
 
 ```text
 <#ftl output_format="XML" >
-<#assign name = documents[0].name>
-<#assign csvFormatName = SystemProperties["csv.format"]!"DEFAULT">
-<#assign cvsFormat = CSVTool.formats[csvFormatName].withHeader()>
-<#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
+<#assign document = Documents.get(0)>
+<#assign name = document.name>
+<#assign cvsFormat = CSVTool.formats.DEFAULT.withDelimiter('\t').withHeader()>
+<#assign csvParser = CSVTool.parse(document, cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
 <#--------------------------------------------------------------------------->
@@ -635,12 +607,28 @@ For a POC (proof of concept) I created a sample transformation from CSV to XML-F
                                margin-right="1cm">
             <fo:region-body margin-top="1cm"/>
             <fo:region-before extent="1cm"/>
-            <fo:region-after extent="1cm"/>
+            <fo:region-after extent="-1.2cm"/>
         </fo:simple-page-master>
     </fo:layout-master-set>
     <fo:page-sequence master-reference="first">
+        <fo:static-content flow-name="xsl-region-before">
+            <fo:block line-height="10pt" font-size="8pt" text-align="left">Transaction Export - ${.now}</fo:block>
+        </fo:static-content>
+        <fo:static-content flow-name="xsl-region-after">
+            <fo:block line-height="6pt" font-size="6pt" text-align="end">Page <fo:page-number/></fo:block>
+        </fo:static-content>
         <fo:flow flow-name="xsl-region-body">
             <fo:table table-layout="fixed" width="100%" border-collapse="separate">
+                <fo:table-column column-width="8%"/>
+                <fo:table-column column-width="10%"/>
+                <fo:table-column column-width="12%"/>
+                <fo:table-column column-width="8%"/>
+                <fo:table-column column-width="7%"/>
+                <fo:table-column column-width="5%"/>
+                <fo:table-column column-width="5%"/>
+                <fo:table-column column-width="5%"/>
+                <fo:table-column column-width="35%"/>
+                <fo:table-column column-width="5%"/>
                 <@writeTableHeader headers=csvHeaders/>
                 <@writeTableBody columns=csvRecords/>
             </fo:table>
@@ -653,8 +641,8 @@ For a POC (proof of concept) I created a sample transformation from CSV to XML-F
     <fo:table-header>
         <fo:table-row>
             <#list headers as header>
-                <fo:table-cell>
-                    <fo:block font-weight="bold">${header}</fo:block>
+                <fo:table-cell border-style="solid" border-width="0.1pt" padding-left="1.0px" padding-right="1.0px">
+                    <fo:block font-size="6pt" font-weight="bold">${header}</fo:block>
                 </fo:table-cell>
             </#list>
         </fo:table-row>
@@ -667,8 +655,8 @@ For a POC (proof of concept) I created a sample transformation from CSV to XML-F
         <#list columns as column>
             <fo:table-row>
                 <#list column.iterator() as field>
-                    <fo:table-cell>
-                        <fo:block>${field}</fo:block>
+                    <fo:table-cell border-style="solid" border-width="0.1pt" padding-left="1.0px" padding-right="1.0px">
+                        <fo:block font-size="6pt">${field}</fo:block>
                     </fo:table-cell>
                 </#list>
             </fo:table-row>
@@ -720,8 +708,9 @@ Recently I got the rather unusual question how to determine the list of dependen
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
-<#assign documentName = documents[0].name>
-<#assign html = JsoupTool.parse(documents[0])>
+<#assign document = Documents.get(0)>
+<#assign documentName = document.name>
+<#assign html = JsoupTool.parse(document)>
 
 <#compress>
     <@writeHeader/>
@@ -752,6 +741,7 @@ Recently I got the rather unusual question how to determine the list of dependen
         </#list>
     </#if>
 </#macro>
+
 
 ```
 
@@ -794,7 +784,7 @@ and the final FTL is found below
 ```
 <#ftl output_format="plainText">
 <#assign cvsFormat = CSVTool.formats["DEFAULT"].withHeader()>
-<#assign csvParser = CSVTool.parse(documents[0], cvsFormat)>
+<#assign csvParser = CSVTool.parse(Documents.get(0), cvsFormat)>
 <#assign records = csvParser.records>
 <#assign csvMap = CSVTool.toMap(records, "disposer")>
 <#--------------------------------------------------------------------------->
@@ -808,8 +798,6 @@ echo "time,user,status,duration,size"
 <#list records as record>
 date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',${record.disposer},%{http_code},%{time_total},%{size_download}\n' --silent --show-error --output /dev/null "${r"${MY_BASE_URL}"}/get"
 </#list>
-
-
 ```
 
 Rendering the FreeMarker template 
@@ -880,7 +868,8 @@ using the following FreeMarker template
 ```
 <#ftl output_format="plainText" strip_whitespace=true>
 <#assign grok = GrokTool.compile("%{COMBINEDAPACHELOG}")>
-<#assign lines = documents[0].getLineIterator()>
+<#assign document = Documents.get(0)>
+<#assign lines = document.getLineIterator()>
 
 <#compress>
     TIMESTAMP;VERB;REQUEST;HTTPVERSION
@@ -911,22 +900,28 @@ renders the following template
 
 ```
 <#ftl output_format="plainText" strip_text="true">
-<#-- Parse incoming CSV with user-supplied configuration -->
-<#assign initialCvsInFormat = CSVTool.formats[SystemTool.getProperty("csv.in.format", "DEFAULT")]>
-<#assign csvInDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.in.delimiter", initialCvsInFormat.getDelimiter()))>
-<#assign cvsInFormat = initialCvsInFormat.withDelimiter(csvInDelimiter)>
-<#assign csvParser = CSVTool.parse(documents[0], cvsInFormat)>
-<#-- Create outgoing CSV with user-supplied configuration -->
-<#assign initialCvsOutFormat = CSVTool.formats[SystemTool.getProperty("csv.out.format", "DEFAULT")]>
-<#assign csvOutDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.out.delimiter", initialCvsOutFormat.getDelimiter()))>
-<#assign cvsOutFormat = initialCvsOutFormat.withDelimiter(csvOutDelimiter)>
-<#assign csvPrinter = CSVTool.printer(cvsOutFormat)>
+<#assign csvParser = createCsvParser(Documents.get(0))>
+<#assign csvPrinter = createCsvPrinter()>
 <#-- Print each line without materializing the CSV in memory -->
 <#compress>
     <#list csvParser.iterator() as record>
         ${csvPrinter.printRecord(record)}
     </#list>
 </#compress>
+
+<#function createCsvParser document>
+    <#assign initialCvsInFormat = CSVTool.formats[SystemTool.getProperty("csv.in.format", "DEFAULT")]>
+    <#assign csvInDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.in.delimiter", initialCvsInFormat.getDelimiter()))>
+    <#assign cvsInFormat = initialCvsInFormat.withDelimiter(csvInDelimiter)>
+    <#return CSVTool.parse(document, cvsInFormat)>
+</#function>
+
+<#function createCsvPrinter>
+    <#assign initialCvsOutFormat = CSVTool.formats[SystemTool.getProperty("csv.out.format", "DEFAULT")]>
+    <#assign csvOutDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.out.delimiter", initialCvsOutFormat.getDelimiter()))>
+    <#assign cvsOutFormat = initialCvsOutFormat.withDelimiter(csvOutDelimiter)>
+    <#return CSVTool.printer(cvsOutFormat)>
+</#function>
 ```
 
 and generates
@@ -965,7 +960,7 @@ h3. AWS EC2 Instance
 </#function>
 
 <#function awsCliToJson line>
-    <#local output = CommonsExecTool.execute(line)>
+    <#local output = ExecTool.execute(line)>
     <#return JsonPathTool.parse(output)>
 </#function>
 
@@ -1017,10 +1012,9 @@ Running
 gives you
 
 ```text
-<#ftl output_format="plainText" >
+<#ftl output_format="plainText">
 1) FreeMarker Special Variables
 ---------------------------------------------------------------------------
-
 FreeMarker version     : ${.version}
 Template name          : ${.current_template_name}
 Language               : ${.lang}
@@ -1045,13 +1039,13 @@ java.math.RoundingMode#UP: ${FreeMarkerTool.enums["java.math.RoundingMode"].UP}
 5) Loop Over The Values Of An Enumeration
 ---------------------------------------------------------------------------
 <#list FreeMarkerTool.enums["java.math.RoundingMode"]?values as roundingMode>
-    * java.math.RoundingMode.${roundingMode}
+    - java.math.RoundingMode.${roundingMode}<#lt>
 </#list>
 
 6) Display list of input files
 ---------------------------------------------------------------------------
 List all files:
-<#list documents as document>
+<#list Documents.list as document>
     - Document: name=${document.name} location=${document.location} length=${document.length} encoding=${document.encoding!""}
 </#list>
 
@@ -1061,23 +1055,23 @@ Host name       : ${SystemTool.getHostName()}
 Command line    : ${SystemTool.getArgs()?join(", ")}
 User name       : ${SystemTool.getProperty("user.name", "N.A.")}
 Timestamp       : ${SystemTool.currentTimeMillis()?c}
-Environment     : ${SystemTool.getEnvironment("foo", SystemTool.getProperty("foo", "N.A."))}
+Environment     : ${SystemTool.envs["FOO"]!"N.A."}
 
 8) Access System Properties
 ---------------------------------------------------------------------------
-app.dir      : ${SystemProperties["app.dir"]!""}
-app.home     : ${SystemProperties["app.home"]!""}
-app.pid      : ${SystemProperties["app.pid"]!""}
-basedir      : ${SystemProperties["basedir"]!""}
-java.version : ${SystemProperties["java.version"]!""}
-user.name    : ${SystemProperties["user.name"]!""}
-user.dir     : ${SystemProperties["user.dir"]!""}
-user.home    : ${SystemProperties["user.home"]!""}
+app.dir      : ${SystemTool.properties["app.dir"]!""}
+app.home     : ${SystemTool.properties["app.home"]!""}
+app.pid      : ${SystemTool.properties["app.pid"]!""}
+basedir      : ${SystemTool.properties["basedir"]!""}
+java.version : ${SystemTool.properties["java.version"]!""}
+user.name    : ${SystemTool.properties["user.name"]!""}
+user.dir     : ${SystemTool.properties["user.dir"]!""}
+user.home    : ${SystemTool.properties["user.home"]!""}
 
-9) Environment Variables
+9) Acessing Environment Variables
 ---------------------------------------------------------------------------
-<#list Environment as name,value>
-    * ${name} ==> ${value}
+<#list SystemTool.envs as name,value>
+    - ${name} ==> ${value}<#lt>
 </#list>
 
 10) Accessing Documents
@@ -1097,24 +1091,20 @@ List all files having "md" extension
     - ${document.name}
 </#list>
 Get all documents
-<#list Documents.getAll() as document>
+<#list Documents.list as document>
     - ${document.name} => ${document.location}
 </#list>
 
 11) Document Data Model
 ---------------------------------------------------------------------------
-
 Top-level entries in the current data model
-
-<#list .data_model?keys as key>
-    - ${key}
+<#list .data_model?keys?sort as key>
+    - ${key}<#lt>
 </#list>
 
 12) Create a UUID
 ---------------------------------------------------------------------------
-
 See https://stackoverflow.com/questions/43501297/i-have-a-simplescalar-i-need-its-strings-getbytes-return-value-what-can-i-d
-
 <#assign uuidSource = "value and salt">
 <#assign buffer = FreeMarkerTool.statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
 <#assign bytes = buffer.array()[0..<buffer.limit()]>
@@ -1125,7 +1115,6 @@ Name UUID as function : ${uuidFromValueAndSalt("value and ", "salt")}
 
 13) Printing Special Characters
 ---------------------------------------------------------------------------
-
 German Special Characters: äöüßÄÖÜ
 
 14) Locale-specific output
@@ -1133,7 +1122,6 @@ German Special Characters: äöüßÄÖÜ
 <#setting number_format=",##0.00">
 <#assign smallNumber = 1.234>
 <#assign largeNumber = 12345678.9>
-
 Small Number :  ${smallNumber}
 Large Number :  ${largeNumber}
 Currency     :  ${largeNumber} EUR
@@ -1143,7 +1131,7 @@ Time         :  ${.now?time}
 15) Execute a program
 ---------------------------------------------------------------------------
 > date
-${CommonsExecTool.execute("date")}
+${ExecTool.execute("date")}
 
 <#--------------------------------------------------------------------------->
 <#function uuidFromValueAndSalt value salt>
@@ -1158,28 +1146,25 @@ ${CommonsExecTool.execute("date")}
 
 ## 7.1 How It Works
 
-* The user-supplied files are loaded into memory or if there are no file the script reads the from `stdin`
-* The FreeMarker data model containing the documents and helper object is created and passed to the template
+* The user-supplied files are loaded or input is read from `stdin`
+* The FreeMarker data model containing the documents and tools is created and passed to the template
 * The generated output is written to the user-supplied file or to `stdout`
 
 ## 7.2 FreeMarker Data Model
 
-Within the script a FreeMarker data model is set up and passed to the template - it contains the documents to be processed and helper objects
+Within the script a FreeMarker data model is set up and passed to the template - it contains the documents to be processed and the following tools
 
 | Helper                | Description                                                         |
 |-----------------------|---------------------------------------------------------------------|
-| CommonsExecTool       | Executing commons using Apache Commons Exec                         |
 | CSVTool               | CSV parser exposing a `parse` method                                |
-| Documents             | Helper to find documents, e.g. by name or extension                 |
-| documents             | List of documents passed on the command line                        |
-| Environment           | Environment variables                                               |
+| ExecTool              | Executing commons using Apache Commons Exec                         |
+| Documents             | Helper to find documents, e.g. by name, extension or index          |
 | ExcelTool             | Excel parser exposing a `parse` method                              |
 | FreeMarkerTool        | FreeMarker helper classes                                           |
 | GrokTool              | Use Grok for powerful regular expressions                           |
 | JsonPathTool          | JSON Parser                                                         |
 | JsoupTool             | Jsoup HTML parser                                                   |
 | PropertiesTool        | Properties parser exposing a `parse` method                         |
-| SystemProperties      | JVM System properties                                               |
 | XmlTool               | XML parser exposing a `parse` method                                |
 | YamlTool              | SnakeYAML to parse YAML files                                       |
 

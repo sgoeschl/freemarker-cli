@@ -133,7 +133,7 @@ Time         :  ${.now?time}
 15) Execute a program
 ---------------------------------------------------------------------------
 > date
-${CommonsExecTool.execute("date")}
+${ExecTool.execute("date")}
 
 <#--------------------------------------------------------------------------->
 <#function uuidFromValueAndSalt value salt>
