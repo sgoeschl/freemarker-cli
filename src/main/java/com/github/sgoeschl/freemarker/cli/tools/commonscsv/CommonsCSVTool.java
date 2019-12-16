@@ -24,7 +24,9 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.input.BOMInputStream;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,8 +37,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.io.IOUtils.toInputStream;
 
 public class CommonsCSVTool {
 
@@ -52,13 +56,26 @@ public class CommonsCSVTool {
         }
 
         try {
-            final BOMInputStream bomInputStream = new BOMInputStream(document.getInputStream(), false);
             // As stated in the documentation : "If you do not read all records from the given {@code reader},
             // you should call {@link #close()} on the parser, unless you close the {@code reader}."
             // The underlying input stream is closed by the document by its "CloseableReaper".
-            return CSVParser.parse(bomInputStream, document.getCharset(), format);
+            final InputStream is = new BOMInputStream(document.getInputStream(), false);
+            return parse(is, document.getCharset(), format);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse CSV: " + document, e);
+        }
+    }
+
+    public CSVParser parse(String csv, CSVFormat format) {
+        if (isNullOrEmtpty(csv)) {
+            throw new IllegalArgumentException("No CSV was provided");
+        }
+
+        try {
+            // We don't need to close the underyling ByteArrayInputStream
+            return parse(toInputStream(csv, UTF_8), UTF_8, format);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to parse CSV", e);
         }
     }
 
@@ -145,7 +162,7 @@ public class CommonsCSVTool {
      */
     public CSVPrinter printer(CSVFormat csvFormat) throws IOException {
         // We do not close the CSVPrinter but the underlying writer at the of processing
-        return new CSVPrinter(writer, csvFormat);
+        return new CSVPrinter(getWriter(), csvFormat);
     }
 
     /**
@@ -188,14 +205,24 @@ public class CommonsCSVTool {
         return writer;
     }
 
-    private List<String> toKeys(Collection<CSVRecord> csvRecords, Function<CSVRecord, String> value) {
+    private static CSVParser parse(InputStream is, Charset charset, CSVFormat format) throws IOException {
+        if (is == null) {
+            throw new IllegalArgumentException("No input stream was provided");
+        }
+
+        // As stated in the documentation : "If you do not read all records from the given {@code reader},
+        // you should call {@link #close()} on the parser, unless you close the {@code reader}."
+        return CSVParser.parse(is, charset, format);
+    }
+
+    private static List<String> toKeys(Collection<CSVRecord> csvRecords, Function<CSVRecord, String> value) {
         return csvRecords.stream()
                 .map(value)
                 .distinct()
                 .collect(toList());
     }
 
-    private Map<String, CSVRecord> toMap(Collection<CSVRecord> records, Function<CSVRecord, String> value) {
+    private static Map<String, CSVRecord> toMap(Collection<CSVRecord> records, Function<CSVRecord, String> value) {
         return records.stream()
                 .collect(Collectors.toMap(
                         value,
@@ -205,7 +232,7 @@ public class CommonsCSVTool {
                 ));
     }
 
-    private Map<String, List<CSVRecord>> toMultiMap(Collection<CSVRecord> records, Function<CSVRecord, String> value) {
+    private static Map<String, List<CSVRecord>> toMultiMap(Collection<CSVRecord> records, Function<CSVRecord, String> value) {
         final Map<String, List<CSVRecord>> result = new LinkedHashMap<>();
         final List<String> keys = toKeys(records, value);
         keys.forEach(key -> result.put(key, new ArrayList<>()));

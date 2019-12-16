@@ -93,8 +93,22 @@ public class Document implements Closeable {
         }
     }
 
+    /**
+     * Get an input stream which is closed together with this document.
+     *
+     * @return InputStream
+     */
     public InputStream getInputStream() throws IOException {
         return closables.add(dataSource.getInputStream());
+    }
+
+    /**
+     * Get an input stream which needs to be closed by the caller.
+     *
+     * @return InputStream
+     */
+    public InputStream getUnsafeInputStream() throws IOException {
+        return dataSource.getInputStream();
     }
 
     public String getText() throws IOException {
@@ -156,7 +170,8 @@ public class Document implements Closeable {
      * @throws IOException if an I/O error occurs
      */
     public LineIterator getLineIterator(String charsetName) throws IOException {
-        return closables.add(lineIterator(getInputStream(), forName(charsetName)));
+        final LineIterator lineIterator = lineIterator(getUnsafeInputStream(), forName(charsetName));
+        return closables.add(lineIterator);
     }
 
     public byte[] getBytes() throws IOException {
@@ -165,6 +180,15 @@ public class Document implements Closeable {
         }
     }
 
+    /**
+     * Some tools create a {@link java.io.Closeable} which can bound to the
+     * lifecycle of the document. When the document is closed all the bound
+     * {@link java.io.Closeable} are closed as well.
+     *
+     * @param closeable Closable
+     * @param <T>       Type of closable
+     * @return Closable
+     */
     public <T extends Closeable> T addClosable(T closeable) {
         return closables.add(closeable);
     }

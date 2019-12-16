@@ -32,7 +32,7 @@ public class XmlTool {
     }
 
     public NodeModel parse(Document document) throws Exception {
-        try (InputStream is = document.getInputStream()) {
+        try (InputStream is = document.getUnsafeInputStream()) {
             return NodeModel.parse(new InputSource(is));
         }
     }

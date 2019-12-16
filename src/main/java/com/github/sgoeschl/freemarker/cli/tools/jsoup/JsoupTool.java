@@ -17,7 +17,6 @@
 package com.github.sgoeschl.freemarker.cli.tools.jsoup;
 
 import com.github.sgoeschl.freemarker.cli.model.Document;
-import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
@@ -33,9 +32,8 @@ public class JsoupTool {
     }
 
     public org.jsoup.nodes.Document parse(Document document) {
-        try (InputStream is = document.getInputStream()) {
-            final byte[] bytes = IOUtils.toByteArray(is);
-            return Jsoup.parse(new String(bytes, document.getCharset()));
+        try (InputStream is = document.getUnsafeInputStream()) {
+            return Jsoup.parse(is, document.getCharset().name(), "");
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse HTML document: " + document, e);
         }

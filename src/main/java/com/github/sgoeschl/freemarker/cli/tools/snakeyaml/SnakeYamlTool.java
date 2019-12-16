@@ -32,7 +32,7 @@ public class SnakeYamlTool {
     }
 
     public Map<String, Object> parse(Document document) {
-        try (InputStream is = document.getInputStream()) {
+        try (InputStream is = document.getUnsafeInputStream()) {
             final Yaml yaml = new Yaml();
             return yaml.load(is);
         } catch (IOException e) {

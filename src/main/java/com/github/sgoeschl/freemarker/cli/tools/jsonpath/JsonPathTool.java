@@ -33,7 +33,7 @@ public class JsonPathTool {
     }
 
     public DocumentContext parse(Document document) throws IOException {
-        try (InputStream is = document.getInputStream()) {
+        try (InputStream is = document.getUnsafeInputStream()) {
             return JsonPath.parse(is);
         }
     }

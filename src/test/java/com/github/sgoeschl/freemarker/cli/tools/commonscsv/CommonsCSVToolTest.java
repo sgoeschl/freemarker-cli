@@ -58,6 +58,15 @@ public class CommonsCSVToolTest {
     }
 
     @Test
+    public void shallParseCvsString() throws IOException {
+        try (CSVParser parser = commonsCsvTool().parse(document().getText(), DEFAULT.withHeader())) {
+            assertNotNull(parser);
+            assertEquals(32, parser.getHeaderMap().size());
+            assertEquals(22, parser.getRecords().size());
+        }
+    }
+
+    @Test
     public void shallGetKeysFromCsvRecords() throws IOException {
         final CommonsCSVTool commonsCsvTool = commonsCsvTool();
         final List<String> keys;

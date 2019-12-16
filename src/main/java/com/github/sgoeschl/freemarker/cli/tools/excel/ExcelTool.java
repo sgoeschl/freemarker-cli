@@ -41,7 +41,7 @@ public class ExcelTool {
     }
 
     public Workbook parse(Document document) {
-        try (InputStream is = document.getInputStream()) {
+        try (InputStream is = document.getUnsafeInputStream()) {
             final Workbook workbook = WorkbookFactory.create(is);
             return document.addClosable(workbook);
         } catch (IOException e) {
