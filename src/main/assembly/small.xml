@@ -50,7 +50,7 @@
     </dependencySets>
     <fileSets>
         <fileSet>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>${file.separator}</outputDirectory>
             <directory>${project.build.outputDirectory}</directory>
         </fileSet>
     </fileSets>
