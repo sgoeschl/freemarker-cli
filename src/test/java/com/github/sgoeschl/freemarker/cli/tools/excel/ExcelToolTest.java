@@ -27,6 +27,7 @@ import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 
 public class ExcelToolTest {
 
@@ -93,7 +94,8 @@ public class ExcelToolTest {
         final List<Object> record = records.get(1);
 
         assertEquals("Row 1", record.get(0));
-        assertEquals("Tue Jan 31 00:00:00 CET 2017", record.get(1).toString());
+        // TODO Implement proper data comparision
+        assertTrue(record.get(1).toString().contains("Tue Jan 31 00:00:00"));
         assertEquals(100.00, record.get(2));
         assertEquals(100.00, record.get(2));
         assertEquals("11:00:00", record.get(4));
