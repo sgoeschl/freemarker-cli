@@ -19,7 +19,7 @@
 <#-- Parse the first document & sheet of the Excel document -->
 <#assign workbook = ExcelTool.parse(Documents.get(0))>
 <#assign sheet = ExcelTool.getSheets(workbook)[0]>
-<#assign records = ExcelTool.parseSheet(sheet)>
+<#assign records = ExcelTool.toTable(sheet)>
 <#-- Setup CSVPrinter  -->
 <#assign cvsFormat = CSVTool.formats[format]>
 <#assign csvPrinter = CSVTool.printer(cvsFormat, Settings["freemarker.writer"])>

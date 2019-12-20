@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. We try to a
 ## 2.0.0-BETA-5-SNAPSHOT
 
 ### Added
+- `ExcelTool` returns raw table consisting of the underlying Java data type
 - `Document#getUnsafeInputStream` to get a input stream which needs to be closed by the caller
 - `CSVTool` allows parsing plain string CSV
 - Tools are loaded from `freemarker-cli.properties` and freely configurable
@@ -12,6 +13,8 @@ All notable changes to this project will be documented in this file. We try to a
 - Add `-times` command line option to execute the transformation N times
 
 ### Changed
+- Renamed `ExcelTool#parseSheet` to `ExcelTool#toTable`
+- Removed various Tool constructors taking `Settings`
 - Do not use `documents[0]` as top-level variable - use `Documents.get(0)` instead
 - Available CSV formats are exposed using the CSVTool and not the global data model
 - Expose user-supplied system properties as top-level variables when using `-E`

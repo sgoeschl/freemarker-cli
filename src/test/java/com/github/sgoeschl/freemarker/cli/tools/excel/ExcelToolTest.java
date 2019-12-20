@@ -39,7 +39,7 @@ public class ExcelToolTest {
         final Workbook workbook = workbook(TEST_XLS);
 
         final List<Sheet> sheets = excelTool().getSheets(workbook);
-        final List<List<String>> records = excelTool().parseSheet(sheets.get(0));
+        final List<List<Object>> records = excelTool().toTable(sheets.get(0));
 
         assertEquals(1, sheets.size());
         assertEquals(3, records.size());
@@ -50,7 +50,7 @@ public class ExcelToolTest {
         final Workbook workbook = workbook(TEST_XLSX);
 
         final List<Sheet> sheets = excelTool().getSheets(workbook);
-        final List<List<String>> records = excelTool().parseSheet(sheets.get(0));
+        final List<List<Object>> records = excelTool().toTable(sheets.get(0));
 
         assertEquals(1, sheets.size());
         assertEquals(3, records.size());
@@ -63,24 +63,41 @@ public class ExcelToolTest {
         final List<Sheet> sheets = excelTool().getSheets(workbook);
 
         assertEquals(2, sheets.size());
-        assertEquals(3, excelTool().parseSheet(sheets.get(0)).size());
-        assertEquals(2, excelTool().parseSheet(sheets.get(1)).size());
+        assertEquals(3, excelTool().toTable(sheets.get(0)).size());
+        assertEquals(2, excelTool().toTable(sheets.get(1)).size());
     }
 
     @Test
-    public void shouldParseCellContent() {
+    public void shouldConvertSheetToTable() {
         final Workbook workbook = workbook(TEST_XLSX);
         final List<Sheet> sheets = excelTool().getSheets(workbook);
-        final List<List<String>> records = excelTool().parseSheet(sheets.get(0));
+        final List<List<Object>> records = excelTool().toTable(sheets.get(0));
 
-        final List<String> record = records.get(1);
+        final List<Object> record = records.get(1);
 
         assertEquals("Row 1", record.get(0));
-        assertEquals("01/01/17", record.get(1));
+        assertEquals("01/31/17", record.get(1));
         assertEquals("100.00", record.get(2));
         assertEquals("€100.00", record.get(3));
         assertEquals("11:00", record.get(4));
         assertEquals("10.00%", record.get(5));
+        assertEquals("C2*F2", record.get(6));
+    }
+
+    @Test
+    public void shouldConvertSheetToRawTable() {
+        final Workbook workbook = workbook(TEST_XLSX);
+        final List<Sheet> sheets = excelTool().getSheets(workbook);
+        final List<List<Object>> records = excelTool().toRawTable(sheets.get(0));
+
+        final List<Object> record = records.get(1);
+
+        assertEquals("Row 1", record.get(0));
+        assertEquals("Tue Jan 31 00:00:00 CET 2017", record.get(1).toString());
+        assertEquals(100.00, record.get(2));
+        assertEquals(100.00, record.get(2));
+        assertEquals("11:00:00", record.get(4));
+        assertEquals(0.1, record.get(5));
         assertEquals("C2*F2", record.get(6));
     }
 

@@ -52,7 +52,7 @@
 <#-- writeSheet                                                            -->
 <#--------------------------------------------------------------------------->
 <#macro writeSheet sheet>
-    <#assign rows = ExcelTool.parseSheet(sheet)>
+    <#assign rows = ExcelTool.toTable(sheet)>
     <h2>${sheet.getSheetName()}</h2>
     <@writeRows rows/>
 </#macro>

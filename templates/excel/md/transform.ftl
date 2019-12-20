@@ -40,7 +40,7 @@ ${'\n'}
 <#-- writeSheet                                                            -->
 <#--------------------------------------------------------------------------->
 <#macro writeSheet sheet>
-    <#assign rows = ExcelTool.parseSheet(sheet)>
+    <#assign rows = ExcelTool.toTable(sheet)>
     ## ${sheet.getSheetName()}
     ${'\n'}
     <@writeRows rows/>
