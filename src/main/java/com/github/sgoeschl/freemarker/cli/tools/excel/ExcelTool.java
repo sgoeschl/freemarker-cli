@@ -147,7 +147,7 @@ public class ExcelTool {
      * @param cell Cell containing some sort of date or time
      * @return The corresponding Java istance
      */
-    private static Object toDateCellValue(Cell cell) {
+    private static synchronized Object toDateCellValue(Cell cell) {
         final Date date = cell.getDateCellValue();
 
         // Get a date year
