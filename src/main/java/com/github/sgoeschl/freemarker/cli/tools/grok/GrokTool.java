@@ -19,17 +19,9 @@ package com.github.sgoeschl.freemarker.cli.tools.grok;
 import io.krakens.grok.api.Grok;
 import io.krakens.grok.api.GrokCompiler;
 
-import java.util.Map;
-
-import static java.util.Objects.requireNonNull;
-
 public class GrokTool {
 
     private static final String DEFAULT_PATTERN = "/patterns/patterns";
-
-    public GrokTool(Map<String, Object> settings) {
-        requireNonNull(settings);
-    }
 
     public GrokWrapper compile(String pattern) {
         return compile(DEFAULT_PATTERN, pattern);

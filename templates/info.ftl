@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-FreeMarker Information
+FreeMarker CLI Information
 ---------------------------------------------------------------------------
 FreeMarker version     : ${.version}
 Template name          : ${.current_template_name}
@@ -25,34 +25,38 @@ Timestamp              : ${.now}
 Output encoding        : ${.output_encoding!"not set"}
 Output format          : ${.output_format}
 
-<#if documents?has_content>
-Documents
----------------------------------------------------------------------------
-<#list Documents.list as document>
-[${document?counter}] ${document.name}, ${document.location}, ${document.length} Bytes
-</#list>
-</#if>
-
-User Supplied Properties
----------------------------------------------------------------------------
-<#list SystemTool.getUserSuppliedProperties() as name,value>
-- ${name} ==> ${value}
-</#list>
-
-Template Directories
+FreeMarker CLI Template Directories
 ---------------------------------------------------------------------------
 <#list SystemTool.getTemplateDirectories() as directory>
 [${directory?counter}] ${directory}
 </#list>
-
-SystemTool
----------------------------------------------------------------------------
-Host name       : ${SystemTool.getHostName()}
-User name       : ${SystemTool.getProperty("user.name", "N.A.")}
-Command line    : ${SystemTool.getArgs()?join(", ")}
 
 FreeMarker Document Model
 ---------------------------------------------------------------------------
 <#list .data_model?keys?sort as key>
 - ${key}
 </#list>
+
+FreeMarker CLI Documents
+---------------------------------------------------------------------------
+<#list Documents.list as document>
+[${document?counter}] ${document.name}, ${document.location}, ${document.length} Bytes
+</#list>
+
+FreeMarker CLI Settings
+---------------------------------------------------------------------------
+<#list Settings?keys?sort as key>
+- ${key}
+</#list>
+
+User Supplied Properties
+---------------------------------------------------------------------------
+<#list Settings["user.properties"] as name,value>
+- ${name} ==> ${value}
+</#list>
+
+SystemTool
+---------------------------------------------------------------------------
+Host name       : ${SystemTool.getHostName()}
+User name       : ${SystemTool.getProperty("user.name", "N.A.")}
+Command line    : ${SystemTool.getCommandLineArgs()?join(", ")}

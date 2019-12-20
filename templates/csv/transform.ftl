@@ -35,5 +35,6 @@
     <#assign initialCvsOutFormat = CSVTool.formats[SystemTool.getProperty("csv.out.format", "DEFAULT")]>
     <#assign csvOutDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.out.delimiter", initialCvsOutFormat.getDelimiter()))>
     <#assign cvsOutFormat = initialCvsOutFormat.withDelimiter(csvOutDelimiter)>
-    <#return CSVTool.printer(cvsOutFormat)>
+    <#assign writer = Settings["freemarker.writer"]>
+    <#return CSVTool.printer(cvsOutFormat, writer)>
 </#function>

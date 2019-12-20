@@ -20,16 +20,9 @@ import com.github.sgoeschl.freemarker.cli.model.Document;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
 import java.util.Properties;
 
-import static java.util.Objects.requireNonNull;
-
 public class PropertiesTool {
-
-    public PropertiesTool(Map<String, Object> settings) {
-        requireNonNull(settings);
-    }
 
     public Properties parse(Document document) {
         try (InputStream is = document.getUnsafeInputStream()) {

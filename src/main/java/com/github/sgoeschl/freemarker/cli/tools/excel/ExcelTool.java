@@ -29,16 +29,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import static java.util.Objects.requireNonNull;
 import static org.apache.poi.ss.usermodel.Row.MissingCellPolicy.CREATE_NULL_AS_BLANK;
 
 public class ExcelTool {
-
-    public ExcelTool(Map<String, Object> settings) {
-        requireNonNull(settings);
-    }
 
     public Workbook parse(Document document) {
         try (InputStream is = document.getUnsafeInputStream()) {

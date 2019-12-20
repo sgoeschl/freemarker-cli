@@ -22,15 +22,8 @@ import com.jayway.jsonpath.JsonPath;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
-
-import static java.util.Objects.requireNonNull;
 
 public class JsonPathTool {
-
-    public JsonPathTool(Map<String, Object> settings) {
-        requireNonNull(settings);
-    }
 
     public DocumentContext parse(Document document) throws IOException {
         try (InputStream is = document.getUnsafeInputStream()) {
@@ -41,5 +34,4 @@ public class JsonPathTool {
     public DocumentContext parse(String json) {
         return JsonPath.parse(json);
     }
-
 }

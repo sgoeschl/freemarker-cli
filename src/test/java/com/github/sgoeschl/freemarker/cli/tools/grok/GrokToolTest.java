@@ -18,7 +18,6 @@ package com.github.sgoeschl.freemarker.cli.tools.grok;
 
 import org.junit.Test;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -41,6 +40,6 @@ public class GrokToolTest {
     }
 
     private GrokTool grokTool() {
-        return new GrokTool(new HashMap<>());
+        return new GrokTool();
     }
 }

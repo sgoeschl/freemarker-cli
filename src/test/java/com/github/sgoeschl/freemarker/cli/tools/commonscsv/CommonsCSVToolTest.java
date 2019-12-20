@@ -18,7 +18,6 @@ package com.github.sgoeschl.freemarker.cli.tools.commonscsv;
 
 import com.github.sgoeschl.freemarker.cli.impl.DocumentFactory;
 import com.github.sgoeschl.freemarker.cli.model.Document;
-import com.github.sgoeschl.freemarker.cli.model.Settings;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
@@ -28,9 +27,9 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static junit.framework.TestCase.assertEquals;
@@ -116,14 +115,15 @@ public class CommonsCSVToolTest {
     public void shallPrintCsvRecords() throws IOException {
         final CommonsCSVTool commonsCsvTool = commonsCsvTool();
         final CSVFormat cvsFormat = DEFAULT.withHeader();
+        final Writer writer = new StringWriter();
 
         try (CSVParser parser = commonsCsvTool.parse(document(), cvsFormat)) {
-            try (CSVPrinter printer = commonsCsvTool.printer(cvsFormat)) {
+            try (CSVPrinter printer = commonsCsvTool.printer(cvsFormat, writer)) {
                 printer.printRecord(parser.getHeaderMap());
             }
         }
 
-        assertTrue(commonsCsvTool.getWriter().toString().contains(CONTRACT_ID));
+        assertTrue(writer.toString().contains(CONTRACT_ID));
     }
 
     @Test
@@ -149,15 +149,6 @@ public class CommonsCSVToolTest {
     }
 
     private CommonsCSVTool commonsCsvTool() {
-        return new CommonsCSVTool(settings());
-    }
-
-    private Map<String, Object> settings() {
-        return Settings.builder()
-                .setTemplateName(ANY_TEMPLATE)
-                .setConfiguration(new Properties())
-                .setWriter(new StringWriter())
-                .build()
-                .toMap();
+        return new CommonsCSVTool();
     }
 }

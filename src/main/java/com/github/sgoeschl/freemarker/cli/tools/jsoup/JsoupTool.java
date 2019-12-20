@@ -21,15 +21,8 @@ import org.jsoup.Jsoup;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
-
-import static java.util.Objects.requireNonNull;
 
 public class JsoupTool {
-
-    public JsoupTool(Map<String, Object> settings) {
-        requireNonNull(settings);
-    }
 
     public org.jsoup.nodes.Document parse(Document document) {
         try (InputStream is = document.getUnsafeInputStream()) {

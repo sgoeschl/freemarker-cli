@@ -22,18 +22,10 @@ import freemarker.template.Configuration;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.utility.ObjectConstructor;
 
-import java.util.Map;
-
-import static java.util.Objects.requireNonNull;
-
 public class FreeMarkerTool {
 
     private volatile BeansWrapper beansWrapper;
     private volatile ObjectConstructor objectConstructor;
-
-    public FreeMarkerTool(Map<String, Object> settings) {
-        requireNonNull(settings);
-    }
 
     public synchronized ObjectConstructor getObjectConstructor() {
         if (objectConstructor == null) {

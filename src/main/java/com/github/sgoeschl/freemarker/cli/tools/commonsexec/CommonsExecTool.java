@@ -24,15 +24,8 @@ import org.apache.commons.exec.PumpStreamHandler;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-
-import static java.util.Objects.requireNonNull;
 
 public class CommonsExecTool {
-
-    public CommonsExecTool(Map<String, Object> settings) {
-        requireNonNull(settings);
-    }
 
     public String execute(String line) {
         return execute(CommandLine.parse(line));

@@ -44,12 +44,6 @@ import static org.apache.commons.io.IOUtils.toInputStream;
 
 public class CommonsCSVTool {
 
-    private final Writer writer;
-
-    public CommonsCSVTool(Map<String, Object> settings) {
-        this.writer = (Writer) settings.get("freemarker.writer");
-    }
-
     public CSVParser parse(Document document, CSVFormat format) {
         if (document == null) {
             throw new IllegalArgumentException("No document was provided");
@@ -157,12 +151,13 @@ public class CommonsCSVTool {
      * Get a CSVPrinter using the FreeMarker's writer instance.
      *
      * @param csvFormat CSV format to use for writing records
+     * @param writer    Writer to receive the CSV output
      * @return CSVPrinter instance
      * @throws IOException thrown if the parameters of the format are inconsistent or if either out or format are null.
      */
-    public CSVPrinter printer(CSVFormat csvFormat) throws IOException {
+    public CSVPrinter printer(CSVFormat csvFormat, Writer writer) throws IOException {
         // We do not close the CSVPrinter but the underlying writer at the of processing
-        return new CSVPrinter(getWriter(), csvFormat);
+        return new CSVPrinter(writer, csvFormat);
     }
 
     /**
@@ -173,7 +168,7 @@ public class CommonsCSVTool {
      * @return CSV delimiter
      */
     public char toDelimiter(String name) {
-        if (isNullOrEmtpty(name)) {
+        if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Now CSV delimiter provided");
         }
 
@@ -199,10 +194,6 @@ public class CommonsCSVTool {
                     throw new IllegalArgumentException("Unsupported CSV delimiter: " + name);
                 }
         }
-    }
-
-    Writer getWriter() {
-        return writer;
     }
 
     private static CSVParser parse(InputStream is, Charset charset, CSVFormat format) throws IOException {

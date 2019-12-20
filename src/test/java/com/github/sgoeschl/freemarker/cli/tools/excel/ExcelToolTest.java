@@ -23,7 +23,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -90,7 +89,7 @@ public class ExcelToolTest {
     }
 
     private ExcelTool excelTool() {
-        return new ExcelTool(new HashMap<>());
+        return new ExcelTool();
     }
 
     private Document document(File file) {

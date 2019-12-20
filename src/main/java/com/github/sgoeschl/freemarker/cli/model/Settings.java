@@ -31,12 +31,15 @@ import java.util.Properties;
 import static com.github.sgoeschl.freemarker.cli.util.LocaleUtils.parseLocale;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.emptyList;
+import static java.util.Locale.US;
 import static java.util.Objects.requireNonNull;
 
 /**
  * Capture all the settings required for rendering a FreeMarker template.
  */
 public class Settings {
+
+    private static final String FREEMARKER_CLI_LOCALE_KEY = "freemarker.locale";
 
     /** FreeMarker CLI configuration containing tools */
     private final Properties configuration;
@@ -50,7 +53,7 @@ public class Settings {
     /** Name of the template to be loaded and rendered */
     private final String templateName;
 
-    /** Encoding of source files */
+    /** Encoding of input files */
     private final Charset inputEncoding;
 
     /** Encoding of output files */
@@ -190,12 +193,10 @@ public class Settings {
 
     public Map<String, Object> toMap() {
         final Map<String, Object> result = new HashMap<>();
-        result.put("user.args", getArgs());
-        result.put("user.configuration", getConfiguration());
-        result.put("user.properties", getProperties());
-        result.put("freemarker.verbose", isVerbose());
+        result.put("freemarker.cli.args", getArgs());
         result.put("freemarker.template.directories", getTemplateDirectories());
         result.put("freemarker.writer", getWriter());
+        result.put("user.properties", getProperties());
         return result;
     }
 
@@ -242,12 +243,13 @@ public class Settings {
 
         private SettingsBuilder() {
             this.args = emptyList();
-            this.sources = emptyList();
+            this.configuration = new Properties();
+            this.locale = US.toString();
+            this.properties = new HashMap<>();
             this.setInputEncoding(UTF_8.name());
             this.setOutputEncoding(UTF_8.name());
+            this.sources = emptyList();
             this.templateDirectories = emptyList();
-            this.properties = new HashMap<>();
-            this.configuration = new Properties();
         }
 
         public SettingsBuilder setArgs(String[] args) {
@@ -271,12 +273,16 @@ public class Settings {
         }
 
         public SettingsBuilder setInputEncoding(String inputEncoding) {
-            this.inputEncoding = inputEncoding;
+            if (inputEncoding != null) {
+                this.inputEncoding = inputEncoding;
+            }
             return this;
         }
 
         public SettingsBuilder setOutputEncoding(String outputEncoding) {
-            this.outputEncoding = outputEncoding;
+            if (outputEncoding != null) {
+                this.outputEncoding = outputEncoding;
+            }
             return this;
         }
 
@@ -316,12 +322,16 @@ public class Settings {
         }
 
         public SettingsBuilder setProperties(Map<String, String> properties) {
-            this.properties = properties;
+            if (properties != null) {
+                this.properties = properties;
+            }
             return this;
         }
 
         public SettingsBuilder setConfiguration(Properties configuration) {
-            this.configuration = configuration;
+            if (configuration != null) {
+                this.configuration = configuration;
+            }
             return this;
         }
 
@@ -333,6 +343,8 @@ public class Settings {
         public Settings build() {
             final Charset inputEncoding = Charset.forName(this.inputEncoding);
             final Charset outputEncoding = Charset.forName(this.outputEncoding);
+            final String currLocale = locale != null ? locale : getDefaultLocale();
+            final File currOutputFile = outputFile != null ? new File(outputFile) : null;
 
             return new Settings(
                     configuration,
@@ -342,15 +354,21 @@ public class Settings {
                     inputEncoding,
                     outputEncoding,
                     verbose,
-                    outputFile != null ? new File(outputFile) : null,
+                    currOutputFile,
                     include,
-                    parseLocale(locale),
+                    parseLocale(currLocale),
                     isReadFromStdin,
                     isEnvironmentExposed,
                     sources,
                     properties,
                     writer
             );
+        }
+
+        private String getDefaultLocale() {
+            return configuration.getProperty(
+                    FREEMARKER_CLI_LOCALE_KEY,
+                    System.getProperty(FREEMARKER_CLI_LOCALE_KEY, US.toString()));
         }
     }
 }

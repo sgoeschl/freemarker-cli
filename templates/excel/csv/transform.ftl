@@ -22,7 +22,7 @@
 <#assign records = ExcelTool.parseSheet(sheet)>
 <#-- Setup CSVPrinter  -->
 <#assign cvsFormat = CSVTool.formats[format]>
-<#assign csvPrinter = CSVTool.printer(cvsFormat)>
+<#assign csvPrinter = CSVTool.printer(cvsFormat, Settings["freemarker.writer"])>
 <#-- Print each line of the Excel as CSV record -->
 <#compress>
     <#list records as record>

@@ -27,7 +27,6 @@ import com.github.sgoeschl.freemarker.cli.model.Settings;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import freemarker.template.Version;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -40,7 +39,6 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 
-import static freemarker.template.Configuration.VERSION_2_3_29;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 
@@ -48,7 +46,6 @@ public class FreeMarkerTask implements Callable<Integer> {
 
     private static final int SUCCESS = 0;
     private static final String STDIN = "stdin";
-    private static final Version FREEMARKER_VERSION = VERSION_2_3_29;
 
     private final Settings settings;
 
@@ -131,6 +128,7 @@ public class FreeMarkerTask implements Callable<Integer> {
         final Map<String, Object> dataModel = new HashMap<>();
 
         dataModel.put("Documents", documents);
+        dataModel.put("Settings", settings.toMap());
 
         if (settings.isEnvironmentExposed()) {
             dataModel.putAll(System.getenv());

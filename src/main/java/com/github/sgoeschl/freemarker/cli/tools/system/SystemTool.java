@@ -19,7 +19,6 @@ package com.github.sgoeschl.freemarker.cli.tools.system;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -34,27 +33,26 @@ import static java.util.Objects.requireNonNull;
 @SuppressWarnings("unchecked")
 public class SystemTool {
 
-    private final List<String> args;
-    private final Map<String, String> properties;
+    private final List<String> commandLineArgs;
     private final List<File> templateDirectories;
+
+    public SystemTool() {
+        this.commandLineArgs = emptyList();
+        this.templateDirectories = emptyList();
+    }
 
     public SystemTool(Map<String, Object> settings) {
         requireNonNull(settings);
-        this.args = (List<String>) settings.getOrDefault("user.args", emptyList());
-        this.properties = (Map<String, String>) settings.getOrDefault("user.properties", new HashMap<>());
+        this.commandLineArgs = (List<String>) settings.getOrDefault("freemarker.cli.args", emptyList());
         this.templateDirectories = (List<File>) settings.getOrDefault("freemarker.template.directories", emptyList());
     }
 
-    public List<String> getArgs() {
-        return args;
+    public List<String> getCommandLineArgs() {
+        return commandLineArgs;
     }
 
     public List<File> getTemplateDirectories() {
         return templateDirectories;
-    }
-
-    public Map<String, String> getUserSuppliedProperties() {
-        return properties;
     }
 
     public Properties getProperties() {
