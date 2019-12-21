@@ -39,6 +39,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class Settings {
 
+    private static final Locale DEFAULT_LOCALE = US;
+    private static final Charset DEFAULT_CHARSET = UTF_8;
+
     private static final String FREEMARKER_CLI_LOCALE_KEY = "freemarker.locale";
 
     /** FreeMarker CLI configuration containing tools */
@@ -191,6 +194,12 @@ public class Settings {
         return writer;
     }
 
+    /**
+     * Create a settings map only exposing the most important information
+     * to avoid coupling between "Settings" and the various tools.
+     *
+     * @return Map with settings
+     */
     public Map<String, Object> toMap() {
         final Map<String, Object> result = new HashMap<>();
         result.put("freemarker.cli.args", getArgs());
@@ -245,10 +254,10 @@ public class Settings {
         private SettingsBuilder() {
             this.args = emptyList();
             this.configuration = new Properties();
-            this.locale = US.toString();
+            this.locale = DEFAULT_LOCALE.toString();
             this.properties = new HashMap<>();
-            this.setInputEncoding(UTF_8.name());
-            this.setOutputEncoding(UTF_8.name());
+            this.setInputEncoding(DEFAULT_CHARSET.name());
+            this.setOutputEncoding(DEFAULT_CHARSET.name());
             this.sources = emptyList();
             this.templateDirectories = emptyList();
         }
@@ -369,7 +378,7 @@ public class Settings {
         private String getDefaultLocale() {
             return configuration.getProperty(
                     FREEMARKER_CLI_LOCALE_KEY,
-                    System.getProperty(FREEMARKER_CLI_LOCALE_KEY, US.toString()));
+                    System.getProperty(FREEMARKER_CLI_LOCALE_KEY, DEFAULT_LOCALE.toString()));
         }
     }
 }

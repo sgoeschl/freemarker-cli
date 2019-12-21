@@ -25,5 +25,4 @@ public class ObjectUtils {
     public static boolean isNotEmpty(String value) {
         return !isNullOrEmtpty(value);
     }
-
 }

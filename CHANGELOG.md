@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. We try to a
 ## 2.0.0-BETA-5-SNAPSHOT
 
 ### Added
+- `UUIDTool` to create random and named UUIDs
 - `ExcelTool` returns raw table consisting of the underlying Java data type
 - `Document#getUnsafeInputStream` to get a input stream which needs to be closed by the caller
 - `CSVTool` allows parsing plain string CSV

@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Callable;
+import java.util.stream.IntStream;
 
 import static com.github.sgoeschl.freemarker.cli.util.ClosableUtils.closeQuietly;
 import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNotEmpty;
@@ -50,7 +51,7 @@ public class Main implements Callable<Integer> {
     @Option(names = { "-b", "--basedir" }, description = "Optional template base directory")
     private String baseDir;
 
-    @Option(names = { "-D" , "--property"}, description = "Set system property")
+    @Option(names = { "-D", "--property" }, description = "Set system property")
     private Map<String, String> properties;
 
     @Option(names = { "-e", "--input-encoding" }, description = "Encoding of input file", defaultValue = "UTF-8")
@@ -127,16 +128,11 @@ public class Main implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        int result = 0;
-        for (int i = 0; i < times; i++) {
-            result = callOnce();
-        }
-        return result;
+        updateSystemProperties();
+        return IntStream.range(0, times).map(i -> callOnce()).max().orElse(0);
     }
 
     private Integer callOnce() {
-        updateSystemProperties();
-
         final Properties configuration = loadFreeMarkerCliConfiguration(configFile);
         final List<File> templateDirectories = getTemplateDirectories(baseDir);
         final Settings settings = settings(configuration, templateDirectories);

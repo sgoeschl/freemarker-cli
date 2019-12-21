@@ -79,9 +79,9 @@ user.home    : ${SystemTool.properties["user.home"]!""}
 10) Accessing Documents
 ---------------------------------------------------------------------------
 Get the number of documents:
-- ${Documents.size()}
+    - ${Documents.size()}
 <#if !Documents.isEmpty()>
-    Get the first document
+Get the first document
     - ${Documents.get(0)!"NA"}
 </#if>
 List all files containing "README" in the name
@@ -107,13 +107,9 @@ Top-level entries in the current data model
 12) Create a UUID
 ---------------------------------------------------------------------------
 See https://stackoverflow.com/questions/43501297/i-have-a-simplescalar-i-need-its-strings-getbytes-return-value-what-can-i-d
-<#assign uuidSource = "value and salt">
-<#assign buffer = FreeMarkerTool.statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
-<#assign bytes = buffer.array()[0..<buffer.limit()]>
-<#assign uuid = FreeMarkerTool.statics["java.util.UUID"].nameUUIDFromBytes(bytes)>
 Random UUID           : ${FreeMarkerTool.statics["java.util.UUID"].randomUUID()}
-Name UUID from bytes  : ${uuid}
-Name UUID as function : ${uuidFromValueAndSalt("value and ", "salt")}
+UUIDTool Random UUID  : ${UUIDTool.randomUUID()}
+UUIDTool Named UUID   : ${UUIDTool.nameUUIDFromBytes("value and salt")}
 
 13) Printing Special Characters
 ---------------------------------------------------------------------------
@@ -134,11 +130,3 @@ Time         :  ${.now?time}
 ---------------------------------------------------------------------------
 > date
 ${ExecTool.execute("date")}
-
-<#--------------------------------------------------------------------------->
-<#function uuidFromValueAndSalt value salt>
-    <#assign uuidSource = value + salt>
-    <#assign buffer = FreeMarkerTool.statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
-    <#assign bytes = buffer.array()[0..<buffer.limit()]>
-    <#return FreeMarkerTool.statics["java.util.UUID"].nameUUIDFromBytes(bytes)>
-</#function>
