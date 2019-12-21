@@ -31,4 +31,8 @@ public class JsoupTool {
             throw new RuntimeException("Failed to parse HTML document: " + document, e);
         }
     }
+
+    public org.jsoup.nodes.Document parse(String html) {
+        return Jsoup.parse(html);
+    }
 }

@@ -41,7 +41,6 @@ import static org.apache.commons.csv.CSVFormat.EXCEL;
 public class CommonsCSVToolTest {
 
     private static final String ANY_KEY = "C71";
-    private static final String ANY_TEMPLATE = "info.ftl";
     private static final String CONTRACT_ID = "contract_id";
     private static final int CONTRACT_ID_IDX = 0;
     private static final File BOM_CSV = new File("./site/sample/csv/excel-export-utf8.csv");

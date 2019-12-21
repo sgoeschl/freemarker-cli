@@ -78,6 +78,19 @@ public class CommonsCSVTool {
     }
 
     /**
+     * Get a CSVPrinter using the FreeMarker's writer instance.
+     *
+     * @param csvFormat CSV format to use for writing records
+     * @param writer    Writer to receive the CSV output
+     * @return CSVPrinter instance
+     * @throws IOException thrown if the parameters of the format are inconsistent or if either out or format are null.
+     */
+    public CSVPrinter printer(CSVFormat csvFormat, Writer writer) throws IOException {
+        // We do not close the CSVPrinter but the underlying writer at the of processing
+        return new CSVPrinter(writer, csvFormat);
+    }
+
+    /**
      * Extract the list of unique values (keys) of the column "name".
      *
      * @param records records to process
@@ -145,19 +158,6 @@ public class CommonsCSVTool {
      */
     public Map<String, List<CSVRecord>> toMultiMap(Collection<CSVRecord> records, Integer index) {
         return toMultiMap(records, new ValueResolver(index));
-    }
-
-    /**
-     * Get a CSVPrinter using the FreeMarker's writer instance.
-     *
-     * @param csvFormat CSV format to use for writing records
-     * @param writer    Writer to receive the CSV output
-     * @return CSVPrinter instance
-     * @throws IOException thrown if the parameters of the format are inconsistent or if either out or format are null.
-     */
-    public CSVPrinter printer(CSVFormat csvFormat, Writer writer) throws IOException {
-        // We do not close the CSVPrinter but the underlying writer at the of processing
-        return new CSVPrinter(writer, csvFormat);
     }
 
     /**

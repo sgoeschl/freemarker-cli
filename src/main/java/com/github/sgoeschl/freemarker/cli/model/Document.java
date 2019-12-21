@@ -97,6 +97,7 @@ public class Document implements Closeable {
      * Get an input stream which is closed together with this document.
      *
      * @return InputStream
+     * @throws IOException Operation failed
      */
     public InputStream getInputStream() throws IOException {
         return closables.add(dataSource.getInputStream());
@@ -106,6 +107,7 @@ public class Document implements Closeable {
      * Get an input stream which needs to be closed by the caller.
      *
      * @return InputStream
+     * @throws IOException Operation failed
      */
     public InputStream getUnsafeInputStream() throws IOException {
         return dataSource.getInputStream();

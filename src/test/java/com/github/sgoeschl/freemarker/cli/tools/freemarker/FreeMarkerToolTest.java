@@ -14,26 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.tools.snakeyaml;
+package com.github.sgoeschl.freemarker.cli.tools.freemarker;
 
-import com.github.sgoeschl.freemarker.cli.model.Document;
-import org.yaml.snakeyaml.Yaml;
+import org.junit.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
+import static junit.framework.TestCase.assertNotNull;
 
-public class SnakeYamlTool {
+public class FreeMarkerToolTest {
 
-    public Map<String, Object> parse(Document document) {
-        try (InputStream is = document.getUnsafeInputStream()) {
-            return new Yaml().load(is);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load YAML document: " + document, e);
-        }
+    @Test
+    public void shallGetBeansWrapper() {
+        assertNotNull(freeMarkerTool().getBeansWrapper());
     }
 
-    public Map<String, Object> parse(String value) {
-        return new Yaml().load(value);
+    @Test
+    public void shallGetObjectConstructor() {
+        assertNotNull(freeMarkerTool().getObjectConstructor());
+    }
+
+    @Test
+    public void shallGetEnums() {
+        assertNotNull(freeMarkerTool().getEnums());
+    }
+
+    @Test
+    public void shallGetStatics() {
+        assertNotNull(freeMarkerTool().getStatics());
+    }
+
+    private FreeMarkerTool freeMarkerTool() {
+        return new FreeMarkerTool();
     }
 }

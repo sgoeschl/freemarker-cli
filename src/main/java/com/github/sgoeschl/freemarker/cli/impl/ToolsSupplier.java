@@ -16,33 +16,38 @@
  */
 package com.github.sgoeschl.freemarker.cli.impl;
 
-import com.github.sgoeschl.freemarker.cli.model.Settings;
-
 import java.lang.reflect.Constructor;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.stream;
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
 
 public class ToolsSupplier implements Supplier<Map<String, Object>> {
 
     private static final String FREEMARKER_TOOLS_PREFIX = "freemarker.tools.";
 
-    private final Settings settings;
+    private final Properties configuration;
+    private final Map<String, Object> settings;
 
-    public ToolsSupplier(Settings settings) {
-        this.settings = settings;
+    /**
+     * Constructor.
+     *
+     * @param configuration Containing "freemarker.tools.XXX=class"
+     * @param settings      Passed tp the instanitated tools
+     */
+    public ToolsSupplier(Properties configuration, Map<String, Object> settings) {
+        this.configuration = requireNonNull(configuration);
+        this.settings = requireNonNull(settings);
     }
 
     @Override
     public Map<String, Object> get() {
-        final Properties configuration = settings.getConfiguration();
-        final Map<String, Object> settingsMap = settings.toMap();
         return configuration.stringPropertyNames().stream()
                 .filter(name -> name.startsWith(FREEMARKER_TOOLS_PREFIX))
-                .collect(toMap(ToolsSupplier::toolName, name -> createTool(configuration.getProperty(name), settingsMap)));
+                .collect(toMap(ToolsSupplier::toolName, name -> createTool(configuration.getProperty(name), settings)));
     }
 
     /**

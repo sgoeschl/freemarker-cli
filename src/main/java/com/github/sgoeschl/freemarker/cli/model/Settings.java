@@ -194,6 +194,7 @@ public class Settings {
     public Map<String, Object> toMap() {
         final Map<String, Object> result = new HashMap<>();
         result.put("freemarker.cli.args", getArgs());
+        result.put("freemarker.locale", getLocale());
         result.put("freemarker.template.directories", getTemplateDirectories());
         result.put("freemarker.writer", getWriter());
         result.put("user.properties", getProperties());

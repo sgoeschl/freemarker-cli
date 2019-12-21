@@ -20,6 +20,7 @@ import com.github.sgoeschl.freemarker.cli.model.Document;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.util.Properties;
 
 public class PropertiesTool {
@@ -30,7 +31,17 @@ public class PropertiesTool {
             properties.load(is);
             return properties;
         } catch (IOException e) {
-            throw new RuntimeException("Failed to parse Properties document: " + document, e);
+            throw new RuntimeException("Failed to parse properties: " + document, e);
+        }
+    }
+
+    public Properties parse(String value) {
+        try (StringReader reader = new StringReader(value)) {
+            final Properties properties = new Properties();
+            properties.load(reader);
+            return properties;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to parse properties: " + value, e);
         }
     }
 }

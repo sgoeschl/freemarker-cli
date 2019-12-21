@@ -14,26 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.sgoeschl.freemarker.cli.tools.snakeyaml;
+package com.github.sgoeschl.freemarker.cli.tools.properties;
 
+import com.github.sgoeschl.freemarker.cli.impl.DocumentFactory;
 import com.github.sgoeschl.freemarker.cli.model.Document;
-import org.yaml.snakeyaml.Yaml;
+import org.junit.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
+import static junit.framework.TestCase.assertEquals;
 
-public class SnakeYamlTool {
+public class PropertiesToolTest {
 
-    public Map<String, Object> parse(Document document) {
-        try (InputStream is = document.getUnsafeInputStream()) {
-            return new Yaml().load(is);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load YAML document: " + document, e);
+    private static final String ANY_PROPERTIES_STRING = "foo=bar";
+
+    @Test
+    public void shallParsePropertiesDocument() {
+        try (Document document = document(ANY_PROPERTIES_STRING)) {
+            assertEquals("bar", propertiesTool().parse(document).getProperty("foo"));
         }
     }
 
-    public Map<String, Object> parse(String value) {
-        return new Yaml().load(value);
+    @Test
+    public void shallParsePropertiesString() {
+        assertEquals("bar", propertiesTool().parse(ANY_PROPERTIES_STRING).getProperty("foo"));
+    }
+
+    private PropertiesTool propertiesTool() {
+        return new PropertiesTool();
+    }
+
+    private Document document(String value) {
+        return DocumentFactory.create("test.properties", value);
     }
 }

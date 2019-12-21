@@ -42,6 +42,9 @@ import java.util.function.Supplier;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 
+/**
+ * Renders a FreeMarker template.
+ */
 public class FreeMarkerTask implements Callable<Integer> {
 
     private static final int SUCCESS = 0;
@@ -106,6 +109,10 @@ public class FreeMarkerTask implements Callable<Integer> {
      * concern (see https://freemarker.apache.org/docs/pgui_config_templateloading.html#autoid_42)
      * which are mostly irrelevant when running on the command line. So we resolve the absolute file
      * instead of relying on existing template loaders.
+     *
+     * @param settings Settings
+     * @param configurationSupplier Supplies FreeMarker configuration
+     * @return FreeMarker template
      */
     protected Template getTemplate(Settings settings, Supplier<Configuration> configurationSupplier) {
         final File templateFile = new File(settings.getTemplateName());
@@ -128,9 +135,11 @@ public class FreeMarkerTask implements Callable<Integer> {
         final Map<String, Object> dataModel = new HashMap<>();
 
         dataModel.put("Documents", documents);
+        // pass a map to decouple from the implementation class
         dataModel.put("Settings", settings.toMap());
 
         if (settings.isEnvironmentExposed()) {
+            // add all system & user-supplied properties as top-lvel entries
             dataModel.putAll(System.getenv());
             dataModel.putAll(settings.getProperties());
         }
@@ -141,7 +150,7 @@ public class FreeMarkerTask implements Callable<Integer> {
     }
 
     protected Supplier<Map<String, Object>> tools(Settings settings) {
-        return new ToolsSupplier(settings);
+        return new ToolsSupplier(settings.getConfiguration(), settings.toMap());
     }
 
     protected Writer writer(Settings settings) {

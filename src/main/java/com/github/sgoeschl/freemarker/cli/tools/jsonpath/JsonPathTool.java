@@ -17,8 +17,10 @@
 package com.github.sgoeschl.freemarker.cli.tools.jsonpath;
 
 import com.github.sgoeschl.freemarker.cli.model.Document;
+import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.Option;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,11 +29,17 @@ public class JsonPathTool {
 
     public DocumentContext parse(Document document) throws IOException {
         try (InputStream is = document.getUnsafeInputStream()) {
-            return JsonPath.parse(is);
+            return JsonPath.using(configuration()).parse(is);
         }
     }
 
     public DocumentContext parse(String json) {
-        return JsonPath.parse(json);
+        return JsonPath.using(configuration()).parse(json);
+    }
+
+    private Configuration configuration() {
+        return Configuration.builder()
+                .options(Option.SUPPRESS_EXCEPTIONS)
+                .build();
     }
 }
