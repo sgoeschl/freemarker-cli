@@ -29,6 +29,8 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -70,16 +72,16 @@ public class ExcelTool {
     }
 
     /**
-     * Transform the sheet to table. Please not that locales are mostly
+     * Transform the Excel sheet into a table. Please not that locales are mostly
      * ignored by Apache POI (see https://poi.apache.org/apidocs/dev/org/apache/poi/ss/usermodel/DataFormatter.html)
      *
      * @param sheet Excel sheet
      * @return Table containing formatted cell values as strings
      */
-    public List<List<Object>> toTable(Sheet sheet) {
+    public List<List<String>> toTable(Sheet sheet) {
         final DataFormatter dataFormatter = dataFormatter();
         final Iterator<Row> iterator = sheet.iterator();
-        final List<List<Object>> result = new ArrayList<>();
+        final List<List<String>> result = new ArrayList<>();
 
         while (iterator.hasNext()) {
             final Row row = iterator.next();
@@ -90,6 +92,8 @@ public class ExcelTool {
     }
 
     /**
+     * EXPERIMENTAL FEATURE
+     * <p>
      * Transform the sheet to table contaning raw Java objects, e.g. Date, Double, ...
      *
      * @param sheet Excel sheet
@@ -108,8 +112,8 @@ public class ExcelTool {
         return result;
     }
 
-    private static List<Object> toColumns(Row row, DataFormatter dataFormatter) {
-        final List<Object> columnValues = new ArrayList<>();
+    private static List<String> toColumns(Row row, DataFormatter dataFormatter) {
+        final List<String> columnValues = new ArrayList<>();
         for (int columnIndex = 0; columnIndex < row.getLastCellNum(); columnIndex++) {
             final Cell cell = row.getCell(columnIndex, CREATE_NULL_AS_BLANK);
             final String formatedCellValue = dataFormatter.formatCellValue(cell).trim();
@@ -142,7 +146,7 @@ public class ExcelTool {
 
     /**
      * Try desperately to make sense out of Excel and its handling of dates.
-     * See https://stackoverflow.com/questions/15710888/reading-time-values-from-spreadsheet-using-poi-api
+     * See https://stackoverflow.com/questions/15710888/reading-time-values-from-spreadsheet-using-poi-api.
      *
      * @param cell Cell containing some sort of date or time
      * @return The corresponding Java istance
@@ -150,27 +154,21 @@ public class ExcelTool {
     private static synchronized Object toDateCellValue(Cell cell) {
         final Date date = cell.getDateCellValue();
 
-        // Get a date year
         // "Time-only" values have date set to 31-Dec-1899 so if year is "1899"
         // you can assume it is a "time-only" value
-        final String dateStamp = YEAR_TIME_FORMAT.format(date);
+        final String year = YEAR_TIME_FORMAT.format(date);
 
-        if (dateStamp.equals("1899")) {
-            // Return "Time-only" value as String HH:mm:ss
-            return TIME_DATE_FORMAT.format(date);
+        if (year.equals("1899")) {
+            // handle "Time-only" value
+            return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()).toLocalTime();
         } else {
-            //here you may have a date-only or date-time value
-
-            //get time as String HH:mm:ss
+            // here you may have a date-only or date-time value
             final String timeStamp = TIME_DATE_FORMAT.format(date);
-
             if (timeStamp.equals("00:00:00")) {
                 // if time is 00:00:00 you can assume it is a date only value (but it could be midnight)
-                // In this case I'm fine with the default Cell.toString method (returning dd-MMM-yyyy in case of a date value)
-                return cell.getDateCellValue();
+                return new java.sql.Date(date.getTime()).toLocalDate();
             } else {
-                // return date-time value as "dd-MMM-yyyy HH:mm:ss"
-                return cell.toString() + " " + timeStamp;
+                return date;
             }
         }
     }

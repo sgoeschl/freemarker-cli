@@ -27,7 +27,6 @@ import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
 
 public class ExcelToolTest {
 
@@ -40,7 +39,7 @@ public class ExcelToolTest {
         final Workbook workbook = workbook(TEST_XLS);
 
         final List<Sheet> sheets = excelTool().getSheets(workbook);
-        final List<List<Object>> records = excelTool().toTable(sheets.get(0));
+        final List<List<String>> records = excelTool().toTable(sheets.get(0));
 
         assertEquals(1, sheets.size());
         assertEquals(3, records.size());
@@ -51,7 +50,7 @@ public class ExcelToolTest {
         final Workbook workbook = workbook(TEST_XLSX);
 
         final List<Sheet> sheets = excelTool().getSheets(workbook);
-        final List<List<Object>> records = excelTool().toTable(sheets.get(0));
+        final List<List<String>> records = excelTool().toTable(sheets.get(0));
 
         assertEquals(1, sheets.size());
         assertEquals(3, records.size());
@@ -72,9 +71,9 @@ public class ExcelToolTest {
     public void shouldConvertSheetToTable() {
         final Workbook workbook = workbook(TEST_XLSX);
         final List<Sheet> sheets = excelTool().getSheets(workbook);
-        final List<List<Object>> records = excelTool().toTable(sheets.get(0));
+        final List<List<String>> records = excelTool().toTable(sheets.get(0));
 
-        final List<Object> record = records.get(1);
+        final List<String> record = records.get(1);
 
         assertEquals("Row 1", record.get(0));
         assertEquals("01/31/17", record.get(1));
@@ -94,11 +93,10 @@ public class ExcelToolTest {
         final List<Object> record = records.get(1);
 
         assertEquals("Row 1", record.get(0));
-        // TODO Implement proper data comparision
-        assertTrue(record.get(1).toString().contains("Tue Jan 31 00:00:00"));
+        assertEquals("2017-01-31", record.get(1).toString());
         assertEquals(100.00, record.get(2));
         assertEquals(100.00, record.get(2));
-        assertEquals("11:00:00", record.get(4));
+        assertEquals("11:00", record.get(4).toString());
         assertEquals(0.1, record.get(5));
         assertEquals("C2*F2", record.get(6));
     }
