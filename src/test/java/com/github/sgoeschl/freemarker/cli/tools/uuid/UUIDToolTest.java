@@ -16,17 +16,24 @@
  */
 package com.github.sgoeschl.freemarker.cli.tools.uuid;
 
-import java.util.UUID;
+import org.junit.Test;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
 
-public class UUIDTool {
+public class UUIDToolTest {
 
-    public UUID randomUUID() {
-        return UUID.randomUUID();
+    @Test
+    public void shallCreateRandomUUID() {
+        assertNotNull(uuidTool().randomUUID());
     }
 
-    public UUID namedUUID(String name) {
-        return UUID.nameUUIDFromBytes(name.getBytes(UTF_8));
+    @Test
+    public void shallCreateNamedUUID() {
+        assertEquals("b068931c-c450-342b-a3f5-b3d276ea4297", uuidTool().namedUUID("name").toString());
+    }
+
+    private UUIDTool uuidTool() {
+        return new UUIDTool();
     }
 }

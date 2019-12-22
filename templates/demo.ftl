@@ -32,7 +32,8 @@ new java.utilDate(1000 * 3600 * 24): ${date?datetime}
 
 3) Invoke a static method of an non-constructor class
 ---------------------------------------------------------------------------
-System.currentTimeMillis: ${FreeMarkerTool.statics["java.lang.System"].currentTimeMillis()}
+Random UUID              : ${FreeMarkerTool.statics["java.util.UUID"].randomUUID()}
+System.currentTimeMillis : ${FreeMarkerTool.statics["java.lang.System"].currentTimeMillis()}
 
 4) Access an Enumeration
 ---------------------------------------------------------------------------
@@ -55,9 +56,9 @@ List all files:
 ---------------------------------------------------------------------------
 Host name       : ${SystemTool.getHostName()}
 Command line    : ${SystemTool.getCommandLineArgs()?join(", ")}
-User name       : ${SystemTool.getProperty("user.name", "N.A.")}
+System property : ${SystemTool.getProperty("user.name", "N.A.")}
 Timestamp       : ${SystemTool.currentTimeMillis()?c}
-Environment     : ${SystemTool.envs["FOO"]!"N.A."}
+Environment var : ${SystemTool.envs["USER"]!"N.A."}
 
 8) Access System Properties
 ---------------------------------------------------------------------------
@@ -70,13 +71,13 @@ user.name    : ${SystemTool.properties["user.name"]!""}
 user.dir     : ${SystemTool.properties["user.dir"]!""}
 user.home    : ${SystemTool.properties["user.home"]!""}
 
-9) Acessing Environment Variables
+9) List Environment Variables
 ---------------------------------------------------------------------------
 <#list SystemTool.envs as name,value>
     - ${name} ==> ${value}<#lt>
 </#list>
 
-10) Accessing Documents
+10) Access Documents
 ---------------------------------------------------------------------------
 Get the number of documents:
     - ${Documents.size()}
@@ -99,17 +100,14 @@ Get all documents
 
 11) Document Data Model
 ---------------------------------------------------------------------------
-Top-level entries in the current data model
 <#list .data_model?keys?sort as key>
     - ${key}<#lt>
 </#list>
 
 12) Create a UUID
 ---------------------------------------------------------------------------
-See https://stackoverflow.com/questions/43501297/i-have-a-simplescalar-i-need-its-strings-getbytes-return-value-what-can-i-d
-Random UUID           : ${FreeMarkerTool.statics["java.util.UUID"].randomUUID()}
 UUIDTool Random UUID  : ${UUIDTool.randomUUID()}
-UUIDTool Named UUID   : ${UUIDTool.nameUUIDFromBytes("value and salt")}
+UUIDTool Named UUID   : ${UUIDTool.namedUUID("value and salt")}
 
 13) Printing Special Characters
 ---------------------------------------------------------------------------
@@ -122,7 +120,6 @@ German Special Characters: äöüßÄÖÜ
 <#assign largeNumber = 12345678.9>
 Small Number :  ${smallNumber}
 Large Number :  ${largeNumber}
-Currency     :  ${largeNumber} EUR
 Date         :  ${.now?date}
 Time         :  ${.now?time}
 
