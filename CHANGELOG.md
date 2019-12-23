@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. We try to a
 ## 2.0.0-BETA-6-SNAPSHOT
 
 ### Changed
+- Using `ALLOWS_NOTHING_RESOLVER` built-in class resolver
 - Silently skipped tools whose implementation classes can't be even loaded 
 
 ## 2.0.0-BETA-5

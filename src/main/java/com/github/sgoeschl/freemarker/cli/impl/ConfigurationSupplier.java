@@ -26,6 +26,7 @@ import freemarker.template.Version;
 
 import java.util.function.Supplier;
 
+import static freemarker.core.TemplateClassResolver.ALLOWS_NOTHING_RESOLVER;
 import static freemarker.template.Configuration.VERSION_2_3_29;
 import static java.util.Objects.requireNonNull;
 
@@ -47,11 +48,18 @@ public class ConfigurationSupplier implements Supplier<Configuration> {
         configuration.setAPIBuiltinEnabled(false);
         configuration.setDefaultEncoding(settings.getTemplateEncoding().name());
         configuration.setLocale(settings.getLocale());
-        configuration.setLogTemplateExceptions(false);
         configuration.setObjectWrapper(objectWrapper());
         configuration.setOutputEncoding(settings.getOutputEncoding().name());
         configuration.setTemplateLoader(templateLoader.get());
         configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+
+        // Try to decrease an attack surface if "FreeMarkerTool" is not exposed
+        // https://www.blackhat.com/docs/us-15/materials/us-15-Kettle-Server-Side-Template-Injection-RCE-For-The-Modern-Web-App-wp.pdf
+        // https://ackcent.com/blog/in-depth-freemarker-template-injection/
+        // Not relevant for a command line tool but good to remember ...
+        configuration.setAPIBuiltinEnabled(false); // is default anyway
+        configuration.setNewBuiltinClassResolver(ALLOWS_NOTHING_RESOLVER);
+
         return configuration;
     }
 

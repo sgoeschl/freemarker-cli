@@ -69,7 +69,7 @@ public class FreeMarkerTask implements Callable<Integer> {
 
         final Template template = getTemplate(settings, configuration);
 
-        try (Writer writer = writer(settings); Documents documents = documents(settings, documentResolver)) {
+        try (Writer writer = settings.getWriter(); Documents documents = documents(settings, documentResolver)) {
             final Map<String, Object> dataModel = dataModel(settings, documents, tools);
             template.process(dataModel, writer);
             return SUCCESS;
@@ -158,10 +158,6 @@ public class FreeMarkerTask implements Callable<Integer> {
 
     protected Supplier<Map<String, Object>> tools(Settings settings) {
         return new ToolsSupplier(settings.getConfiguration(), settings.toMap());
-    }
-
-    protected Writer writer(Settings settings) {
-        return settings.getWriter();
     }
 
     private static boolean isAbsoluteTemplateFile(File file) {

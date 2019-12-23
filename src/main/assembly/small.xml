@@ -31,10 +31,9 @@
             <unpack>true</unpack>
             <scope>runtime</scope>
             <excludes>
-                <!-- Exclude Apache POI, Grok, JSoup -->
+                <!-- Exclude Apache POI -->
                 <exclude>com.github.virtuald:curvesapi</exclude>
                 <exclude>commons-codec:commons-codec</exclude>
-                <exclude>io.krakens:java-grok</exclude>
                 <exclude>org.apache.commons:commons-collections4</exclude>
                 <exclude>org.apache.commons:commons-compress</exclude>
                 <exclude>org.apache.commons:commons-lang3</exclude>
@@ -44,6 +43,9 @@
                 <exclude>org.apache.poi:poi-ooxml</exclude>
                 <exclude>org.apache.poi:poi-ooxml-schemas</exclude>
                 <exclude>org.apache.poi:poi-ooxml-schemas</exclude>
+                <!-- Exclude Grok -->
+                <exclude>io.krakens:java-grok</exclude>
+                <!-- Exclude JSoup -->
                 <exclude>org.jsoup:jsoup</exclude>
             </excludes>
         </dependencySet>
