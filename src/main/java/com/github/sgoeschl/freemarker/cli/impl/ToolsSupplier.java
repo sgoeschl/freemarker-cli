@@ -16,6 +16,8 @@
  */
 package com.github.sgoeschl.freemarker.cli.impl;
 
+import freemarker.template.utility.ClassUtil;
+
 import java.lang.reflect.Constructor;
 import java.util.Map;
 import java.util.Properties;
@@ -53,7 +55,7 @@ public class ToolsSupplier implements Supplier<Map<String, Object>> {
 
     private boolean toolClassCanBeLoaded(String clazzName) {
         try {
-            Class.forName(clazzName);
+            ClassUtil.forName(clazzName);
             return true;
         } catch (NoClassDefFoundError | ClassNotFoundException e) {
             return false;

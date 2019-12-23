@@ -19,6 +19,8 @@ package com.github.sgoeschl.freemarker.cli.tools.system;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -56,27 +58,28 @@ public class SystemTool {
     }
 
     public Properties getProperties() {
-        return System.getProperties();
+        return (Properties) AccessController.doPrivileged((PrivilegedAction) System::getProperties);
     }
 
     public String getProperty(String key) {
-        return System.getProperty(key);
+        return (String) AccessController.doPrivileged((PrivilegedAction) () -> System.getProperty(key));
     }
 
     public String getProperty(String key, String def) {
-        return System.getProperty(key, def);
+        return (String) AccessController.doPrivileged((PrivilegedAction) () -> System.getProperty(key, def));
     }
 
     public Map<String, String> getEnvs() {
-        return System.getenv();
+        return (Map<String, String>) AccessController.doPrivileged((PrivilegedAction) System::getenv);
     }
 
     public String getEnv(String name) {
-        return System.getenv(name);
+        return (String) AccessController.doPrivileged((PrivilegedAction) () -> System.getenv(name));
     }
 
     public String getEnv(String name, String def) {
-        return System.getenv(name) != null ? System.getenv(name) : def;
+        final String env = this.getEnv(name);
+        return env != null ? env : def;
     }
 
     public String getHostName() {
