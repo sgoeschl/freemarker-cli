@@ -2,7 +2,12 @@
 
 All notable changes to this project will be documented in this file. We try to adhere to https://github.com/olivierlacan/keep-a-changelog.
 
-## 2.0.0-BETA-5-SNAPSHOT
+## 2.0.0-BETA-6-SNAPSHOT
+
+### Changed
+- Silently skipped tools whose implementation classes can't be even loaded 
+
+## 2.0.0-BETA-5
 
 ### Added
 - Support interactive mode (`-i` or `--interactive`) to supply FreeMarker templates on the command line

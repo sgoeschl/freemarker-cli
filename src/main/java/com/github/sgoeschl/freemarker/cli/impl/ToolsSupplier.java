@@ -47,7 +47,17 @@ public class ToolsSupplier implements Supplier<Map<String, Object>> {
     public Map<String, Object> get() {
         return configuration.stringPropertyNames().stream()
                 .filter(name -> name.startsWith(FREEMARKER_TOOLS_PREFIX))
+                .filter(name -> toolClassCanBeLoaded(configuration.getProperty(name)))
                 .collect(toMap(ToolsSupplier::toolName, name -> createTool(configuration.getProperty(name), settings)));
+    }
+
+    private boolean toolClassCanBeLoaded(String clazzName) {
+        try {
+            Class.forName(clazzName);
+            return true;
+        } catch (NoClassDefFoundError | ClassNotFoundException e) {
+            return false;
+        }
     }
 
     /**
