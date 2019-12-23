@@ -21,6 +21,7 @@ import com.github.sgoeschl.freemarker.cli.impl.TemplateDirectorySupplier;
 import com.github.sgoeschl.freemarker.cli.model.Settings;
 import com.github.sgoeschl.freemarker.cli.picocli.GitVersionProvider;
 import picocli.CommandLine;
+import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
@@ -48,6 +49,17 @@ public class Main implements Callable<Integer> {
 
     private static final String FREEMARKER_CLI_PROPERTY_FILE = "freemarker-cli.properties";
 
+    @ArgGroup(exclusive = true, multiplicity = "1")
+    private TemplateSourceOptions templateSourceOptions;
+
+    private static final class TemplateSourceOptions {
+        @Option(names = { "-t", "--template" }, description = "FreeMarker template to render")
+        private String template;
+
+        @Option(names = { "-i", "--interactive" }, description = "Interactive FreeMarker template")
+        private String interactiveTemplate;
+    }
+
     @Option(names = { "-b", "--basedir" }, description = "Optional template base directory")
     private String baseDir;
 
@@ -65,9 +77,6 @@ public class Main implements Callable<Integer> {
 
     @Option(names = { "-o", "--output" }, description = "Output file")
     private String outputFile;
-
-    @Option(names = { "-t", "--template" }, description = "FreeMarker template to render", required = true)
-    private String template;
 
     @Option(names = { "--config" }, defaultValue = FREEMARKER_CLI_PROPERTY_FILE, description = "FreeMarker CLI configuration file")
     private String configFile;
@@ -160,7 +169,8 @@ public class Main implements Callable<Integer> {
                 .setProperties(properties != null ? properties : new HashMap<>())
                 .setSources(sources != null ? sources : new ArrayList<>())
                 .setTemplateDirectories(templateDirectories)
-                .setTemplateName(template)
+                .setTemplateName(templateSourceOptions.template)
+                .setInteractiveTemplate(templateSourceOptions.interactiveTemplate)
                 .setConfiguration(configuration)
                 .setWriter(writer(outputFile, outputEncoding))
                 .build();

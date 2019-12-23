@@ -43,6 +43,14 @@ echo "templates/demo.ftl"
 $FREEMARKER_CMD -t templates/demo.ftl README.md > target/out/demo.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
+# Interactive Mode
+#############################################################################
+
+$FREEMARKER_CMD -i '${JsonPathTool.parse(Documents.first).read("$.info.title")}' site/sample/json/swagger-spec.json > target/out/interactive-json.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${XmlTool.parse(Documents.first)["recipients/person[1]/name"]}' site/sample/xml/recipients.xml > target/out/interactive-xml.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${JsoupTool.parse(Documents.first).select("a")[0]}' site/sample/html/dependencies.html > target/out/interactive-html.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+#############################################################################
 # CSV
 #############################################################################
 
@@ -165,3 +173,4 @@ $FREEMARKER_CMD -t ./templates/xml/txt/recipients.ftl site/sample/xml/recipients
 
 echo "Created the following sample files in ./target/out"
 ls -l ./target/out
+

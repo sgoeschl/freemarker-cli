@@ -76,7 +76,7 @@ public class FreeMarkerTask implements Callable<Integer> {
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to render FreeMarker Template: " + settings.getTemplateName(), e);
+            throw new RuntimeException("Failed to render FreeMarker Template: " + template.getName(), e);
         }
     }
 
@@ -115,10 +115,17 @@ public class FreeMarkerTask implements Callable<Integer> {
      * @return FreeMarker template
      */
     protected Template getTemplate(Settings settings, Supplier<Configuration> configurationSupplier) {
-        final File templateFile = new File(settings.getTemplateName());
         final Configuration configuration = configurationSupplier.get();
 
         try {
+            if (settings.getInteractiveTemplate() != null) {
+                return new Template("interactive",
+                        settings.getInteractiveTemplate(),
+                        configuration);
+            }
+
+            final File templateFile = new File(settings.getTemplateName());
+
             if (isAbsoluteTemplateFile(templateFile)) {
                 return new Template(settings.getTemplateName(),
                         FileUtils.readFileToString(templateFile, settings.getTemplateEncoding()),
@@ -127,7 +134,7 @@ public class FreeMarkerTask implements Callable<Integer> {
                 return configuration.getTemplate(settings.getTemplateName());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load template file: " + templateFile);
+            throw new RuntimeException("Failed to load template", e);
         }
     }
 

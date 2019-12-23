@@ -56,6 +56,9 @@ public class Settings {
     /** Name of the template to be loaded and rendered */
     private final String templateName;
 
+    /** Tempplate provided by the user interactivly */
+    private final String interactiveTemplate;
+
     /** Encoding of input files */
     private final Charset inputEncoding;
 
@@ -94,6 +97,7 @@ public class Settings {
             List<String> args,
             List<File> templateDirectories,
             String template,
+            String interactiveTemplate,
             Charset inputEncoding,
             Charset outputEncoding,
             boolean verbose,
@@ -107,7 +111,8 @@ public class Settings {
             Writer writer) {
         this.args = requireNonNull(args);
         this.templateDirectories = requireNonNull(templateDirectories);
-        this.templateName = requireNonNull(template);
+        this.templateName = template;
+        this.interactiveTemplate = interactiveTemplate;
         this.inputEncoding = inputEncoding;
         this.outputEncoding = outputEncoding;
         this.verbose = verbose;
@@ -140,6 +145,10 @@ public class Settings {
 
     public String getTemplateName() {
         return templateName;
+    }
+
+    public String getInteractiveTemplate() {
+        return interactiveTemplate;
     }
 
     public Charset getInputEncoding() {
@@ -238,6 +247,7 @@ public class Settings {
         private List<String> args;
         private List<File> templateDirectories;
         private String templateName;
+        private String interactiveTemplate;
         private String inputEncoding;
         private String outputEncoding;
         private boolean verbose;
@@ -279,6 +289,11 @@ public class Settings {
 
         public SettingsBuilder setTemplateName(String templateName) {
             this.templateName = templateName;
+            return this;
+        }
+
+        public SettingsBuilder setInteractiveTemplate(String interactiveTemplate) {
+            this.interactiveTemplate = interactiveTemplate;
             return this;
         }
 
@@ -361,6 +376,7 @@ public class Settings {
                     args,
                     templateDirectories,
                     templateName,
+                    interactiveTemplate,
                     inputEncoding,
                     outputEncoding,
                     verbose,

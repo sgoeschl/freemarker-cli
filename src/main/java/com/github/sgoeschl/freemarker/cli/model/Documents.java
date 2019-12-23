@@ -52,6 +52,10 @@ public class Documents implements Closeable {
         return documents.isEmpty();
     }
 
+    public Document getFirst() {
+        return documents.get(0);
+    }
+
     public List<Document> getList() {
         return new ArrayList<>(documents);
     }
