@@ -20,14 +20,29 @@
 <#assign paths = json.read("$.paths")>
 
 <#compress>
-    ENDPOINT;METHOD;DESCRIPTION
+    ENDPOINT;METHOD;CONSUMES;PRODUCES;SUMMARY;DESCRIPTION
     <#list paths as endpoint,metadata>
         <#assign relative_url = basePath + endpoint>
         <#assign methods = metadata?keys>
         <#list methods as method>
-            <#assign description = paths[endpoint][method]["description"]?replace(";", ",")>
-            ${relative_url};${method?upper_case};${description}
+            <#assign summary = sanitize(paths[endpoint][method]["summary"]!"")>
+            <#assign description = sanitize(paths[endpoint][method]["description"]!"")>
+            <#assign consumes = join(paths[endpoint][method]["consumes"]![])>
+            <#assign produces = join(paths[endpoint][method]["produces"]![])>
+            ${relative_url};${method?upper_case};${consumes};${produces};${summary};${description}
         </#list>
     </#list>
 </#compress>
 ${'\n'}
+
+<#function sanitize str>
+    <#return (((str?replace(";", ","))?replace("(\\n)+", "",'r')))?truncate(250)>
+</#function>
+
+<#function join list>
+    <#if list?has_content>
+        <#return list?join(", ")>
+    <#else>
+        <#return "">
+    </#if>
+</#function>

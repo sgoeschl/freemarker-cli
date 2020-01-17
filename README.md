@@ -429,23 +429,37 @@ D. H.
 One day I was asked a to prepare a CSV files containing REST endpoints described by Swagger - technically this is a JSON to CSV transformation. Of course I could create that CSV manually but writing a FTL template doing that was simply more fun and saves time in the future.
 
 ```text
-<#ftl output_format="plainText" strip_text="true">
 <#assign json = JsonPathTool.parse(Documents.get(0))>
 <#assign basePath = json.read("$.basePath")>
 <#assign paths = json.read("$.paths")>
 
 <#compress>
-    ENDPOINT;METHOD;DESCRIPTION
+    ENDPOINT;METHOD;CONSUMES;PRODUCES;SUMMARY;DESCRIPTION
     <#list paths as endpoint,metadata>
         <#assign relative_url = basePath + endpoint>
         <#assign methods = metadata?keys>
         <#list methods as method>
-            <#assign description = paths[endpoint][method]["description"]?replace(";", ",")>
-            ${relative_url};${method?upper_case};${description}
+            <#assign summary = sanitize(paths[endpoint][method]["summary"]!"")>
+            <#assign description = sanitize(paths[endpoint][method]["description"]!"")>
+            <#assign consumes = join(paths[endpoint][method]["consumes"]![])>
+            <#assign produces = join(paths[endpoint][method]["produces"]![])>
+            ${relative_url};${method?upper_case};${consumes};${produces};${summary};${description}
         </#list>
     </#list>
 </#compress>
 ${'\n'}
+
+<#function sanitize str>
+    <#return (((str?replace(";", ","))?replace("(\\n)+", "",'r')))?truncate(250)>
+</#function>
+
+<#function join list>
+    <#if list?has_content>
+        <#return list?join(", ")>
+    <#else>
+        <#return "">
+    </#if>
+</#function>
 
 ```
 
@@ -456,11 +470,11 @@ Invoking the FTL template
 gives you
 
 ```text
-ENDPOINT;METHOD;DESCRIPTION
-/api/pets;GET;Returns all pets from the system that the user has access to
-/api/pets;POST;Creates a new pet in the store. Duplicates are allowed
-/api/pets/{id};GET;Returns a user based on a single ID, if the user does not have access to the pet
-/api/pets/{id};DELETE;Deletes a single pet based on the ID supplied
+ENDPOINT;METHOD;CONSUMES;PRODUCES;SUMMARY;DESCRIPTION
+/api/pets;GET;;;;Returns all pets from the system that the user has access to
+/api/pets;POST;;;;Creates a new pet in the store. Duplicates are allowed
+/api/pets/{id};GET;;;;Returns a user based on a single ID, if the user does not have access to the pet
+/api/pets/{id};DELETE;;;;Deletes a single pet based on the ID supplied
 ```
 
 ## 6.6 Transforming Excel Documents

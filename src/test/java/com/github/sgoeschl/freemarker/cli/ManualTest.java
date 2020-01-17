@@ -28,8 +28,9 @@ public class ManualTest {
     // private static final String CMD = "-b ./src/test -DFOO=foo -DBAR=bar -t templates/demo.ftl site/sample/csv/transactions.csv";
     // private static final String CMD = "-b ./src/test -Dcsv.out.format=TDF -t templates/csv/transform.ftl site/sample/csv/contract.csv";
     // private static final String CMD = "-t templates/excel/csv/transform.ftl -l de_AT site/sample/excel/test.xlsx";
-    // private static final String CMD = "-i ${JsonPathTool.parse(Documents.get(0)).read(\"$.info.title\")} site/sample/json/swagger-spec.json";
-    private static final String CMD = "-i ${XmlTool.parse(Documents.first)[\"recipients/person[1]/name\"]} site/sample/xml/recipients.xml";
+    // private static final String CMD = "-i ${JsonPathTool.parse(Documents.first).read('$.info.title')} site/sample/json/swagger-spec.json";
+    // private static final String CMD = "-i ${XmlTool.parse(Documents.first)['recipients/person[1]/name']} site/sample/xml/recipients.xml";
+    private static final String CMD = "-i ${JsoupTool.parse(Documents.first).select('a')[0]} site/sample/html/dependencies.html";
 
     public static void main(String[] args) {
         Main.execute(CMD.split(SPACE));
