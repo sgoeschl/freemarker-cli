@@ -20,6 +20,7 @@ import com.github.sgoeschl.freemarker.cli.util.ClosableUtils;
 
 import java.io.Closeable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
@@ -34,7 +35,7 @@ public class Documents implements Closeable {
 
     private final List<Document> documents;
 
-    public Documents(List<Document> documents) {
+    public Documents(Collection<Document> documents) {
         this.documents = new ArrayList<>(requireNonNull(documents));
     }
 

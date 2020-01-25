@@ -24,12 +24,20 @@ import static java.util.Objects.requireNonNull;
 
 public class InputStreamDataSource implements DataSource {
 
+    private static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
+
     private final String name;
     private final InputStream is;
+    private final String contentType;
 
     public InputStreamDataSource(String name, InputStream is) {
+        this(name, is, DEFAULT_CONTENT_TYPE);
+    }
+
+    public InputStreamDataSource(String name, InputStream is, String contentType) {
         this.name = requireNonNull(name);
         this.is = requireNonNull(is);
+        this.contentType = requireNonNull(contentType);
     }
 
     @Override
@@ -44,12 +52,21 @@ public class InputStreamDataSource implements DataSource {
 
     @Override
     public String getContentType() {
-        return "application/octet-stream";
+        return contentType;
     }
 
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String toString() {
+        return "InputStreamDataSource{" +
+                "name='" + name + '\'' +
+                ", contentType='" + contentType + '\'' +
+                ", inputStream=" + is.getClass().getName() +
+                '}';
     }
 }
 

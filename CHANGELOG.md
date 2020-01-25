@@ -2,14 +2,14 @@
 
 All notable changes to this project will be documented in this file. We try to adhere to https://github.com/olivierlacan/keep-a-changelog.
 
-## 2.0.0-BETA-6-SNAPSHOT
+## 2.0.0-BETA-6-SNAPSHOT - TBA
 
 ### Changed
 - Improve Swagger JSON to CSV example
 - Using `ALLOWS_NOTHING_RESOLVER` built-in class resolver
 - Silently skipped tools whose implementation classes can't be even loaded 
 
-## 2.0.0-BETA-5
+## [2.0.0-BETA-5] - 2019-12-22
 
 ### Added
 - Support interactive mode (`-i` or `--interactive`) to supply FreeMarker templates on the command line
@@ -73,6 +73,7 @@ All notable changes to this project will be documented in this file. We try to a
 - Works as standalone application with OS wrapper scripts
 - Existing templates will break due to naming changes of injected helper classes
 
+[2.0.0-BETA-5]: https://github.com/sgoeschl/freemarker-cli/releases/tag/v2.0.0-BETA-5
 [2.0.0-BETA-4]: https://github.com/sgoeschl/freemarker-cli/releases/tag/v2.0.0-BETA-4
 [2.0.0-BETA-3]: https://github.com/sgoeschl/freemarker-cli/releases/tag/v2.0.0-BETA-3
 [2.0.0-BETA-2]: https://github.com/sgoeschl/freemarker-cli/releases/tag/v2.0.0-BETA-2

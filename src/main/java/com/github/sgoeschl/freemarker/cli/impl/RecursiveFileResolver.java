@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
+import static com.github.sgoeschl.freemarker.cli.util.StringUtils.isNullOrEmtpty;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;

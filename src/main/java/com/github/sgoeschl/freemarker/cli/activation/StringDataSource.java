@@ -23,12 +23,17 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 import static java.util.Objects.requireNonNull;
+import static org.apache.commons.codec.Charsets.UTF_8;
 
 public class StringDataSource implements DataSource {
 
     private final String name;
     private final String content;
     private final Charset charset;
+
+    public StringDataSource(String name, String content) {
+        this(name, content, UTF_8);
+    }
 
     public StringDataSource(String name, String content, Charset charset) {
         this.name = requireNonNull(name);
@@ -58,5 +63,14 @@ public class StringDataSource implements DataSource {
 
     public String getContent() {
         return content;
+    }
+
+    @Override
+    public String toString() {
+        return "StringDataSource{" +
+                "name='" + name + '\'' +
+                ", charset=" + charset +
+                ", length=" + content.length() +
+                '}';
     }
 }

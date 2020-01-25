@@ -21,7 +21,7 @@ import io.krakens.grok.api.Grok;
 import java.util.Collections;
 import java.util.Map;
 
-import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
+import static com.github.sgoeschl.freemarker.cli.util.StringUtils.isNullOrEmtpty;
 import static java.util.Objects.requireNonNull;
 
 public class GrokWrapper {

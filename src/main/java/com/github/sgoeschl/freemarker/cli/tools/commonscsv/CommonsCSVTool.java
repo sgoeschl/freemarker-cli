@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
+import static com.github.sgoeschl.freemarker.cli.util.StringUtils.isNullOrEmtpty;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;

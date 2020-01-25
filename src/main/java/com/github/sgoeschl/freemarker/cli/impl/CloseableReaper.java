@@ -31,22 +31,17 @@ public class CloseableReaper implements Closeable {
 
     private final List<WeakReference<Closeable>> closeables = new ArrayList<>();
 
-    public <T extends Closeable> T add(T closeable) {
-        synchronized (this) {
-            if (closeable != null) {
-                closeables.add(new WeakReference<>(closeable));
-            }
-            return closeable;
+    public synchronized <T extends Closeable> T add(T closeable) {
+        if (closeable != null) {
+            closeables.add(new WeakReference<>(closeable));
         }
+        return closeable;
     }
 
     @Override
-    public void close() {
-        // Ensure that we close instances only once
-        synchronized (this) {
-            closeables.forEach(c -> closeQuietly(c.get()));
-            closeables.clear();
-        }
+    public synchronized void close() {
+        closeables.forEach(c -> closeQuietly(c.get()));
+        closeables.clear();
     }
 }
 

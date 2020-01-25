@@ -52,7 +52,7 @@ public class Document implements Closeable {
     /** The data source */
     private final DataSource dataSource;
 
-    /** The location of the content */
+    /** The location of the content, e.g. file name */
     private final String location;
 
     /** Collect all closables handed out to the caller to be closed when the document is closed itself */
@@ -172,8 +172,7 @@ public class Document implements Closeable {
      * @throws IOException if an I/O error occurs
      */
     public LineIterator getLineIterator(String charsetName) throws IOException {
-        final LineIterator lineIterator = lineIterator(getUnsafeInputStream(), forName(charsetName));
-        return closables.add(lineIterator);
+        return closables.add(lineIterator(getUnsafeInputStream(), forName(charsetName)));
     }
 
     public byte[] getBytes() throws IOException {

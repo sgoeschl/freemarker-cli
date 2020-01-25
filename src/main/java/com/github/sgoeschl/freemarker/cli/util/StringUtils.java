@@ -16,7 +16,7 @@
  */
 package com.github.sgoeschl.freemarker.cli.util;
 
-public class ObjectUtils {
+public class StringUtils {
 
     public static boolean isNullOrEmtpty(String value) {
         return value == null || value.trim().isEmpty();

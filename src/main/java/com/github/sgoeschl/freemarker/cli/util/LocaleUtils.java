@@ -18,7 +18,7 @@ package com.github.sgoeschl.freemarker.cli.util;
 
 import java.util.Locale;
 
-import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNullOrEmtpty;
+import static com.github.sgoeschl.freemarker.cli.util.StringUtils.isNullOrEmtpty;
 
 public class LocaleUtils {
 

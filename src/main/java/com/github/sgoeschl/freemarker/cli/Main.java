@@ -41,7 +41,7 @@ import java.util.concurrent.Callable;
 import java.util.stream.IntStream;
 
 import static com.github.sgoeschl.freemarker.cli.util.ClosableUtils.closeQuietly;
-import static com.github.sgoeschl.freemarker.cli.util.ObjectUtils.isNotEmpty;
+import static com.github.sgoeschl.freemarker.cli.util.StringUtils.isNotEmpty;
 import static java.util.Objects.requireNonNull;
 
 @Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
