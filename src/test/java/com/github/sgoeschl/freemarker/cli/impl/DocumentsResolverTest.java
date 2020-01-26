@@ -29,9 +29,9 @@ public class DocumentsResolverTest {
 
     @Test
     public void shouldResolveFilesOfDirectory() {
-        assertEquals(19, supplier(ANY_DIRECTORY, null).get().size());
-        assertEquals(19, supplier(ANY_DIRECTORY, "").get().size());
-        assertEquals(19, supplier(ANY_DIRECTORY, "*").get().size());
+        assertEquals(18, supplier(ANY_DIRECTORY, null).get().size());
+        assertEquals(18, supplier(ANY_DIRECTORY, "").get().size());
+        assertEquals(18, supplier(ANY_DIRECTORY, "*").get().size());
         assertEquals(5, supplier(ANY_DIRECTORY, "*.csv").get().size());
         assertEquals(4, supplier(ANY_DIRECTORY, "*.x*").get().size());
     }

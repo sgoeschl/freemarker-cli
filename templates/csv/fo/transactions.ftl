@@ -47,16 +47,20 @@
         </fo:static-content>
         <fo:flow flow-name="xsl-region-body">
             <fo:table table-layout="fixed" width="100%" border-collapse="separate">
-                <fo:table-column column-width="8%"/>
-                <fo:table-column column-width="10%"/>
-                <fo:table-column column-width="12%"/>
-                <fo:table-column column-width="8%"/>
+                <fo:table-column column-width="9%"/>
                 <fo:table-column column-width="7%"/>
-                <fo:table-column column-width="5%"/>
-                <fo:table-column column-width="5%"/>
-                <fo:table-column column-width="5%"/>
-                <fo:table-column column-width="35%"/>
-                <fo:table-column column-width="5%"/>
+                <fo:table-column column-width="7%"/>
+                <fo:table-column column-width="7%"/>
+                <fo:table-column column-width="7%"/>
+                <fo:table-column column-width="7%"/>
+                <fo:table-column column-width="7%"/>
+                <fo:table-column column-width="7%"/>
+                <fo:table-column column-width="7%"/>
+                <fo:table-column column-width="7%"/>
+                <fo:table-column column-width="7%"/>
+                <fo:table-column column-width="7%"/>
+                <fo:table-column column-width="7%"/>
+                <fo:table-column column-width="7%"/>
                 <@writeTableHeader headers=csvHeaders/>
                 <@writeTableBody columns=csvRecords/>
             </fo:table>

@@ -72,8 +72,6 @@ public class ExamplesTest extends AbstractMainTest {
     @Test
     public void shouldRunJsonExamples() throws IOException {
         assertValid(execute("-t templates/json/csv/swagger-endpoints.ftl site/sample/json/swagger-spec.json"));
-        assertValid(execute("-t templates/json/html/customer-user-products.ftl site/sample/json/customer-user-products.json"));
-        assertValid(execute("-t templates/json/md/customer-user-products.ftl site/sample/json/customer-user-products.json"));
         assertValid(execute("-t templates/json/md/github-users.ftl site/sample/json/github-users.json"));
     }
 

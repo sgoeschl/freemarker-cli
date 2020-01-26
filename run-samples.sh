@@ -134,17 +134,6 @@ $FREEMARKER_CMD -t templates/html/csv/dependencies.ftl site/sample/html/dependen
 echo "templates/json/csv/swagger-endpoints.ftl"
 $FREEMARKER_CMD -t templates/json/csv/swagger-endpoints.ftl site/sample/json/swagger-spec.json > target/out/swagger-spec.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
-echo "templates/json/html/customer-user-products.ftl"
-$FREEMARKER_CMD -t templates/json/html/customer-user-products.ftl site/sample/json/customer-user-products.json > target/out/customer-user-products.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
-
-if hash wkhtmltopdf 2>/dev/null; then
-	echo "wkhtmltopdf -O landscape target/out/customer-user-products.html target/out/customer-user-products.pdf"
-    wkhtmltopdf -O landscape target/out/customer-user-products.html target/out/customer-user-products.pdf 2>/dev/null || { echo >&2 "Test failed.  Aborting."; exit 1; }
-fi
-
-echo "templates/json/md/customer-user-products.ftl"
-$FREEMARKER_CMD -t templates/json/md/customer-user-products.ftl  site/sample/json/customer-user-products.json > target/out/customer-user-products.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
-
 if hash curl 2>/dev/null; then
 echo "templates/json/md/github-users.ftl"
 $FREEMARKER_CMD -t templates/json/md/github-users.ftl site/sample/json/github-users.json > target/out/github-users-curl.md || { echo >&2 "Test failed.  Aborting."; exit 1; }

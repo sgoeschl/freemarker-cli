@@ -27,7 +27,7 @@
         <#assign password = properties["PASSWORD"]!"">
         <#assign smsOtp = properties["SMS_OTP"]!"">
         <#assign name = properties["NAME"]!"">
-        <#assign description = properties["NAME"]!"">
+        <#assign description = properties["DESCRIPTION"]!"">
         ${tenant},${site},${userId},${disposerId},${password},${smsOtp},${name},${description}
     </#list>
 </#compress>
@@ -50,14 +50,12 @@ ${'\n'}
 </#function>
 
 <#function extractTenant environments>
-    <#if (environments)?contains("AT_")>
-        <#return "at">
-    <#elseif (environments)?contains("BCR_")>
-        <#return "ro">
-    <#elseif (environments)?contains("CSAS_")>
-        <#return "cz">
-    <#elseif (environments)?contains("SK_")>
-        <#return "sk">
+    <#if (environments)?contains("TENANT_A")>
+        <#return "TENANT_A">
+    <#elseif (environments)?contains("TENANT_B")>
+        <#return "TENANT_B">
+    <#elseif (environments)?contains("TENANT_C")>
+        <#return "TENANT_C">
     <#else>
         <#return "???">
     </#if>
