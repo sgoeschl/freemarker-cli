@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/sgoeschl/freemarker-cli.svg?branch=master)](https://travis-ci.org/sgoeschl/freemarker-cli)
 
+__This project is currently migrated to the official [Apache FreeMarker Generator](https://github.com/apache/freemarker-generator)__ 
+
 # 1. Is This Project For You?
 
 You somehow found this GitHub project and wonder if it solves a problem you might have?!
@@ -1091,7 +1093,6 @@ user.home    : /Users/sgoeschl
 - MAVEN_OPTS ==> -Xmx2048m
 - DISPLAY ==> :0.0
 - JAVA_11_HOME ==> /Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home
-- BEEONE_NEXUS_CREDENTIALS ==> H50N0OB:fRidnevo0719!
 - LOGNAME ==> sgoeschl
 - XPC_SERVICE_NAME ==> 0
 - PWD ==> /Users/sgoeschl/work/github/sgoeschl/freemarker-cli/target/appassembler
@@ -1102,7 +1103,6 @@ user.home    : /Users/sgoeschl
 - TERM_PROGRAM ==> Apple_Terminal
 - LSCOLORS ==> ExFxCxDxBxegedabagacad
 - PROFILE_ENV ==> default
-- SECURITYSESSIONID ==> 186ab
 - USER ==> sgoeschl
 - CLICOLOR ==> 1
 - GATLING_HOME ==> /Applications/Java/gatling-3.1.2
